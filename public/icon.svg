@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e1b4b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#030213;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Squircle Background -->
+  <rect x="0" y="0" width="512" height="512" rx="112" fill="url(#grad)" />
+  <!-- Central Emblem: A Shield and Checkmark -->
+  <g transform="translate(128, 128) scale(0.5)">
+    <!-- Path representing a shield -->
+    <path d="M256 0 C380 0 450 60 480 180 C480 340 380 460 256 512 C132 460 32 340 32 180 C62 60 132 0 256 0 Z" fill="none" stroke="#ffffff" stroke-width="28" stroke-linejoin="round" />
+    <!-- A glowing checkmark -->
+    <path d="M160 250 L230 320 L350 180" fill="none" stroke="#10b981" stroke-width="32" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+</svg>

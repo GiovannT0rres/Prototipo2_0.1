@@ -1,0 +1,85 @@
+# Dependencies (Evita subir pacotes instalados)
+node_modules/
+/jspm_packages/
+lib-cov/
+shinkwrap.resources/
+.pnpm-debug.log*
+
+# Build and Production Outputs (Evita código gerado localmente)
+dist/
+dist-ssr/
+build/
+out/
+.next/
+.nuxt/
+.cache/
+.parcel-cache/
+.docusaurus/
+.svelte-kit/
+.serverless/
+.output/
+
+# Secrets, Credentials, and Environment Variables (CRÍTICO: Segurança contra vazamentos)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+*.env
+*.pem
+*.key
+*.cert
+*.crt
+*.pfx
+*.p12
+*.pub
+*.gpg
+*.asc
+secring.gpg
+jwt.keys
+*credentials*.json
+*secret*.json
+client_secret.json
+service-account.json
+config/jwt/
+.npmrc
+.yarnrc
+
+# IDEs, Editors, and OS Files (Configurações locais de desenvolvedor)
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+*.swo
+.DS_Store
+.DS_Store?
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.sublime-project
+*.sublime-workspace
+
+# Debug and System Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Diagnostic/Cache Files
+.eslintcache
+.stylelintcache
+.prettiercache
+.parcel-cache
+.tsbuildinfo
+
+# Vercel Configuration & Deployment Cache
+.vercel
