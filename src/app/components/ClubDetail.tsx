@@ -165,7 +165,7 @@ export function ClubDetail() {
       <div className="bg-white/80 backdrop-blur-md sticky top-0 z-10 border-b border-gray-200">
         <div className="flex items-center justify-between px-4 h-12">
           <button
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/clubes")}
             className="text-blue-600 flex items-center -ml-2 active:opacity-70"
           >
             <ChevronLeft size={28} strokeWidth={1.5} />
