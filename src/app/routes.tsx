@@ -6,6 +6,7 @@ import { Logs } from "./components/Logs";
 import { Profile } from "./components/Profile";
 import { ClubDetail } from "./components/ClubDetail";
 import { NewInvite } from "./components/NewInvite";
+import { GuestListPage } from "./components/GuestListPage";
 
 function DefaultRedirect() {
   const lastClubId = localStorage.getItem("lastClubId") || "1";
@@ -27,6 +28,7 @@ export const router = createBrowserRouter([
       { path: "profile", Component: Profile },
       { path: "club/:id", Component: ClubDetail },
       { path: "club/:id/new-invite", Component: NewInvite },
+      { path: "club/:id/guests", Component: GuestListPage },
     ],
   },
 ]);

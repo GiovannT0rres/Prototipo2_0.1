@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { ChevronLeft, ChevronRight, Plus, Check, X, Maximize2, ChevronDown, Info } from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus, Check, X, Maximize2, ChevronDown, Info, Send } from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { SwipeableRow } from "./ui/SwipeableRow";
 import { toast, Toaster } from "sonner";
 
 const DEPENDENTS_ACTIVE = [
@@ -11,11 +12,39 @@ const DEPENDENTS_ACTIVE = [
     type: "Familiar",
     avatar: "https://i.pravatar.cc/150?u=maria",
     pending: false,
-    invites: 2,
-    canManageAccess: true, // <-- Adicionada a flag para o balão verde
+    invites: 30,
+    canManageAccess: true,
     guestList: [
-      { id: "g1", name: "Lucas Silva", date: "Hoje" },
-      { id: "g2", name: "Julia Silva", date: "15/06/2026" }
+      { id: "g1", name: "Lucas Silva", date: "01/06/2026" },
+      { id: "g2", name: "Julia Silva", date: "01/06/2026" },
+      { id: "g3", name: "Rafael Mendes", date: "31/05/2026" },
+      { id: "g4", name: "Camila Rocha", date: "31/05/2026" },
+      { id: "g5", name: "Pedro Henrique", date: "30/05/2026" },
+      { id: "g6", name: "Fernanda Lima", date: "30/05/2026" },
+      { id: "g7", name: "Gustavo Oliveira", date: "29/05/2026" },
+      { id: "g8", name: "Isabela Santos", date: "29/05/2026" },
+      { id: "g9", name: "Thiago Ferreira", date: "28/05/2026" },
+      { id: "g10", name: "Larissa Costa", date: "28/05/2026" },
+      { id: "g11", name: "Bruno Martins", date: "27/05/2026" },
+      { id: "g12", name: "Amanda Pereira", date: "27/05/2026" },
+      { id: "g13", name: "Diego Almeida", date: "26/05/2026" },
+      { id: "g14", name: "Natalia Souza", date: "26/05/2026" },
+      { id: "g15", name: "Marcos Paulo", date: "25/05/2026" },
+      { id: "g16", name: "Carolina Ribeiro", date: "25/05/2026" },
+      { id: "g17", name: "Felipe Gomes", date: "24/05/2026" },
+      { id: "g18", name: "Juliana Barros", date: "24/05/2026" },
+      { id: "g19", name: "Rodrigo Nunes", date: "23/05/2026" },
+      { id: "g20", name: "Beatriz Campos", date: "23/05/2026" },
+      { id: "g21", name: "Leonardo Dias", date: "22/05/2026" },
+      { id: "g22", name: "Vanessa Teixeira", date: "22/05/2026" },
+      { id: "g23", name: "André Moreira", date: "21/05/2026" },
+      { id: "g24", name: "Patrícia Cardoso", date: "21/05/2026" },
+      { id: "g25", name: "Eduardo Vieira", date: "20/05/2026" },
+      { id: "g26", name: "Mariana Araújo", date: "20/05/2026" },
+      { id: "g27", name: "Henrique Castro", date: "19/05/2026" },
+      { id: "g28", name: "Débora Pinto", date: "19/05/2026" },
+      { id: "g29", name: "Ricardo Lopes", date: "18/05/2026" },
+      { id: "g30", name: "Aline Monteiro", date: "18/05/2026" },
     ],
   },
   {
@@ -159,6 +188,31 @@ export function ClubDetail() {
     toast.error(`A solicitação de ${req.name} foi recusada.`);
   };
 
+  // Função para revogar convidado individual de um dependente
+  const handleRevokeGuest = (depId: string, guestId: string, guestName: string) => {
+    setActiveDependents(prev =>
+      prev.map(dep => {
+        if (dep.id !== depId) return dep;
+        const updatedList = dep.guestList.filter(g => g.id !== guestId);
+        return {
+          ...dep,
+          guestList: updatedList,
+          invites: updatedList.length,
+        };
+      })
+    );
+    toast.error(`Acesso de ${guestName} foi revogado.`);
+  };
+
+  // Função para reenviar código de cadastro
+  const handleResendCode = (depName: string) => {
+    const text = encodeURIComponent(
+      `Olá ${depName}, finalize seu cadastro pelo link: go.entradasegura.com.br/cadastro-${Date.now().toString(36)}`
+    );
+    window.open(`https://api.whatsapp.com/send?text=${text}`, "_blank");
+    toast.success(`Código reenviado para ${depName} via WhatsApp!`);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Navigation Bar */}
@@ -275,15 +329,38 @@ export function ClubDetail() {
 
                 {expandedDependentId === dep.id && dep.guestList && (
                   <div className="mt-3 pt-3 border-t border-gray-100 flex flex-col gap-2">
-                    <h4 className="text-[12px] uppercase font-semibold text-gray-500 tracking-wider">Convidados</h4>
-                    <div className="flex flex-col gap-2">
-                      {dep.guestList.map(guest => (
-                        <div key={guest.id} className="flex justify-between items-center bg-gray-50 p-2 rounded-lg">
-                          <span className="text-[14px] font-medium text-gray-900">{guest.name}</span>
-                          <span className="text-[12px] text-gray-500">{guest.date}</span>
-                        </div>
-                      ))}
+                    <div className="flex justify-between items-center">
+                      <h4 className="text-[12px] uppercase font-semibold text-gray-500 tracking-wider">Últimos convidados</h4>
+                      <span className="text-[11px] text-gray-400 font-medium">{dep.guestList.length} total</span>
                     </div>
+                    <div className="flex flex-col gap-1.5">
+                      {dep.guestList.slice(0, 5).map(guest => (
+                        <SwipeableRow
+                          key={guest.id}
+                          onAction={() => handleRevokeGuest(dep.id, guest.id, guest.name)}
+                        >
+                          <div className="flex justify-between items-center bg-gray-50 p-2.5 rounded-xl">
+  <div className="flex flex-col">
+    <span className="text-[14px] font-medium text-gray-900">{guest.name}</span>
+    <span className="text-[12px] text-gray-500">{guest.date}</span>
+  </div>
+  <button onClick={() => handleRevokeGuest(dep.id, guest.id, guest.name)} className="flex items-center text-red-500 text-[13px] font-medium">
+    <X size={14} className="mr-1" /> Revogar
+  </button>
+</div>
+                        </SwipeableRow>
+                      ))}
+                      
+                    </div>
+                    {dep.guestList.length > 5 && (
+                      <button
+                        onClick={() => navigate(`/club/${id}/guests?dep=${dep.id}&name=${encodeURIComponent(dep.name)}`)}
+                        className="w-full mt-1 py-2.5 bg-blue-50 text-blue-600 text-[14px] font-semibold rounded-xl active:bg-blue-100 transition-colors flex items-center justify-center gap-1.5"
+                      >
+                        Ver todos ({dep.guestList.length})
+                        <ChevronRight size={16} />
+                      </button>
+                    )}
                   </div>
                 )}
 
@@ -307,6 +384,15 @@ export function ClubDetail() {
                   >
                     Revogar
                   </button>
+                         {dep.pending && (
+                      <button
+                        onClick={() => handleResendCode(dep.name)}
+                        className="mt-2 flex items-center gap-1.5 bg-[#25D366]/10 text-[#25D366] text-[13px] font-semibold px-3 py-1.5 rounded-lg active:bg-[#25D366]/20 transition-colors"
+                      >
+                        <Send size={13} />
+                        Reenviar código via WhatsApp
+                      </button>
+                    )}
                 </div>
               </div>
             ))}
