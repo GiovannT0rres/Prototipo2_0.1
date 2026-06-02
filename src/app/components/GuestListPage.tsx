@@ -1,42 +1,224 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router";
-import { ChevronLeft, User, Calendar, Search } from "lucide-react";
-import { SwipeableRow } from "./ui/SwipeableRow";
+import { ChevronLeft, User, Calendar, Search, X } from "lucide-react";
 import { toast, Toaster } from "sonner";
 
 // Dados mock dos 30 convidados da Maria Silva
-const ALL_GUESTS_DATA: Record<string, { id: string; name: string; date: string; status: string; avatar: string }[]> = {
+const ALL_GUESTS_DATA: Record<
+  string,
+  { id: string; name: string; date: string; status: string; avatar: string }[]
+> = {
   d1: [
-    { id: "g1", name: "Lucas Silva", date: "01/06/2026", status: "Ativo", avatar: "https://i.pravatar.cc/150?u=lucas" },
-    { id: "g2", name: "Julia Silva", date: "01/06/2026", status: "Ativo", avatar: "https://i.pravatar.cc/150?u=julia" },
-    { id: "g3", name: "Rafael Mendes", date: "31/05/2026", status: "Ativo", avatar: "https://i.pravatar.cc/150?u=rafael" },
-    { id: "g4", name: "Camila Rocha", date: "31/05/2026", status: "Ativo", avatar: "https://i.pravatar.cc/150?u=camila" },
-    { id: "g5", name: "Pedro Henrique", date: "30/05/2026", status: "Ativo", avatar: "https://i.pravatar.cc/150?u=pedroh" },
-    { id: "g6", name: "Fernanda Lima", date: "30/05/2026", status: "Ativo", avatar: "https://i.pravatar.cc/150?u=fernanda" },
-    { id: "g7", name: "Gustavo Oliveira", date: "29/05/2026", status: "Ativo", avatar: "https://i.pravatar.cc/150?u=gustavo" },
-    { id: "g8", name: "Isabela Santos", date: "29/05/2026", status: "Ativo", avatar: "https://i.pravatar.cc/150?u=isabela" },
-    { id: "g9", name: "Thiago Ferreira", date: "28/05/2026", status: "Ativo", avatar: "https://i.pravatar.cc/150?u=thiago" },
-    { id: "g10", name: "Larissa Costa", date: "28/05/2026", status: "Ativo", avatar: "https://i.pravatar.cc/150?u=larissa" },
-    { id: "g11", name: "Bruno Martins", date: "27/05/2026", status: "Expirado", avatar: "https://i.pravatar.cc/150?u=bruno" },
-    { id: "g12", name: "Amanda Pereira", date: "27/05/2026", status: "Ativo", avatar: "https://i.pravatar.cc/150?u=amanda" },
-    { id: "g13", name: "Diego Almeida", date: "26/05/2026", status: "Ativo", avatar: "https://i.pravatar.cc/150?u=diego" },
-    { id: "g14", name: "Natalia Souza", date: "26/05/2026", status: "Expirado", avatar: "https://i.pravatar.cc/150?u=natalia" },
-    { id: "g15", name: "Marcos Paulo", date: "25/05/2026", status: "Ativo", avatar: "https://i.pravatar.cc/150?u=marcos" },
-    { id: "g16", name: "Carolina Ribeiro", date: "25/05/2026", status: "Ativo", avatar: "https://i.pravatar.cc/150?u=carolina" },
-    { id: "g17", name: "Felipe Gomes", date: "24/05/2026", status: "Ativo", avatar: "https://i.pravatar.cc/150?u=felipe" },
-    { id: "g18", name: "Juliana Barros", date: "24/05/2026", status: "Expirado", avatar: "https://i.pravatar.cc/150?u=juliana" },
-    { id: "g19", name: "Rodrigo Nunes", date: "23/05/2026", status: "Ativo", avatar: "https://i.pravatar.cc/150?u=rodrigo" },
-    { id: "g20", name: "Beatriz Campos", date: "23/05/2026", status: "Ativo", avatar: "https://i.pravatar.cc/150?u=beatrizc" },
-    { id: "g21", name: "Leonardo Dias", date: "22/05/2026", status: "Ativo", avatar: "https://i.pravatar.cc/150?u=leonardo" },
-    { id: "g22", name: "Vanessa Teixeira", date: "22/05/2026", status: "Expirado", avatar: "https://i.pravatar.cc/150?u=vanessa" },
-    { id: "g23", name: "André Moreira", date: "21/05/2026", status: "Ativo", avatar: "https://i.pravatar.cc/150?u=andre" },
-    { id: "g24", name: "Patrícia Cardoso", date: "21/05/2026", status: "Ativo", avatar: "https://i.pravatar.cc/150?u=patricia" },
-    { id: "g25", name: "Eduardo Vieira", date: "20/05/2026", status: "Ativo", avatar: "https://i.pravatar.cc/150?u=eduardo" },
-    { id: "g26", name: "Mariana Araújo", date: "20/05/2026", status: "Ativo", avatar: "https://i.pravatar.cc/150?u=mariana" },
-    { id: "g27", name: "Henrique Castro", date: "19/05/2026", status: "Expirado", avatar: "https://i.pravatar.cc/150?u=henrique" },
-    { id: "g28", name: "Débora Pinto", date: "19/05/2026", status: "Ativo", avatar: "https://i.pravatar.cc/150?u=debora" },
-    { id: "g29", name: "Ricardo Lopes", date: "18/05/2026", status: "Ativo", avatar: "https://i.pravatar.cc/150?u=ricardo" },
-    { id: "g30", name: "Aline Monteiro", date: "18/05/2026", status: "Ativo", avatar: "https://i.pravatar.cc/150?u=aline" },
+    {
+      id: "g1",
+      name: "Lucas Silva",
+      date: "01/06/2026",
+      status: "Ativo",
+      avatar: "https://i.pravatar.cc/150?u=lucas",
+    },
+    {
+      id: "g2",
+      name: "Julia Silva",
+      date: "01/06/2026",
+      status: "Ativo",
+      avatar: "https://i.pravatar.cc/150?u=julia",
+    },
+    {
+      id: "g3",
+      name: "Rafael Mendes",
+      date: "31/05/2026",
+      status: "Ativo",
+      avatar: "https://i.pravatar.cc/150?u=rafael",
+    },
+    {
+      id: "g4",
+      name: "Camila Rocha",
+      date: "31/05/2026",
+      status: "Ativo",
+      avatar: "https://i.pravatar.cc/150?u=camila",
+    },
+    {
+      id: "g5",
+      name: "Pedro Henrique",
+      date: "30/05/2026",
+      status: "Ativo",
+      avatar: "https://i.pravatar.cc/150?u=pedroh",
+    },
+    {
+      id: "g6",
+      name: "Fernanda Lima",
+      date: "30/05/2026",
+      status: "Ativo",
+      avatar: "https://i.pravatar.cc/150?u=fernanda",
+    },
+    {
+      id: "g7",
+      name: "Gustavo Oliveira",
+      date: "29/05/2026",
+      status: "Ativo",
+      avatar: "https://i.pravatar.cc/150?u=gustavo",
+    },
+    {
+      id: "g8",
+      name: "Isabela Santos",
+      date: "29/05/2026",
+      status: "Ativo",
+      avatar: "https://i.pravatar.cc/150?u=isabela",
+    },
+    {
+      id: "g9",
+      name: "Thiago Ferreira",
+      date: "28/05/2026",
+      status: "Ativo",
+      avatar: "https://i.pravatar.cc/150?u=thiago",
+    },
+    {
+      id: "g10",
+      name: "Larissa Costa",
+      date: "28/05/2026",
+      status: "Ativo",
+      avatar: "https://i.pravatar.cc/150?u=larissa",
+    },
+    {
+      id: "g11",
+      name: "Bruno Martins",
+      date: "27/05/2026",
+      status: "Expirado",
+      avatar: "https://i.pravatar.cc/150?u=bruno",
+    },
+    {
+      id: "g12",
+      name: "Amanda Pereira",
+      date: "27/05/2026",
+      status: "Ativo",
+      avatar: "https://i.pravatar.cc/150?u=amanda",
+    },
+    {
+      id: "g13",
+      name: "Diego Almeida",
+      date: "26/05/2026",
+      status: "Ativo",
+      avatar: "https://i.pravatar.cc/150?u=diego",
+    },
+    {
+      id: "g14",
+      name: "Natalia Souza",
+      date: "26/05/2026",
+      status: "Expirado",
+      avatar: "https://i.pravatar.cc/150?u=natalia",
+    },
+    {
+      id: "g15",
+      name: "Marcos Paulo",
+      date: "25/05/2026",
+      status: "Ativo",
+      avatar: "https://i.pravatar.cc/150?u=marcos",
+    },
+    {
+      id: "g16",
+      name: "Carolina Ribeiro",
+      date: "25/05/2026",
+      status: "Ativo",
+      avatar: "https://i.pravatar.cc/150?u=carolina",
+    },
+    {
+      id: "g17",
+      name: "Felipe Gomes",
+      date: "24/05/2026",
+      status: "Ativo",
+      avatar: "https://i.pravatar.cc/150?u=felipe",
+    },
+    {
+      id: "g18",
+      name: "Juliana Barros",
+      date: "24/05/2026",
+      status: "Expirado",
+      avatar: "https://i.pravatar.cc/150?u=juliana",
+    },
+    {
+      id: "g19",
+      name: "Rodrigo Nunes",
+      date: "23/05/2026",
+      status: "Ativo",
+      avatar: "https://i.pravatar.cc/150?u=rodrigo",
+    },
+    {
+      id: "g20",
+      name: "Beatriz Campos",
+      date: "23/05/2026",
+      status: "Ativo",
+      avatar: "https://i.pravatar.cc/150?u=beatrizc",
+    },
+    {
+      id: "g21",
+      name: "Leonardo Dias",
+      date: "22/05/2026",
+      status: "Ativo",
+      avatar: "https://i.pravatar.cc/150?u=leonardo",
+    },
+    {
+      id: "g22",
+      name: "Vanessa Teixeira",
+      date: "22/05/2026",
+      status: "Expirado",
+      avatar: "https://i.pravatar.cc/150?u=vanessa",
+    },
+    {
+      id: "g23",
+      name: "André Moreira",
+      date: "21/05/2026",
+      status: "Ativo",
+      avatar: "https://i.pravatar.cc/150?u=andre",
+    },
+    {
+      id: "g24",
+      name: "Patrícia Cardoso",
+      date: "21/05/2026",
+      status: "Ativo",
+      avatar: "https://i.pravatar.cc/150?u=patricia",
+    },
+    {
+      id: "g25",
+      name: "Eduardo Vieira",
+      date: "20/05/2026",
+      status: "Ativo",
+      avatar: "https://i.pravatar.cc/150?u=eduardo",
+    },
+    {
+      id: "g26",
+      name: "Mariana Araújo",
+      date: "20/05/2026",
+      status: "Ativo",
+      avatar: "https://i.pravatar.cc/150?u=mariana",
+    },
+    {
+      id: "g27",
+      name: "Henrique Castro",
+      date: "19/05/2026",
+      status: "Expirado",
+      avatar: "https://i.pravatar.cc/150?u=henrique",
+    },
+    {
+      id: "g28",
+      name: "Débora Pinto",
+      date: "19/05/2026",
+      status: "Ativo",
+      avatar: "https://i.pravatar.cc/150?u=debora",
+    },
+    {
+      id: "g29",
+      name: "Ricardo Lopes",
+      date: "18/05/2026",
+      status: "Ativo",
+      avatar: "https://i.pravatar.cc/150?u=ricardo",
+    },
+    {
+      id: "g30",
+      name: "Aline Monteiro",
+      date: "18/05/2026",
+      status: "Ativo",
+      avatar: "https://i.pravatar.cc/150?u=aline",
+    },
   ],
 };
 
@@ -56,14 +238,16 @@ export function GuestListPage() {
   const sentinelRef = useRef<HTMLDivElement>(null);
 
   const filteredGuests = guests.filter((g) =>
-    g.name.toLowerCase().includes(searchQuery.toLowerCase())
+    g.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   const visibleGuests = filteredGuests.slice(0, displayCount);
   const hasMore = displayCount < filteredGuests.length;
 
   // Grouped by date for iOS-style sections
-  const groupedGuests = visibleGuests.reduce<Record<string, typeof visibleGuests>>((acc, guest) => {
+  const groupedGuests = visibleGuests.reduce<
+    Record<string, typeof visibleGuests>
+  >((acc, guest) => {
     if (!acc[guest.date]) acc[guest.date] = [];
     acc[guest.date].push(guest);
     return acc;
@@ -73,7 +257,9 @@ export function GuestListPage() {
     if (isLoading || !hasMore) return;
     setIsLoading(true);
     setTimeout(() => {
-      setDisplayCount((prev) => Math.min(prev + PAGE_SIZE, filteredGuests.length));
+      setDisplayCount((prev) =>
+        Math.min(prev + PAGE_SIZE, filteredGuests.length),
+      );
       setIsLoading(false);
     }, 400);
   }, [isLoading, hasMore, filteredGuests.length]);
@@ -93,7 +279,7 @@ export function GuestListPage() {
       (entries) => {
         if (entries[0].isIntersecting) loadMore();
       },
-      { rootMargin: "100px" }
+      { rootMargin: "100px" },
     );
 
     observer.observe(sentinel);
@@ -130,14 +316,18 @@ export function GuestListPage() {
           Convidados de {depName}
         </h2>
         <p className="text-[14px] text-gray-400 mt-0.5">
-          {filteredGuests.length} {filteredGuests.length === 1 ? "pessoa" : "pessoas"}
+          {filteredGuests.length}{" "}
+          {filteredGuests.length === 1 ? "pessoa" : "pessoas"}
         </p>
       </div>
 
       {/* iOS-style Search Bar */}
       <div className="bg-white px-4 py-2 border-b border-gray-100">
         <div className="relative">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <Search
+            size={16}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+          />
           <input
             type="text"
             placeholder="Buscar convidado..."
@@ -146,13 +336,6 @@ export function GuestListPage() {
             className="w-full bg-gray-100/80 rounded-xl pl-9 pr-4 py-2 text-[15px] text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:bg-white focus:border focus:border-blue-300 transition-all"
           />
         </div>
-      </div>
-
-      {/* Swipe hint - shown once */}
-      <div className="bg-blue-50/60 px-4 py-2 border-b border-blue-100/50 flex items-center gap-2">
-        <span className="text-[12px] text-blue-500 font-medium">
-          ← Deslize para a esquerda para revogar acesso
-        </span>
       </div>
 
       {/* Guest List - iOS grouped style */}
@@ -172,15 +355,15 @@ export function GuestListPage() {
             {/* Section Items */}
             <div className="bg-white">
               {dateGuests.map((guest, idx) => (
-                <SwipeableRow
+                <div
                   key={guest.id}
-                  onAction={() => handleRevoke(guest.id, guest.name)}
+                  className={`flex items-center justify-between px-4 py-3 ${
+                    idx !== dateGuests.length - 1
+                      ? "border-b border-gray-100"
+                      : ""
+                  } bg-white`}
                 >
-                  <div
-                    className={`flex items-center px-4 py-3 ${
-                      idx !== dateGuests.length - 1 ? "border-b border-gray-100" : ""
-                    } bg-white`}
-                  >
+                  <div className="flex items-center flex-1 min-w-0">
                     {/* Avatar */}
                     <img
                       src={guest.avatar}
@@ -203,10 +386,12 @@ export function GuestListPage() {
                       </span>
                       <span className="text-[13px] text-gray-500">{date}</span>
                     </div>
+                  </div>
 
-                    {/* Status Badge */}
+                  {/* Status e Botão Revogar */}
+                  <div className="flex flex-col items-end gap-1.5 shrink-0 ml-2">
                     <span
-                      className={`text-[11px] font-semibold px-2 py-0.5 rounded-md shrink-0 ${
+                      className={`text-[11px] font-semibold px-2 py-0.5 rounded-md ${
                         guest.status === "Ativo"
                           ? "bg-green-50 text-green-600"
                           : "bg-gray-100 text-gray-500"
@@ -214,8 +399,14 @@ export function GuestListPage() {
                     >
                       {guest.status}
                     </span>
+                    <button
+                      onClick={() => handleRevoke(guest.id, guest.name)}
+                      className="flex items-center text-red-500 text-[12px] font-medium active:opacity-70 transition-opacity"
+                    >
+                      <X size={12} className="mr-0.5" /> Revogar
+                    </button>
                   </div>
-                </SwipeableRow>
+                </div>
               ))}
             </div>
           </div>
@@ -226,7 +417,9 @@ export function GuestListPage() {
           <div className="flex justify-center py-6">
             <div className="flex items-center gap-2.5">
               <div className="w-5 h-5 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin" />
-              <span className="text-[13px] text-gray-400 font-medium">Carregando...</span>
+              <span className="text-[13px] text-gray-400 font-medium">
+                Carregando...
+              </span>
             </div>
           </div>
         )}
@@ -237,9 +430,7 @@ export function GuestListPage() {
         {/* End of list */}
         {!hasMore && filteredGuests.length > 0 && (
           <div className="text-center py-6">
-            <span className="text-[13px] text-gray-400">
-              — Fim da lista —
-            </span>
+            <span className="text-[13px] text-gray-400">— Fim da lista —</span>
           </div>
         )}
 
@@ -249,8 +440,12 @@ export function GuestListPage() {
             <div className="w-14 h-14 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
               <Search size={22} className="text-gray-400" />
             </div>
-            <p className="text-[15px] font-medium text-gray-700 mb-1">Nenhum resultado</p>
-            <p className="text-[13px] text-gray-400">Tente buscar com outro nome.</p>
+            <p className="text-[15px] font-medium text-gray-700 mb-1">
+              Nenhum resultado
+            </p>
+            <p className="text-[13px] text-gray-400">
+              Tente buscar com outro nome.
+            </p>
           </div>
         )}
 
@@ -258,12 +453,15 @@ export function GuestListPage() {
         {guests.length > PAGE_SIZE && (
           <div className="flex justify-center items-center gap-3 py-4">
             <span className="text-[12px] text-gray-400 font-medium">
-              {Math.min(displayCount, filteredGuests.length)} de {filteredGuests.length}
+              {Math.min(displayCount, filteredGuests.length)} de{" "}
+              {filteredGuests.length}
             </span>
             <div className="w-24 h-1 bg-gray-200 rounded-full overflow-hidden">
               <div
                 className="h-full bg-blue-500 rounded-full transition-all duration-500 ease-out"
-                style={{ width: `${(Math.min(displayCount, filteredGuests.length) / filteredGuests.length) * 100}%` }}
+                style={{
+                  width: `${(Math.min(displayCount, filteredGuests.length) / filteredGuests.length) * 100}%`,
+                }}
               />
             </div>
           </div>
