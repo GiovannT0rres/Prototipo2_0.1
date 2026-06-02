@@ -5,8 +5,8 @@ import { Home } from "./components/Home";
 import { Logs } from "./components/Logs";
 import { Profile } from "./components/Profile";
 import { ClubDetail } from "./components/ClubDetail";
-import { NewInvite } from "./components/NewInvite";
 import { GuestListPage } from "./components/GuestListPage";
+import { Autorizacoes } from "./components/Autorizacoes"; // IMPORTAR A NOVA PÁGINA
 
 function DefaultRedirect() {
   const lastClubId = localStorage.getItem("lastClubId") || "1";
@@ -24,10 +24,10 @@ export const router = createBrowserRouter([
     children: [
       { index: true, Component: DefaultRedirect },
       { path: "clubes", Component: Home },
+      { path: "autorizacoes", Component: Autorizacoes }, // NOVA ROTA AQUI
       { path: "logs", Component: Logs },
       { path: "profile", Component: Profile },
-      { path: "club/:id", Component: ClubDetail },
-      { path: "club/:id/new-invite", Component: NewInvite },
+      { path: "club/:id", Component: ClubDetail }, // O ClubDetail agora é o ecrã do convite
       { path: "club/:id/guests", Component: GuestListPage },
     ],
   },
