@@ -1,8 +1,17 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { ChevronLeft, ChevronRight, Plus, Check, X, Maximize2, ChevronDown, Info, Send } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Plus,
+  Check,
+  X,
+  Maximize2,
+  ChevronDown,
+  Info,
+  Send,
+} from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
-import { SwipeableRow } from "./ui/SwipeableRow";
 import { toast, Toaster } from "sonner";
 
 const DEPENDENTS_ACTIVE = [
@@ -93,11 +102,12 @@ const INITIAL_PENDING = [
     cpf: "123.456.789-00",
     phone: "(11) 98765-4321",
     email: "enzo.rossi@email.com",
-    avatar: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=400",
+    avatar:
+      "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=400",
     requestDate: "Hoje, 14:20",
     type: "dayuse",
-    startDate: new Date().toISOString().split('T')[0],
-    endDate: new Date(Date.now() + 86400000).toISOString().split('T')[0], // amanhã
+    startDate: new Date().toISOString().split("T")[0],
+    endDate: new Date(Date.now() + 86400000).toISOString().split("T")[0], // amanhã
   },
   {
     id: "p2",
@@ -105,19 +115,24 @@ const INITIAL_PENDING = [
     cpf: "987.654.321-11",
     phone: "(11) 91234-5678",
     email: "beatriz.oliveira@email.com",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=400",
+    avatar:
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=400",
     requestDate: "Ontem, 16:45",
     type: "familiar",
-    startDate: new Date().toISOString().split('T')[0],
+    startDate: new Date().toISOString().split("T")[0],
     endDate: "",
-  }
+  },
 ];
 
 export function ClubDetail() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [activeTab, setActiveTab] = useState<"autorizacoes" | "ativos" | "historico">("autorizacoes");
-  const [expandedDependentId, setExpandedDependentId] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<
+    "autorizacoes" | "ativos" | "historico"
+  >("autorizacoes");
+  const [expandedDependentId, setExpandedDependentId] = useState<string | null>(
+    null,
+  );
 
   // Salva o clube atual para o botão "Início" do menu inferior
   useEffect(() => {
@@ -127,7 +142,8 @@ export function ClubDetail() {
   // Estados de dados dinâmicos
   const [activeDependents, setActiveDependents] = useState(DEPENDENTS_ACTIVE);
   const [pendingRequests, setPendingRequests] = useState(INITIAL_PENDING);
-  const [historyDependents, setHistoryDependents] = useState(DEPENDENTS_HISTORY);
+  const [historyDependents, setHistoryDependents] =
+    useState(DEPENDENTS_HISTORY);
 
   // Estado para o modal de selfie ampliada
   const [selectedSelfie, setSelectedSelfie] = useState<{
@@ -138,21 +154,25 @@ export function ClubDetail() {
   } | null>(null);
 
   // Função para atualizar campos de um item pendente
-  const updateRequestField = (reqId: string, field: "type" | "startDate" | "endDate", value: string) => {
-    setPendingRequests(prev =>
-      prev.map(req => (req.id === reqId ? { ...req, [field]: value } : req))
+  const updateRequestField = (
+    reqId: string,
+    field: "type" | "startDate" | "endDate",
+    value: string,
+  ) => {
+    setPendingRequests((prev) =>
+      prev.map((req) => (req.id === reqId ? { ...req, [field]: value } : req)),
     );
   };
 
   // Função para autorizar
-  const handleAccept = (req: typeof INITIAL_PENDING[0]) => {
+  const handleAccept = (req: (typeof INITIAL_PENDING)[0]) => {
     const typeLabelMap: Record<string, string> = {
       familiar: "Familiar",
       dayuse: "Day Use",
       cuidador: "Cuidador",
       prestador: "Prestador de Serviço",
     };
-    
+
     const label = typeLabelMap[req.type] || "Visitante";
 
     const newActive = {
@@ -166,14 +186,14 @@ export function ClubDetail() {
       guestList: [],
     };
 
-    setActiveDependents(prev => [newActive, ...prev]);
-    setPendingRequests(prev => prev.filter(p => p.id !== req.id));
+    setActiveDependents((prev) => [newActive, ...prev]);
+    setPendingRequests((prev) => prev.filter((p) => p.id !== req.id));
 
     toast.success(`${req.name} foi autorizado(a) com sucesso como ${label}!`);
   };
 
   // Função para recusar
-  const handleDecline = (req: typeof INITIAL_PENDING[0]) => {
+  const handleDecline = (req: (typeof INITIAL_PENDING)[0]) => {
     const newHistory = {
       id: `h_new_${Date.now()}`,
       name: req.name,
@@ -182,24 +202,28 @@ export function ClubDetail() {
       cancelledBy: "Titular",
     };
 
-    setHistoryDependents(prev => [newHistory, ...prev]);
-    setPendingRequests(prev => prev.filter(p => p.id !== req.id));
+    setHistoryDependents((prev) => [newHistory, ...prev]);
+    setPendingRequests((prev) => prev.filter((p) => p.id !== req.id));
 
     toast.error(`A solicitação de ${req.name} foi recusada.`);
   };
 
   // Função para revogar convidado individual de um dependente
-  const handleRevokeGuest = (depId: string, guestId: string, guestName: string) => {
-    setActiveDependents(prev =>
-      prev.map(dep => {
+  const handleRevokeGuest = (
+    depId: string,
+    guestId: string,
+    guestName: string,
+  ) => {
+    setActiveDependents((prev) =>
+      prev.map((dep) => {
         if (dep.id !== depId) return dep;
-        const updatedList = dep.guestList.filter(g => g.id !== guestId);
+        const updatedList = dep.guestList.filter((g) => g.id !== guestId);
         return {
           ...dep,
           guestList: updatedList,
           invites: updatedList.length,
         };
-      })
+      }),
     );
     toast.error(`Acesso de ${guestName} foi revogado.`);
   };
@@ -207,7 +231,7 @@ export function ClubDetail() {
   // Função para reenviar código de cadastro
   const handleResendCode = (depName: string) => {
     const text = encodeURIComponent(
-      `Olá ${depName}, finalize seu cadastro pelo link: go.entradasegura.com.br/cadastro-${Date.now().toString(36)}`
+      `Olá ${depName}, finalize seu cadastro pelo link: go.entradasegura.com.br/cadastro-${Date.now().toString(36)}`,
     );
     window.open(`https://api.whatsapp.com/send?text=${text}`, "_blank");
     toast.success(`Código reenviado para ${depName} via WhatsApp!`);
@@ -225,7 +249,7 @@ export function ClubDetail() {
             <ChevronLeft size={28} strokeWidth={1.5} />
             <span className="text-[17px] -ml-1">Clubes</span>
           </button>
-          
+
           <button
             onClick={() => navigate(`/club/${id}/new-invite`)}
             className="text-blue-600 active:opacity-70 p-1"
@@ -293,12 +317,12 @@ export function ClubDetail() {
                     <h3 className="text-[17px] font-semibold text-gray-900">
                       {dep.name}
                     </h3>
-                    
+
                     <div className="flex flex-wrap gap-2 mt-1.5">
                       <span className="inline-block px-2 py-0.5 bg-gray-100 text-gray-600 text-[12px] font-medium rounded-md">
                         {dep.type}
                       </span>
-                      
+
                       {dep.canManageAccess && (
                         <span className="inline-block px-2 py-0.5 bg-green-100 text-green-700 text-[12px] font-medium rounded-md">
                           Gestão de acesso
@@ -314,13 +338,19 @@ export function ClubDetail() {
 
                     {dep.invites > 0 && (
                       <button
-                        onClick={() => setExpandedDependentId(expandedDependentId === dep.id ? null : dep.id)}
+                        onClick={() =>
+                          setExpandedDependentId(
+                            expandedDependentId === dep.id ? null : dep.id,
+                          )
+                        }
                         className="text-blue-600 text-[13px] font-medium mt-2 active:opacity-70 flex items-center"
                       >
-                        {expandedDependentId === dep.id ? 'Ocultar convidados' : `Ver ${dep.invites} convidados`}
-                        <ChevronRight 
-                          size={14} 
-                          className={`ml-0.5 transition-transform ${expandedDependentId === dep.id ? 'rotate-90' : ''}`} 
+                        {expandedDependentId === dep.id
+                          ? "Ocultar convidados"
+                          : `Ver ${dep.invites} convidados`}
+                        <ChevronRight
+                          size={14}
+                          className={`ml-0.5 transition-transform ${expandedDependentId === dep.id ? "rotate-90" : ""}`}
                         />
                       </button>
                     )}
@@ -330,31 +360,45 @@ export function ClubDetail() {
                 {expandedDependentId === dep.id && dep.guestList && (
                   <div className="mt-3 pt-3 border-t border-gray-100 flex flex-col gap-2">
                     <div className="flex justify-between items-center">
-                      <h4 className="text-[12px] uppercase font-semibold text-gray-500 tracking-wider">Últimos convidados</h4>
-                      <span className="text-[11px] text-gray-400 font-medium">{dep.guestList.length} total</span>
+                      <h4 className="text-[12px] uppercase font-semibold text-gray-500 tracking-wider">
+                        Últimos convidados
+                      </h4>
+                      <span className="text-[11px] text-gray-400 font-medium">
+                        {dep.guestList.length} total
+                      </span>
                     </div>
                     <div className="flex flex-col gap-1.5">
-                      {dep.guestList.slice(0, 5).map(guest => (
-                        <SwipeableRow
+                      {dep.guestList.slice(0, 5).map((guest) => (
+                        <div
                           key={guest.id}
-                          onAction={() => handleRevokeGuest(dep.id, guest.id, guest.name)}
+                          className="flex justify-between items-center bg-gray-50 p-2.5 rounded-xl"
                         >
-                          <div className="flex justify-between items-center bg-gray-50 p-2.5 rounded-xl">
-  <div className="flex flex-col">
-    <span className="text-[14px] font-medium text-gray-900">{guest.name}</span>
-    <span className="text-[12px] text-gray-500">{guest.date}</span>
-  </div>
-  <button onClick={() => handleRevokeGuest(dep.id, guest.id, guest.name)} className="flex items-center text-red-500 text-[13px] font-medium">
-    <X size={14} className="mr-1" /> Revogar
-  </button>
-</div>
-                        </SwipeableRow>
+                          <div className="flex flex-col">
+                            <span className="text-[14px] font-medium text-gray-900">
+                              {guest.name}
+                            </span>
+                            <span className="text-[12px] text-gray-500">
+                              {guest.date}
+                            </span>
+                          </div>
+                          <button
+                            onClick={() =>
+                              handleRevokeGuest(dep.id, guest.id, guest.name)
+                            }
+                            className="flex items-center text-red-500 text-[13px] font-medium"
+                          >
+                            <X size={14} className="mr-1" /> Revogar
+                          </button>
+                        </div>
                       ))}
-                      
                     </div>
                     {dep.guestList.length > 5 && (
                       <button
-                        onClick={() => navigate(`/club/${id}/guests?dep=${dep.id}&name=${encodeURIComponent(dep.name)}`)}
+                        onClick={() =>
+                          navigate(
+                            `/club/${id}/guests?dep=${dep.id}&name=${encodeURIComponent(dep.name)}`,
+                          )
+                        }
                         className="w-full mt-1 py-2.5 bg-blue-50 text-blue-600 text-[14px] font-semibold rounded-xl active:bg-blue-100 transition-colors flex items-center justify-center gap-1.5"
                       >
                         Ver todos ({dep.guestList.length})
@@ -365,10 +409,12 @@ export function ClubDetail() {
                 )}
 
                 <div className="mt-4 pt-3 border-t border-gray-100 flex justify-end">
-                  <button 
+                  <button
                     onClick={() => {
-                      setActiveDependents(prev => prev.filter(d => d.id !== dep.id));
-                      setHistoryDependents(prev => [
+                      setActiveDependents((prev) =>
+                        prev.filter((d) => d.id !== dep.id),
+                      );
+                      setHistoryDependents((prev) => [
                         {
                           id: `h_rev_${Date.now()}`,
                           name: dep.name,
@@ -376,7 +422,7 @@ export function ClubDetail() {
                           endDate: new Date().toLocaleDateString("pt-BR"),
                           cancelledBy: "Titular",
                         },
-                        ...prev
+                        ...prev,
                       ]);
                       toast.error(`Acesso de ${dep.name} foi revogado.`);
                     }}
@@ -384,22 +430,24 @@ export function ClubDetail() {
                   >
                     Revogar
                   </button>
-                         {dep.pending && (
-                      <button
-                        onClick={() => handleResendCode(dep.name)}
-                        className="mt-2 flex items-center gap-1.5 bg-[#25D366]/10 text-[#25D366] text-[13px] font-semibold px-3 py-1.5 rounded-lg active:bg-[#25D366]/20 transition-colors"
-                      >
-                        <Send size={13} />
-                        Reenviar código via WhatsApp
-                      </button>
-                    )}
+                  {dep.pending && (
+                    <button
+                      onClick={() => handleResendCode(dep.name)}
+                      className="mt-2 flex items-center gap-1.5 bg-[#25D366]/10 text-[#25D366] text-[13px] font-semibold px-3 py-1.5 rounded-lg active:bg-[#25D366]/20 transition-colors"
+                    >
+                      <Send size={13} />
+                      Reenviar código via WhatsApp
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
-            
+
             {activeDependents.length === 0 && (
               <div className="text-center py-12 px-4 bg-white rounded-2xl border border-gray-100 shadow-sm">
-                <p className="text-gray-500 text-[15px]">Nenhum dependente ou convidado ativo no momento.</p>
+                <p className="text-gray-500 text-[15px]">
+                  Nenhum dependente ou convidado ativo no momento.
+                </p>
               </div>
             )}
           </div>
@@ -414,13 +462,15 @@ export function ClubDetail() {
               >
                 {/* Header: Selfie e Identidade Básica */}
                 <div className="flex items-start">
-                  <div 
-                    onClick={() => setSelectedSelfie({
-                      name: req.name,
-                      avatar: req.avatar,
-                      cpf: req.cpf,
-                      phone: req.phone
-                    })}
+                  <div
+                    onClick={() =>
+                      setSelectedSelfie({
+                        name: req.name,
+                        avatar: req.avatar,
+                        cpf: req.cpf,
+                        phone: req.phone,
+                      })
+                    }
                     className="w-16 h-16 rounded-xl object-cover shrink-0 cursor-pointer border border-gray-200 shadow-sm relative group overflow-hidden"
                   >
                     <img
@@ -432,7 +482,7 @@ export function ClubDetail() {
                       <Maximize2 size={16} />
                     </div>
                   </div>
-                  
+
                   <div className="ml-3 flex-1">
                     <div className="flex justify-between items-start">
                       <h3 className="text-[17px] font-semibold text-gray-900 leading-tight">
@@ -446,14 +496,16 @@ export function ClubDetail() {
                       <span className="inline-block w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse"></span>
                       Aguardando autorização
                     </p>
-                    
+
                     <button
-                      onClick={() => setSelectedSelfie({
-                        name: req.name,
-                        avatar: req.avatar,
-                        cpf: req.cpf,
-                        phone: req.phone
-                      })}
+                      onClick={() =>
+                        setSelectedSelfie({
+                          name: req.name,
+                          avatar: req.avatar,
+                          cpf: req.cpf,
+                          phone: req.phone,
+                        })
+                      }
                       className="text-[12px] font-semibold text-gray-500 mt-2 flex items-center gap-1 bg-gray-100/80 px-2.5 py-1 rounded-lg hover:bg-gray-100 transition-colors"
                     >
                       <Info size={13} />
@@ -465,12 +517,20 @@ export function ClubDetail() {
                 {/* Sub-card com Dados Básicos Compactos */}
                 <div className="mt-3.5 grid grid-cols-2 gap-2 text-[12px] text-gray-600 bg-gray-50/50 p-3 rounded-xl border border-gray-100/80">
                   <div>
-                    <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider block">CPF</span>
-                    <span className="font-semibold text-gray-800">{req.cpf}</span>
+                    <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider block">
+                      CPF
+                    </span>
+                    <span className="font-semibold text-gray-800">
+                      {req.cpf}
+                    </span>
                   </div>
                   <div>
-                    <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider block">Celular</span>
-                    <span className="font-semibold text-gray-800">{req.phone}</span>
+                    <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider block">
+                      Celular
+                    </span>
+                    <span className="font-semibold text-gray-800">
+                      {req.phone}
+                    </span>
                   </div>
                 </div>
 
@@ -486,7 +546,9 @@ export function ClubDetail() {
                     <div className="relative">
                       <select
                         value={req.type}
-                        onChange={(e) => updateRequestField(req.id, "type", e.target.value)}
+                        onChange={(e) =>
+                          updateRequestField(req.id, "type", e.target.value)
+                        }
                         className="w-full appearance-none bg-white px-3.5 py-2.5 rounded-xl border border-gray-200 text-[14px] text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-semibold"
                       >
                         <option value="familiar">Familiar</option>
@@ -509,7 +571,13 @@ export function ClubDetail() {
                       <input
                         type="date"
                         value={req.startDate}
-                        onChange={(e) => updateRequestField(req.id, "startDate", e.target.value)}
+                        onChange={(e) =>
+                          updateRequestField(
+                            req.id,
+                            "startDate",
+                            e.target.value,
+                          )
+                        }
                         className="w-full bg-white border border-gray-200 px-3 py-2.5 rounded-xl text-[14px] text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-semibold"
                       />
                     </div>
@@ -520,7 +588,9 @@ export function ClubDetail() {
                       <input
                         type="date"
                         value={req.endDate}
-                        onChange={(e) => updateRequestField(req.id, "endDate", e.target.value)}
+                        onChange={(e) =>
+                          updateRequestField(req.id, "endDate", e.target.value)
+                        }
                         className="w-full bg-white border border-gray-200 px-3 py-2.5 rounded-xl text-[14px] text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-semibold"
                       />
                     </div>
@@ -552,8 +622,12 @@ export function ClubDetail() {
                 <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center text-green-500 mb-3">
                   <Check size={24} />
                 </div>
-                <h3 className="font-semibold text-gray-900 text-[16px] mb-1">Tudo em dia!</h3>
-                <p className="text-gray-500 text-[14px]">Nenhuma solicitação de autorização pendente.</p>
+                <h3 className="font-semibold text-gray-900 text-[16px] mb-1">
+                  Tudo em dia!
+                </h3>
+                <p className="text-gray-500 text-[14px]">
+                  Nenhuma solicitação de autorização pendente.
+                </p>
               </div>
             )}
           </div>
@@ -589,7 +663,9 @@ export function ClubDetail() {
 
             {historyDependents.length === 0 && (
               <div className="text-center py-12 px-4 bg-white rounded-2xl border border-gray-100 shadow-sm">
-                <p className="text-gray-500 text-[15px]">Nenhum registro no histórico.</p>
+                <p className="text-gray-500 text-[15px]">
+                  Nenhum registro no histórico.
+                </p>
               </div>
             )}
           </div>
@@ -598,48 +674,54 @@ export function ClubDetail() {
 
       {/* Modal Overlay de Visualização de Selfie */}
       {selectedSelfie && (
-        <div 
+        <div
           onClick={() => setSelectedSelfie(null)}
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
         >
-          <div 
+          <div
             className="bg-white w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl animate-in zoom-in-95 duration-200 flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Selfie Image Section */}
             <div className="relative aspect-[3/4] bg-gray-100">
-              <img 
-                src={selectedSelfie.avatar} 
-                alt={selectedSelfie.name} 
+              <img
+                src={selectedSelfie.avatar}
+                alt={selectedSelfie.name}
                 className="w-full h-full object-cover"
               />
-              <button 
+              <button
                 onClick={() => setSelectedSelfie(null)}
                 className="absolute top-4 right-4 w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center backdrop-blur-md active:scale-95 transition-transform"
               >
                 <X size={20} />
               </button>
             </div>
-            
+
             {/* Information Section */}
             <div className="p-5">
               <span className="text-[11px] font-bold text-blue-600 uppercase tracking-wider block mb-1">
                 Validação de Identidade
               </span>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">{selectedSelfie.name}</h3>
-              
+              <h3 className="text-xl font-bold text-gray-900 mb-4">
+                {selectedSelfie.name}
+              </h3>
+
               <div className="space-y-2.5 text-[14px]">
                 <div className="flex justify-between border-b border-gray-100 pb-2">
                   <span className="text-gray-400 font-medium">CPF</span>
-                  <span className="font-semibold text-gray-800">{selectedSelfie.cpf}</span>
+                  <span className="font-semibold text-gray-800">
+                    {selectedSelfie.cpf}
+                  </span>
                 </div>
                 <div className="flex justify-between pb-1">
                   <span className="text-gray-400 font-medium">Celular</span>
-                  <span className="font-semibold text-gray-800">{selectedSelfie.phone}</span>
+                  <span className="font-semibold text-gray-800">
+                    {selectedSelfie.phone}
+                  </span>
                 </div>
               </div>
-              
-              <button 
+
+              <button
                 onClick={() => setSelectedSelfie(null)}
                 className="w-full mt-5 bg-gray-900 text-white font-semibold text-[15px] py-3 rounded-xl active:bg-gray-800 transition-colors"
               >
