@@ -6,7 +6,8 @@ import { Logs } from "./components/Logs";
 import { Profile } from "./components/Profile";
 import { ClubDetail } from "./components/ClubDetail";
 import { GuestListPage } from "./components/GuestListPage";
-import { Autorizacoes } from "./components/Autorizacoes"; // IMPORTAR A NOVA PÁGINA
+import { Autorizacoes } from "./components/Autorizacoes"; 
+import { Contatos } from "./components/Contatos";// IMPORTAR A NOVA PÁGINA
 
 function DefaultRedirect() {
   const lastClubId = localStorage.getItem("lastClubId") || "1";
@@ -29,6 +30,7 @@ export const router = createBrowserRouter([
       { path: "profile", Component: Profile },
       { path: "club/:id", Component: ClubDetail }, // O ClubDetail agora é o ecrã do convite
       { path: "club/:id/guests", Component: GuestListPage },
+      { path: "contatos", Component: Contatos },
     ],
   },
 ]);

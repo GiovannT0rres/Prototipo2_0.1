@@ -39,6 +39,8 @@ export function Autorizacoes() {
     null,
   );
 
+  const [expandedRequestId, setExpandedRequestId] = useState<string | null>(null);
+
   const [activeDependents, setActiveDependents] = useState(DEPENDENTS_ACTIVE);
   const [pendingRequests, setPendingRequests] = useState(INITIAL_PENDING);
   const [historyDependents, setHistoryDependents] =
@@ -206,16 +208,24 @@ export function Autorizacoes() {
         </div>
 
         {/* ABA 1: AUTORIZAÇÕES (PENDENTES) */}
+        {/* ABA 1: AUTORIZAÇÕES (PENDENTES) */}
         {activeTab === "autorizacoes" && (
           <div className="space-y-4 pb-10">
             {pendingRequests.map((req) => (
               <div
                 key={req.id}
-                className="bg-white rounded-2xl p-4 flex flex-col shadow-sm border border-gray-100"
+                className="bg-white rounded-2xl p-4 flex flex-col shadow-sm border border-gray-100 transition-all"
               >
-                <div className="flex items-start">
+                {/* ÁREA CLICÁVEL DO CABEÇALHO */}
+                <div 
+                  className="flex items-center cursor-pointer"
+                  onClick={() => setExpandedRequestId(expandedRequestId === req.id ? null : req.id)}
+                >
                   <div
-                    onClick={() => setSelectedSelfie(req)}
+                    onClick={(e) => {
+                      e.stopPropagation(); // Evita expandir o card ao clicar na foto
+                      setSelectedSelfie(req);
+                    }}
                     className="w-16 h-16 rounded-xl object-cover shrink-0 cursor-pointer border border-gray-200 shadow-sm overflow-hidden"
                   >
                     <img
@@ -237,141 +247,156 @@ export function Autorizacoes() {
                       Aguardando autorização
                     </p>
                   </div>
+                  <div className="ml-2 px-1">
+                    <ChevronDown
+                      size={20}
+                      className={`text-gray-400 transition-transform duration-300 ${
+                        expandedRequestId === req.id ? "rotate-180" : ""
+                      }`}
+                    />
+                  </div>
                 </div>
 
-                <div className="mt-5 space-y-4">
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-                      Clube de Destino
-                    </label>
-                    <div className="relative">
-                      <select
-                        value={req.clubId}
-                        onChange={(e) =>
-                          updateRequestField(req.id, "clubId", e.target.value)
-                        }
-                        className="w-full appearance-none bg-gray-50 px-3.5 py-2.5 rounded-xl border border-gray-200 text-[14px] text-gray-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-semibold"
-                      >
-                        {CLUBS.map((club) => (
-                          <option key={club.id} value={club.id}>
-                            {club.name}
-                          </option>
-                        ))}
-                      </select>
-                      <ChevronDown
-                        size={16}
-                        className="absolute right-3.5 top-3.5 text-gray-400 pointer-events-none"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-                      Motivo do Acesso
-                    </label>
-                    <div className="flex flex-wrap gap-2">
-                      {MOTIVOS_ACESSO.map((motivo) => (
-                        <button
-                          key={motivo.id}
-                          onClick={() =>
-                            updateRequestField(req.id, "type", motivo.id)
+                {/* CONTEÚDO EXPANSÍVEL */}
+                {expandedRequestId === req.id && (
+                  <div className="mt-5 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+                        Clube de Destino
+                      </label>
+                      <div className="relative">
+                        <select
+                          value={req.clubId}
+                          onChange={(e) =>
+                            updateRequestField(req.id, "clubId", e.target.value)
                           }
-                          className={`px-3.5 py-1.5 rounded-full text-[13px] font-semibold transition-all ${
-                            req.type === motivo.id
-                              ? "bg-gray-900 text-white shadow-sm"
-                              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                          }`}
+                          className="w-full appearance-none bg-gray-50 px-3.5 py-2.5 rounded-xl border border-gray-200 text-[14px] text-gray-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-semibold"
                         >
-                          {motivo.label}
-                        </button>
-                      ))}
+                          {CLUBS.map((club) => (
+                            <option key={club.id} value={club.id}>
+                              {club.name}
+                            </option>
+                          ))}
+                        </select>
+                        <ChevronDown
+                          size={16}
+                          className="absolute right-3.5 top-3.5 text-gray-400 pointer-events-none"
+                        />
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="flex gap-3">
-                    <div className="flex-1 flex flex-col gap-1.5">
+                    <div className="flex flex-col gap-1.5">
                       <label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-                        Entrada
+                        Motivo do Acesso
                       </label>
-                      <input
-                        type="date"
-                        value={req.startDate}
-                        onChange={(e) =>
-                          updateRequestField(
-                            req.id,
-                            "startDate",
-                            e.target.value,
-                          )
-                        }
-                        className="w-full bg-gray-50 border border-gray-200 px-3 py-2.5 rounded-xl text-[14px] text-gray-900 font-semibold"
-                      />
+                      <div className="flex flex-wrap gap-2">
+                        {MOTIVOS_ACESSO.map((motivo) => (
+                          <button
+                            key={motivo.id}
+                            onClick={() =>
+                              updateRequestField(req.id, "type", motivo.id)
+                            }
+                            className={`px-3.5 py-1.5 rounded-full text-[13px] font-semibold transition-all ${
+                              req.type === motivo.id
+                                ? "bg-gray-900 text-white shadow-sm"
+                                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                            }`}
+                          >
+                            {motivo.label}
+                          </button>
+                        ))}
+                      </div>
                     </div>
-                    <div className="flex-1 flex flex-col gap-1.5">
-                      <label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-                        Saída
+
+                    <div className="flex gap-3">
+                      <div className="flex-1 flex flex-col gap-1.5">
+                        <label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+                          Entrada
+                        </label>
+                        <input
+                          type="date"
+                          value={req.startDate}
+                          onChange={(e) =>
+                            updateRequestField(
+                              req.id,
+                              "startDate",
+                              e.target.value,
+                            )
+                          }
+                          className="w-full bg-gray-50 border border-gray-200 px-3 py-2.5 rounded-xl text-[14px] text-gray-900 font-semibold"
+                        />
+                      </div>
+                      <div className="flex-1 flex flex-col gap-1.5">
+                        <label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+                          Saída
+                        </label>
+                        <input
+                          type="date"
+                          value={req.endDate}
+                          onChange={(e) =>
+                            updateRequestField(req.id, "endDate", e.target.value)
+                          }
+                          className="w-full bg-gray-50 border border-gray-200 px-3 py-2.5 rounded-xl text-[14px] text-gray-900 font-semibold"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="bg-gray-50 p-3.5 rounded-xl border border-gray-100 flex items-center justify-between">
+                      <div className="flex flex-col">
+                        <span className="text-[14px] font-semibold text-gray-900">
+                          Permitir criar convites?
+                        </span>
+                        <span className="text-[12px] text-gray-500">
+                          Esta pessoa será um Autorizador.
+                        </span>
+                      </div>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          className="sr-only peer"
+                          checked={req.canManageAccess}
+                          onChange={(e) =>
+                            updateRequestField(
+                              req.id,
+                              "canManageAccess",
+                              e.target.checked,
+                            )
+                          }
+                        />
+                        <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
                       </label>
-                      <input
-                        type="date"
-                        value={req.endDate}
-                        onChange={(e) =>
-                          updateRequestField(req.id, "endDate", e.target.value)
+                    </div>
+
+                    <div className="flex gap-3 border-t border-gray-100 pt-3.5 mt-4">
+                      <button
+                        onClick={() =>
+                          setRevokeModal({
+                            isOpen: true,
+                            type: "pending",
+                            depId: req.id,
+                            name: req.name,
+                            clubId: req.clubId,
+                          })
                         }
-                        className="w-full bg-gray-50 border border-gray-200 px-3 py-2.5 rounded-xl text-[14px] text-gray-900 font-semibold"
-                      />
+                        className="flex-1 bg-white border border-red-200 text-red-600 font-semibold text-[15px] py-2.5 rounded-xl active:bg-red-50 flex items-center justify-center gap-1.5"
+                      >
+                        <X size={16} />
+                        Recusar
+                      </button>
+                      <button
+                        onClick={() => {
+                          handleAccept(req);
+                          // Opcional: Fecha o accordion ao autorizar (se não quiser limpar a lista)
+                          setExpandedRequestId(null);
+                        }}
+                        className="flex-1 bg-blue-600 text-white font-semibold text-[15px] py-2.5 rounded-xl active:bg-blue-700 shadow-sm flex items-center justify-center gap-1.5"
+                      >
+                        <Check size={16} />
+                        Autorizar
+                      </button>
                     </div>
                   </div>
-
-                  <div className="bg-gray-50 p-3.5 rounded-xl border border-gray-100 flex items-center justify-between">
-                    <div className="flex flex-col">
-                      <span className="text-[14px] font-semibold text-gray-900">
-                        Permitir criar convites?
-                      </span>
-                      <span className="text-[12px] text-gray-500">
-                        Esta pessoa será um Autorizador.
-                      </span>
-                    </div>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        className="sr-only peer"
-                        checked={req.canManageAccess}
-                        onChange={(e) =>
-                          updateRequestField(
-                            req.id,
-                            "canManageAccess",
-                            e.target.checked,
-                          )
-                        }
-                      />
-                      <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
-                    </label>
-                  </div>
-                </div>
-
-                <div className="flex gap-3 border-t border-gray-100 pt-3.5 mt-4">
-                  <button
-                    onClick={() =>
-                      setRevokeModal({
-                        isOpen: true,
-                        type: "pending",
-                        depId: req.id,
-                        name: req.name,
-                        clubId: req.clubId,
-                      })
-                    }
-                    className="flex-1 bg-white border border-red-200 text-red-600 font-semibold text-[15px] py-2.5 rounded-xl active:bg-red-50 flex items-center justify-center gap-1.5"
-                  >
-                    <X size={16} />
-                    Recusar
-                  </button>
-                  <button
-                    onClick={() => handleAccept(req)}
-                    className="flex-1 bg-blue-600 text-white font-semibold text-[15px] py-2.5 rounded-xl active:bg-blue-700 shadow-sm flex items-center justify-center gap-1.5"
-                  >
-                    <Check size={16} />
-                    Autorizar
-                  </button>
-                </div>
+                )}
               </div>
             ))}
           </div>

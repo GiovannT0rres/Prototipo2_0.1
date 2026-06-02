@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import { ChevronRight, MapPin, FileText } from "lucide-react";
+import { ChevronRight, MapPin, FileText, Contact } from "lucide-react";
 import { useRef, useState } from "react";
 
 import { CLUBS } from "./clubs";
@@ -108,6 +108,27 @@ export function Home() {
             </div>
             <span className="text-[17px] font-medium text-gray-900">
               Autorizações
+            </span>
+          </div>
+
+          {/* Lado Direito: Setinha padrão iOS */}
+          <ChevronRight size={22} className="text-gray-400" strokeWidth={1.5} />
+        </button>
+      </div>
+
+            {/* NOVA SEÇÃO: BOTÃO DE AUTORIZAÇÕES (PADRÃO IOS) */}
+      <div className="px-4 mt-6">
+        <button
+          onClick={() => navigate('/contatos')}
+          className="w-full bg-white flex items-center justify-between p-4 rounded-xl shadow-sm border border-gray-100 active:scale-[0.98] active:bg-gray-50 transition-all"
+        >
+          {/* Lado Esquerdo: Ícone e Texto */}
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+              <Contact size={20} strokeWidth={2} />
+            </div>
+            <span className="text-[17px] font-medium text-gray-900">
+              Contatos
             </span>
           </div>
 
