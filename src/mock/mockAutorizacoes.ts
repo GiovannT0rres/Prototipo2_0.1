@@ -8,11 +8,21 @@ export const DEPENDENTS_ACTIVE = [
     clubId: "1",
     avatar: "https://i.pravatar.cc/150?u=maria",
     pending: false,
-    invites: 6,
+    invites: 12,
     canManageAccess: true, // É autorizadora
     guestList: [
-      { id: "g1", name: "Lucas Silva", date: "01/06/2026" },
-      { id: "g2", name: "Julia Silva", date: "01/06/2026" },
+      { id: "g1", name: "Lucas Silva", date: "01/06/2026", type: "Familiar", startDate: "01/06/2026", endDate: "01/06/2026" },
+      { id: "g2", name: "Julia Silva", date: "01/06/2026", type: "Familiar", startDate: "01/06/2026", endDate: "01/06/2026" },
+      { id: "g3", name: "Marcos Silva", date: "02/06/2026", type: "Day Use", startDate: "02/06/2026", endDate: "02/06/2026" },
+      { id: "g4", name: "Pedro Silva", date: "02/06/2026", type: "Familiar", startDate: "02/06/2026", endDate: "05/06/2026" },
+      { id: "g5", name: "Ana Silva", date: "03/06/2026", type: "Day Use", startDate: "03/06/2026", endDate: "03/06/2026" },
+      { id: "g6", name: "Paulo Silva", date: "03/06/2026", type: "Familiar", startDate: "03/06/2026", endDate: "06/06/2026" },
+      { id: "g7", name: "Carlos Silva", date: "04/06/2026", type: "Day Use", startDate: "04/06/2026", endDate: "04/06/2026" },
+      { id: "g8", name: "Renata Silva", date: "04/06/2026", type: "Familiar", startDate: "04/06/2026", endDate: "07/06/2026" },
+      { id: "g9", name: "Joana Silva", date: "05/06/2026", type: "Day Use", startDate: "05/06/2026", endDate: "05/06/2026" },
+      { id: "g10", name: "Thiago Silva", date: "05/06/2026", type: "Familiar", startDate: "05/06/2026", endDate: "08/06/2026" },
+      { id: "g11", name: "Fernando Silva", date: "06/06/2026", type: "Day Use", startDate: "06/06/2026", endDate: "06/06/2026" },
+      { id: "g12", name: "Rafael Silva", date: "06/06/2026", type: "Familiar", startDate: "06/06/2026", endDate: "09/06/2026" },
     ],
   },
   {
@@ -29,8 +39,8 @@ export const DEPENDENTS_ACTIVE = [
 ];
 
 export const DEPENDENTS_HISTORY = [
-  { id: "h1", name: "Ana Costa", clubId: "1", status: "Expirado", endDate: "12/05/2026", cancelledBy: "Sistema" },
-  { id: "h2", name: "Roberto Almeida", clubId: "3", status: "Revogado", endDate: "10/05/2026", cancelledBy: "Titular" },
+  { id: "h1", name: "Ana Costa", clubId: "1", status: "Expirado", startDate: "01/05/2026", endDate: "12/05/2026", cancelledBy: "Sistema", type: "Familiar" },
+  { id: "h2", name: "Roberto Almeida", clubId: "3", status: "Revogado", startDate: "05/05/2026", endDate: "10/05/2026", cancelledBy: "Titular", type: "Day Use" },
 ];
 
 const hoje = new Date().toISOString().split("T")[0];

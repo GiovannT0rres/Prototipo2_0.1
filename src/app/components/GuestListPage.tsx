@@ -1,228 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router";
-import { ChevronLeft, User, Calendar, Search, X } from "lucide-react";
+import { ChevronLeft, User, Search, X, Clock } from "lucide-react";
 import { toast, Toaster } from "sonner";
 
-// Dados mock dos 30 convidados da Maria Silva
-const ALL_GUESTS_DATA: Record<
-  string,
-  { id: string; name: string; date: string; status: string; avatar: string }[]
-> = {
-  d1: [
-    {
-      id: "g1",
-      name: "Lucas Silva",
-      date: "01/06/2026",
-      status: "Ativo",
-      avatar: "https://i.pravatar.cc/150?u=lucas",
-    },
-    {
-      id: "g2",
-      name: "Julia Silva",
-      date: "01/06/2026",
-      status: "Ativo",
-      avatar: "https://i.pravatar.cc/150?u=julia",
-    },
-    {
-      id: "g3",
-      name: "Rafael Mendes",
-      date: "31/05/2026",
-      status: "Ativo",
-      avatar: "https://i.pravatar.cc/150?u=rafael",
-    },
-    {
-      id: "g4",
-      name: "Camila Rocha",
-      date: "31/05/2026",
-      status: "Ativo",
-      avatar: "https://i.pravatar.cc/150?u=camila",
-    },
-    {
-      id: "g5",
-      name: "Pedro Henrique",
-      date: "30/05/2026",
-      status: "Ativo",
-      avatar: "https://i.pravatar.cc/150?u=pedroh",
-    },
-    {
-      id: "g6",
-      name: "Fernanda Lima",
-      date: "30/05/2026",
-      status: "Ativo",
-      avatar: "https://i.pravatar.cc/150?u=fernanda",
-    },
-    {
-      id: "g7",
-      name: "Gustavo Oliveira",
-      date: "29/05/2026",
-      status: "Ativo",
-      avatar: "https://i.pravatar.cc/150?u=gustavo",
-    },
-    {
-      id: "g8",
-      name: "Isabela Santos",
-      date: "29/05/2026",
-      status: "Ativo",
-      avatar: "https://i.pravatar.cc/150?u=isabela",
-    },
-    {
-      id: "g9",
-      name: "Thiago Ferreira",
-      date: "28/05/2026",
-      status: "Ativo",
-      avatar: "https://i.pravatar.cc/150?u=thiago",
-    },
-    {
-      id: "g10",
-      name: "Larissa Costa",
-      date: "28/05/2026",
-      status: "Ativo",
-      avatar: "https://i.pravatar.cc/150?u=larissa",
-    },
-    {
-      id: "g11",
-      name: "Bruno Martins",
-      date: "27/05/2026",
-      status: "Expirado",
-      avatar: "https://i.pravatar.cc/150?u=bruno",
-    },
-    {
-      id: "g12",
-      name: "Amanda Pereira",
-      date: "27/05/2026",
-      status: "Ativo",
-      avatar: "https://i.pravatar.cc/150?u=amanda",
-    },
-    {
-      id: "g13",
-      name: "Diego Almeida",
-      date: "26/05/2026",
-      status: "Ativo",
-      avatar: "https://i.pravatar.cc/150?u=diego",
-    },
-    {
-      id: "g14",
-      name: "Natalia Souza",
-      date: "26/05/2026",
-      status: "Expirado",
-      avatar: "https://i.pravatar.cc/150?u=natalia",
-    },
-    {
-      id: "g15",
-      name: "Marcos Paulo",
-      date: "25/05/2026",
-      status: "Ativo",
-      avatar: "https://i.pravatar.cc/150?u=marcos",
-    },
-    {
-      id: "g16",
-      name: "Carolina Ribeiro",
-      date: "25/05/2026",
-      status: "Ativo",
-      avatar: "https://i.pravatar.cc/150?u=carolina",
-    },
-    {
-      id: "g17",
-      name: "Felipe Gomes",
-      date: "24/05/2026",
-      status: "Ativo",
-      avatar: "https://i.pravatar.cc/150?u=felipe",
-    },
-    {
-      id: "g18",
-      name: "Juliana Barros",
-      date: "24/05/2026",
-      status: "Expirado",
-      avatar: "https://i.pravatar.cc/150?u=juliana",
-    },
-    {
-      id: "g19",
-      name: "Rodrigo Nunes",
-      date: "23/05/2026",
-      status: "Ativo",
-      avatar: "https://i.pravatar.cc/150?u=rodrigo",
-    },
-    {
-      id: "g20",
-      name: "Beatriz Campos",
-      date: "23/05/2026",
-      status: "Ativo",
-      avatar: "https://i.pravatar.cc/150?u=beatrizc",
-    },
-    {
-      id: "g21",
-      name: "Leonardo Dias",
-      date: "22/05/2026",
-      status: "Ativo",
-      avatar: "https://i.pravatar.cc/150?u=leonardo",
-    },
-    {
-      id: "g22",
-      name: "Vanessa Teixeira",
-      date: "22/05/2026",
-      status: "Expirado",
-      avatar: "https://i.pravatar.cc/150?u=vanessa",
-    },
-    {
-      id: "g23",
-      name: "André Moreira",
-      date: "21/05/2026",
-      status: "Ativo",
-      avatar: "https://i.pravatar.cc/150?u=andre",
-    },
-    {
-      id: "g24",
-      name: "Patrícia Cardoso",
-      date: "21/05/2026",
-      status: "Ativo",
-      avatar: "https://i.pravatar.cc/150?u=patricia",
-    },
-    {
-      id: "g25",
-      name: "Eduardo Vieira",
-      date: "20/05/2026",
-      status: "Ativo",
-      avatar: "https://i.pravatar.cc/150?u=eduardo",
-    },
-    {
-      id: "g26",
-      name: "Mariana Araújo",
-      date: "20/05/2026",
-      status: "Ativo",
-      avatar: "https://i.pravatar.cc/150?u=mariana",
-    },
-    {
-      id: "g27",
-      name: "Henrique Castro",
-      date: "19/05/2026",
-      status: "Expirado",
-      avatar: "https://i.pravatar.cc/150?u=henrique",
-    },
-    {
-      id: "g28",
-      name: "Débora Pinto",
-      date: "19/05/2026",
-      status: "Ativo",
-      avatar: "https://i.pravatar.cc/150?u=debora",
-    },
-    {
-      id: "g29",
-      name: "Ricardo Lopes",
-      date: "18/05/2026",
-      status: "Ativo",
-      avatar: "https://i.pravatar.cc/150?u=ricardo",
-    },
-    {
-      id: "g30",
-      name: "Aline Monteiro",
-      date: "18/05/2026",
-      status: "Ativo",
-      avatar: "https://i.pravatar.cc/150?u=aline",
-    },
-  ],
-};
+import { DEPENDENTS_ACTIVE } from "../../mock/mockAutorizacoes";
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 15;
 
 export function GuestListPage() {
   const navigate = useNavigate();
@@ -231,7 +14,18 @@ export function GuestListPage() {
   const depId = searchParams.get("dep") || "d1";
   const depName = searchParams.get("name") || "Convidados";
 
-  const [guests, setGuests] = useState(ALL_GUESTS_DATA[depId] || []);
+  const dep = DEPENDENTS_ACTIVE.find((d) => d.id === depId);
+  const initialGuests =
+    dep?.guestList?.map((g) => ({
+      ...g,
+      status: "Ativo",
+      avatar: `https://i.pravatar.cc/150?u=${g.id}`,
+      type: (g as any).type || "Visitante",
+      startDate: (g as any).startDate || (g as any).date,
+      endDate: (g as any).endDate || (g as any).date,
+    })) || [];
+
+  const [guests, setGuests] = useState(initialGuests);
   const [displayCount, setDisplayCount] = useState(PAGE_SIZE);
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -244,12 +38,13 @@ export function GuestListPage() {
   const visibleGuests = filteredGuests.slice(0, displayCount);
   const hasMore = displayCount < filteredGuests.length;
 
-  // Grouped by date for iOS-style sections
+  // Grouped by startDate for iOS-style sections
   const groupedGuests = visibleGuests.reduce<
     Record<string, typeof visibleGuests>
   >((acc, guest) => {
-    if (!acc[guest.date]) acc[guest.date] = [];
-    acc[guest.date].push(guest);
+    const key = guest.startDate || guest.date;
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(guest);
     return acc;
   }, {});
 
@@ -257,51 +52,45 @@ export function GuestListPage() {
     if (isLoading || !hasMore) return;
     setIsLoading(true);
     setTimeout(() => {
-      setDisplayCount((prev) =>
-        Math.min(prev + PAGE_SIZE, filteredGuests.length),
-      );
+      setDisplayCount((prev) => Math.min(prev + PAGE_SIZE, filteredGuests.length));
       setIsLoading(false);
-    }, 400);
+    }, 350);
   }, [isLoading, hasMore, filteredGuests.length]);
 
-  // Revogar acesso de um convidado
   const handleRevoke = (guestId: string, guestName: string) => {
     setGuests((prev) => prev.filter((g) => g.id !== guestId));
     toast.error(`Acesso de ${guestName} foi revogado.`);
   };
 
-  // Infinite scroll observer
   useEffect(() => {
     const sentinel = sentinelRef.current;
     if (!sentinel) return;
-
     const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) loadMore();
-      },
-      { rootMargin: "100px" },
+      (entries) => { if (entries[0].isIntersecting) loadMore(); },
+      { rootMargin: "120px" },
     );
-
     observer.observe(sentinel);
     return () => observer.disconnect();
   }, [loadMore]);
 
-  // Reset display count on search
-  useEffect(() => {
-    setDisplayCount(PAGE_SIZE);
-  }, [searchQuery]);
+  useEffect(() => { setDisplayCount(PAGE_SIZE); }, [searchQuery]);
+
+  const total = filteredGuests.length;
+  const shown = Math.min(displayCount, total);
+  const progressPct = total > 0 ? (shown / total) * 100 : 100;
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
-      {/* iOS-style Navigation Bar */}
-      <div className="bg-white/90 backdrop-blur-xl sticky top-0 z-20 border-b border-gray-200/80">
-        <div className="flex items-center justify-between px-4 h-11">
+    <div className="min-h-screen bg-[#f2f2f7] flex flex-col font-sans">
+
+      {/* ── iOS Navigation Bar ─────────────── */}
+      <div className="bg-white/80 backdrop-blur-xl sticky top-0 z-20 border-b border-black/[0.08]">
+        <div className="flex items-center justify-between px-4 h-[44px]">
           <button
             onClick={() => navigate(-1)}
-            className="text-blue-600 flex items-center -ml-2 active:opacity-70 transition-opacity"
+            className="text-[#007AFF] flex items-center -ml-2 ios-press"
           >
             <ChevronLeft size={28} strokeWidth={1.5} />
-            <span className="text-[17px] -ml-1">Voltar</span>
+            <span className="text-[17px] -ml-1 font-normal">Voltar</span>
           </button>
           <span className="text-[17px] font-semibold text-gray-900 absolute left-1/2 -translate-x-1/2">
             Autorizados
@@ -310,160 +99,154 @@ export function GuestListPage() {
         </div>
       </div>
 
-      {/* Subtitle + count */}
-      <div className="bg-white border-b border-gray-100 px-4 py-3">
-        <h2 className="text-[13px] font-semibold text-gray-500 uppercase tracking-wider">
-          Convidados de {depName}
-        </h2>
+      {/* ── Subtitle ─────────────────────── */}
+      <div className="bg-white border-b border-gray-100 px-4 pt-4 pb-3">
+        <p className="text-[22px] font-bold text-gray-900 leading-tight">{depName}</p>
         <p className="text-[14px] text-gray-400 mt-0.5">
-          {filteredGuests.length}{" "}
-          {filteredGuests.length === 1 ? "pessoa" : "pessoas"}
+          {total} {total === 1 ? "permissão" : "permissões"}
         </p>
       </div>
 
-      {/* iOS-style Search Bar */}
-      <div className="bg-white px-4 py-2 border-b border-gray-100">
+      {/* ── Search Bar ───────────────────── */}
+      <div className="bg-white px-4 py-2.5 border-b border-gray-100 sticky top-[44px] z-10">
         <div className="relative">
           <Search
-            size={16}
+            size={15}
             className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
           />
           <input
             type="text"
-            placeholder="Buscar convidado..."
+            placeholder="Buscar por nome..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-gray-100/80 rounded-xl pl-9 pr-4 py-2 text-[15px] text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:bg-white focus:border focus:border-blue-300 transition-all"
+            className="w-full bg-[#f2f2f7] rounded-[10px] pl-8 pr-8 py-2 text-[15px] text-gray-900 placeholder:text-gray-400 focus:outline-none border-0"
           />
+          {searchQuery.length > 0 && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 bg-gray-400 rounded-full flex items-center justify-center ios-press"
+            >
+              <X size={10} className="text-white" strokeWidth={3} />
+            </button>
+          )}
         </div>
       </div>
 
-      {/* Guest List - iOS grouped style */}
+      {/* ── Guest List ───────────────────── */}
       <div className="flex-1 pb-8">
         {Object.entries(groupedGuests).map(([date, dateGuests]) => (
           <div key={date}>
             {/* Section Header */}
-            <div className="px-4 py-1.5 bg-gray-50">
-              <div className="flex items-center gap-1.5">
-                <Calendar size={12} className="text-gray-400" />
-                <span className="text-[12px] font-semibold text-gray-500 uppercase tracking-wider">
-                  {date}
-                </span>
-              </div>
+            <div className="px-4 py-2 bg-[#f2f2f7]">
+              <span className="text-[12px] font-semibold text-gray-500 uppercase tracking-wider">
+                Entrada: {date}
+              </span>
             </div>
 
             {/* Section Items */}
-            <div className="bg-white">
+            <div className="bg-white mx-0">
               {dateGuests.map((guest, idx) => (
                 <div
                   key={guest.id}
-                  className={`flex items-center justify-between px-4 py-3 ${
-                    idx !== dateGuests.length - 1
-                      ? "border-b border-gray-100"
-                      : ""
-                  } bg-white`}
+                  className={`flex items-center justify-between px-4 py-3.5 ${
+                    idx !== dateGuests.length - 1 ? "border-b border-gray-50" : ""
+                  }`}
                 >
+                  {/* Avatar */}
                   <div className="flex items-center flex-1 min-w-0">
-                    {/* Avatar */}
-                    <img
-                      src={guest.avatar}
-                      alt={guest.name}
-                      className="w-10 h-10 rounded-full object-cover border border-gray-100 shrink-0"
-                      onError={(e) => {
-                        const img = e.target as HTMLImageElement;
-                        img.style.display = "none";
-                        img.nextElementSibling?.classList.remove("hidden");
-                      }}
-                    />
-                    <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center shrink-0 hidden">
-                      <User size={18} className="text-gray-500" />
+                    <div className="relative shrink-0">
+                      <img
+                        src={guest.avatar}
+                        alt={guest.name}
+                        className="w-[42px] h-[42px] rounded-full object-cover border border-black/[0.06] shadow-sm"
+                        onError={(e) => {
+                          const img = e.target as HTMLImageElement;
+                          img.style.display = "none";
+                          img.nextElementSibling?.classList.remove("hidden");
+                        }}
+                      />
+                      <div className="w-[42px] h-[42px] rounded-full bg-gray-200 flex items-center justify-center shrink-0 hidden">
+                        <User size={18} className="text-gray-500" />
+                      </div>
+                      {/* Status dot */}
+                      <span
+                        className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white ${
+                          guest.status === "Ativo" ? "bg-green-500" : "bg-red-400"
+                        }`}
+                      />
                     </div>
 
                     {/* Info */}
                     <div className="ml-3 flex-1 min-w-0">
-                      <span className="text-[15px] font-medium text-gray-900 block truncate">
+                      <p className="text-[16px] font-semibold text-gray-900 truncate leading-tight">
                         {guest.name}
-                      </span>
-                      <span className="text-[13px] text-gray-500">{date}</span>
+                      </p>
+                      <div className="flex items-center gap-1.5 mt-0.5">
+                        <span className="text-[10px] font-bold uppercase tracking-wide text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded-[5px]">
+                          {guest.type}
+                        </span>
+                        <span className="text-[12px] text-gray-400 flex items-center gap-0.5">
+                          <Clock size={10} className="shrink-0" />
+                          {guest.startDate}{guest.endDate !== guest.startDate ? ` – ${guest.endDate}` : ""}
+                        </span>
+                      </div>
                     </div>
                   </div>
 
-                  {/* Status e Botão Revogar */}
-                  <div className="flex flex-col items-end gap-1.5 shrink-0 ml-2">
-                    <span
-                      className={`text-[11px] font-semibold px-2 py-0.5 rounded-md ${
-                        guest.status === "Ativo"
-                          ? "bg-green-50 text-green-600"
-                          : "bg-gray-100 text-gray-500"
-                      }`}
-                    >
-                      {guest.status}
-                    </span>
-                    <button
-                      onClick={() => handleRevoke(guest.id, guest.name)}
-                      className="flex items-center text-red-500 text-[12px] font-medium active:opacity-70 transition-opacity"
-                    >
-                      <X size={12} className="mr-0.5" /> Revogar
-                    </button>
-                  </div>
+                  {/* Revogar */}
+                  <button
+                    onClick={() => handleRevoke(guest.id, guest.name)}
+                    className="ml-3 shrink-0 flex items-center gap-1 text-red-500 font-semibold text-[13px] bg-red-50 px-2.5 py-1.5 rounded-xl ios-press"
+                  >
+                    <X size={12} strokeWidth={2.5} />
+                    Revogar
+                  </button>
                 </div>
               ))}
             </div>
           </div>
         ))}
 
-        {/* Loading indicator */}
+        {/* Loading */}
         {isLoading && (
-          <div className="flex justify-center py-6">
-            <div className="flex items-center gap-2.5">
-              <div className="w-5 h-5 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin" />
-              <span className="text-[13px] text-gray-400 font-medium">
-                Carregando...
-              </span>
-            </div>
+          <div className="flex justify-center py-8">
+            <div className="w-5 h-5 border-2 border-gray-200 border-t-[#007AFF] rounded-full animate-spin" />
           </div>
         )}
 
         {/* Infinite scroll sentinel */}
         {hasMore && !isLoading && <div ref={sentinelRef} className="h-1" />}
 
-        {/* End of list */}
-        {!hasMore && filteredGuests.length > 0 && (
-          <div className="text-center py-6">
-            <span className="text-[13px] text-gray-400">— Fim da lista —</span>
+        {/* Progress bar */}
+        {total > PAGE_SIZE && (
+          <div className="flex justify-center items-center gap-3 py-5 px-6">
+            <span className="text-[12px] text-gray-400 font-medium">{shown} de {total}</span>
+            <div className="flex-1 h-[3px] bg-gray-200 rounded-full overflow-hidden max-w-[120px]">
+              <div
+                className="h-full bg-[#007AFF] rounded-full transition-all duration-500"
+                style={{ width: `${progressPct}%` }}
+              />
+            </div>
           </div>
         )}
 
-        {/* Empty search state */}
+        {/* Empty search */}
         {filteredGuests.length === 0 && (
-          <div className="text-center py-16 px-6">
-            <div className="w-14 h-14 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
-              <Search size={22} className="text-gray-400" />
+          <div className="flex flex-col items-center py-20 px-6 text-center animate-fade-blur-in">
+            <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-4 shadow-sm">
+              <Search size={24} className="text-gray-300" />
             </div>
-            <p className="text-[15px] font-medium text-gray-700 mb-1">
-              Nenhum resultado
-            </p>
-            <p className="text-[13px] text-gray-400">
+            <p className="text-[17px] font-semibold text-gray-700">Sem resultados</p>
+            <p className="text-[14px] text-gray-400 mt-1">
               Tente buscar com outro nome.
             </p>
           </div>
         )}
 
-        {/* Page indicator - iOS style progress */}
-        {guests.length > PAGE_SIZE && (
-          <div className="flex justify-center items-center gap-3 py-4">
-            <span className="text-[12px] text-gray-400 font-medium">
-              {Math.min(displayCount, filteredGuests.length)} de{" "}
-              {filteredGuests.length}
-            </span>
-            <div className="w-24 h-1 bg-gray-200 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-blue-500 rounded-full transition-all duration-500 ease-out"
-                style={{
-                  width: `${(Math.min(displayCount, filteredGuests.length) / filteredGuests.length) * 100}%`,
-                }}
-              />
-            </div>
+        {/* End of list */}
+        {!hasMore && filteredGuests.length > 0 && filteredGuests.length > PAGE_SIZE && (
+          <div className="text-center py-6">
+            <span className="text-[13px] text-gray-300 font-medium">— Fim da lista —</span>
           </div>
         )}
       </div>
