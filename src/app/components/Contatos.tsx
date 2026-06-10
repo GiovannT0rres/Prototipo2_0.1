@@ -5,6 +5,7 @@ import { toast, Toaster } from "sonner";
 
 // ATENÇÃO: Ajuste os caminhos de importação conforme a estrutura do seu projeto
 import { CLUBS } from "./clubs"; 
+import { MOTIVOS_ACESSO } from "../../mock/mockAutorizacoes";
 
 // Mock dos contatos (Em um app real, isso viria de uma API ou de um Contexto)
 const MOCK_CONTACTS = [
@@ -46,6 +47,10 @@ export function Contatos() {
   const [expandedContactId, setExpandedContactId] = useState<string | null>(null);
   const [reauthorizeModal, setReauthorizeModal] = useState<ReauthorizeModalState>(null);
   const [selectedClubId, setSelectedClubId] = useState(CLUBS[0]?.id || "1");
+  const [selectedMotivo, setSelectedMotivo] = useState(MOTIVOS_ACESSO[0]?.id || "familiar");
+  const [startDate, setStartDate] = useState(new Date().toISOString().split("T")[0]);
+  const [endDate, setEndDate] = useState("");
+  const [canManageAccess, setCanManageAccess] = useState(false);
 
   const handleQuickReauthorize = (contact: typeof MOCK_CONTACTS[0]) => {
     const clubSelected = CLUBS.find((c) => c.id === selectedClubId);
@@ -210,6 +215,72 @@ export function Contatos() {
                     className="absolute right-3.5 top-3.5 text-gray-400 pointer-events-none"
                   />
                 </div>
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+                  Motivo do Acesso
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {MOTIVOS_ACESSO.map((motivo) => (
+                    <button
+                      key={motivo.id}
+                      onClick={() => setSelectedMotivo(motivo.id)}
+                      className={`px-3.5 py-1.5 rounded-full text-[13px] font-semibold transition-all ${
+                        selectedMotivo === motivo.id
+                          ? "bg-gray-900 text-white shadow-sm"
+                          : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                      }`}
+                    >
+                      {motivo.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <div className="flex-1 flex flex-col gap-1.5">
+                  <label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+                    Entrada
+                  </label>
+                  <input
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    className="w-full bg-gray-50 border border-gray-200 px-3 py-2.5 rounded-xl text-[14px] text-gray-900 font-semibold"
+                  />
+                </div>
+                <div className="flex-1 flex flex-col gap-1.5">
+                  <label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+                    Saída
+                  </label>
+                  <input
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    className="w-full bg-gray-50 border border-gray-200 px-3 py-2.5 rounded-xl text-[14px] text-gray-900 font-semibold"
+                  />
+                </div>
+              </div>
+
+              <div className="bg-gray-50 p-3.5 rounded-xl border border-gray-100 flex items-center justify-between">
+                <div className="flex flex-col">
+                  <span className="text-[14px] font-semibold text-gray-900">
+                    Permitir criar convites?
+                  </span>
+                  <span className="text-[12px] text-gray-500">
+                    Esta pessoa será um Autorizador.
+                  </span>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="sr-only peer"
+                    checked={canManageAccess}
+                    onChange={(e) => setCanManageAccess(e.target.checked)}
+                  />
+                  <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
+                </label>
               </div>
             </div>
 

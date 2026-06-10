@@ -128,11 +128,6 @@
     @apply bg-background text-foreground;
   }
 
-  /**
-  * Default typography styles for HTML elements (h1-h4, p, label, button, input).
-  * These are in @layer base, so Tailwind utility classes (like text-sm, text-lg) automatically override them.
-  */
-
   html {
     font-size: var(--font-size);
   }
@@ -178,4 +173,69 @@
     font-weight: var(--font-weight-normal);
     line-height: 1.5;
   }
+}
+
+/* ============================================
+   iOS Spring Physics Animations
+   ============================================ */
+
+@keyframes spring-in {
+  0%   { transform: scale(0.88); opacity: 0; }
+  60%  { transform: scale(1.04); opacity: 1; }
+  80%  { transform: scale(0.98); }
+  100% { transform: scale(1); }
+}
+
+@keyframes spring-slide-up {
+  0%   { transform: translateY(32px); opacity: 0; }
+  60%  { transform: translateY(-6px); opacity: 1; }
+  80%  { transform: translateY(3px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes dynamic-island-expand {
+  0%   { transform: scaleX(0.5) scaleY(0.6); border-radius: 50px; }
+  50%  { transform: scaleX(1.04) scaleY(1.02); }
+  100% { transform: scaleX(1) scaleY(1); }
+}
+
+@keyframes fade-blur-in {
+  0%   { opacity: 0; filter: blur(8px); transform: translateY(6px); }
+  100% { opacity: 1; filter: blur(0); transform: translateY(0); }
+}
+
+@keyframes pulse-glow {
+  0%   { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.45); }
+  70%  { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+}
+
+.animate-spring-in {
+  animation: spring-in 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.animate-spring-slide-up {
+  animation: spring-slide-up 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.animate-dynamic-island {
+  animation: dynamic-island-expand 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.animate-fade-blur-in {
+  animation: fade-blur-in 0.35s ease-out both;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* iOS-style press feedback */
+.ios-press {
+  transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.12s ease;
+  cursor: pointer;
+}
+.ios-press:active {
+  transform: scale(0.96);
+  opacity: 0.82;
 }
