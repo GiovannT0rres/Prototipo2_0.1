@@ -9,6 +9,7 @@ import {
   MapPin,
   AlertTriangle,
   Clock,
+  Monitor,
 } from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { toast, Toaster } from "sonner";
@@ -20,6 +21,7 @@ import {
   INITIAL_PENDING,
   MOTIVOS_ACESSO,
 } from "../../mock/mockAutorizacoes";
+import { PortariaDesktop } from "./PortariaDesktop";
 
 type RevokeModalState = {
   isOpen: boolean;
@@ -125,6 +127,7 @@ function SlideToApprove({ onApprove }: { onApprove: () => void }) {
 
 export function Autorizacoes() {
   const navigate = useNavigate();
+  const [viewMode, setViewMode] = useState<"mobile" | "desktop">("mobile");
   const [activeTab, setActiveTab] = useState<
     "autorizacoes" | "ativos" | "historico"
   >("autorizacoes");
@@ -240,6 +243,10 @@ export function Autorizacoes() {
     setRevokeModal(null);
   };
 
+  if (viewMode === "desktop") {
+    return <PortariaDesktop onToggleView={() => setViewMode("mobile")} />;
+  }
+
   return (
     <div className="min-h-screen bg-[#f2f2f7] flex flex-col">
       {/* ── iOS Glassmorphism Navigation Bar ─────────────── */}
@@ -255,7 +262,13 @@ export function Autorizacoes() {
           <span className="text-[17px] font-semibold text-gray-900 absolute left-1/2 -translate-x-1/2">
             Painel Geral
           </span>
-          <div className="w-10" />
+          <button
+            onClick={() => setViewMode("desktop")}
+            className="flex items-center gap-1.5 text-[#007AFF] ios-press"
+            title="Modo Portaria Desktop"
+          >
+            <Monitor size={20} strokeWidth={1.5} />
+          </button>
         </div>
       </div>
 
