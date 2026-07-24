@@ -1,36 +1,51 @@
-import { createBrowserRouter, Navigate } from "react-router";
-import { AppLayout } from "./components/AppLayout";
-import { Login } from "./components/Login";
-import { Home } from "./components/Home";
-import { Logs } from "./components/Logs";
-import { Profile } from "./components/Profile";
-import { ClubDetail } from "./components/ClubDetail";
-import { GuestListPage } from "./components/GuestListPage";
-import { Autorizacoes } from "./components/Autorizacoes"; 
-import { Contatos } from "./components/Contatos";// IMPORTAR A NOVA PÁGINA
+import { createBrowserRouter } from "react-router";
 
-function DefaultRedirect() {
-  const lastClubId = localStorage.getItem("lastClubId") || "1";
-  return <Navigate to={`/club/${lastClubId}`} replace />;
-}
+// Shared
+import { Hub } from "@/shared/components/Hub";
+import { Login } from "@/shared/components/Login";
+
+// Apps Routes
+import { CheckInLayout } from "@/apps/check-in/CheckInLayout";
+import { checkInRoutes } from "@/apps/check-in/routes";
+
+import { ConciergeLayout } from "@/apps/concierge/ConciergeLayout";
+import { conciergeRoutes } from "@/apps/concierge/routes";
+
+import { ManagerLayout } from "@/apps/manager/ManagerLayout";
+import { managerRoutes } from "@/apps/manager/routes";
+
+import { BotLayout } from "@/apps/bot/BotLayout";
+import { botRoutes } from "@/apps/bot/routes";
 
 export const router = createBrowserRouter([
+  { path: "/", Component: Hub },
+  { path: "/login", Component: Login },
+  
+  // Check-in App
   {
-    path: "/login",
-    Component: Login,
+    path: "/check-in",
+    Component: CheckInLayout,
+    children: checkInRoutes,
   },
+
+  // Concierge App
   {
-    path: "/",
-    Component: AppLayout,
-    children: [
-      { index: true, Component: DefaultRedirect },
-      { path: "clubes", Component: Home },
-      { path: "autorizacoes", Component: Autorizacoes }, // NOVA ROTA AQUI
-      { path: "logs", Component: Logs },
-      { path: "profile", Component: Profile },
-      { path: "club/:id", Component: ClubDetail }, // O ClubDetail agora é o ecrã do convite
-      { path: "club/:id/guests", Component: GuestListPage },
-      { path: "contatos", Component: Contatos },
-    ],
+    path: "/concierge",
+    Component: ConciergeLayout,
+    children: conciergeRoutes,
+  },
+
+  // Manager App
+  {
+    path: "/manager",
+    Component: ManagerLayout,
+    children: managerRoutes,
+  },
+
+  // Bot App
+  {
+    path: "/bot",
+    Component: BotLayout,
+    children: botRoutes,
   },
 ]);
