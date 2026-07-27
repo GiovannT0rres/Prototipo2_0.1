@@ -1,11 +1,16 @@
 // mockCheckIn.ts
+// Vocabulário alinhado ao PACC Clube: espaços do clube (não "clubes" diferentes),
+// placa como mecanismo principal de liberação (LPR já existe na portaria hoje),
+// e motivos de acesso batendo com as categorias respondidas pela administração
+// (ver respostas_PERGUNTAS-PARA-O-CLUBE, seções A e F).
 
 export const DEPENDENTS_ACTIVE = [
   {
     id: "d1",
     name: "Maria Silva",
-    type: "Familiar",
-    clubId: "1",
+    type: "Cônjuge",
+    espacoId: "1", // Espaço de acesso preferencial / mais recente
+    placa: "ABC1D23",
     avatar: "https://i.pravatar.cc/150?u=maria",
     pending: false,
     invites: 12,
@@ -13,14 +18,15 @@ export const DEPENDENTS_ACTIVE = [
     guestList: [
       { id: "g1", name: "Lucas Silva", date: "01/06/2026", type: "Familiar", startDate: "01/06/2026", endDate: "01/06/2026" },
       { id: "g2", name: "Julia Silva", date: "01/06/2026", type: "Familiar", startDate: "01/06/2026", endDate: "01/06/2026" },
-      { id: "g3", name: "Marcos Silva", date: "02/06/2026", type: "Day Use", startDate: "02/06/2026", endDate: "02/06/2026" },
+      { id: "g3", name: "Marcos Silva", date: "02/06/2026", type: "Convidado Social", startDate: "02/06/2026", endDate: "02/06/2026" },
     ],
   },
   {
     id: "d2",
     name: "João Pedro",
-    type: "Familiar",
-    clubId: "2",
+    type: "Filho(a)",
+    espacoId: "5",
+    placa: null,
     avatar: "https://i.pravatar.cc/150?u=joao",
     pending: true,
     invites: 0,
@@ -30,24 +36,27 @@ export const DEPENDENTS_ACTIVE = [
 ];
 
 export const DEPENDENTS_HISTORY = [
-  { id: "h1", name: "Ana Costa", clubId: "1", status: "Expirado", startDate: "01/05/2026", endDate: "12/05/2026", cancelledBy: "Sistema", type: "Familiar" },
-  { id: "h2", name: "Roberto Almeida", clubId: "3", status: "Revogado", startDate: "05/05/2026", endDate: "10/05/2026", cancelledBy: "Titular", type: "Day Use" },
+  { id: "h1", name: "Ana Costa", espacoId: "1", status: "Expirado", startDate: "01/05/2026", endDate: "12/05/2026", cancelledBy: "Sistema", type: "Convidado Social" },
+  { id: "h2", name: "Roberto Almeida", espacoId: "3", status: "Revogado", startDate: "05/05/2026", endDate: "10/05/2026", cancelledBy: "Titular", type: "Convidado Jogador" },
 ];
 
 const hoje = new Date().toISOString().split("T")[0];
 const amanha = new Date(Date.now() + 86400000).toISOString().split("T")[0];
 
 export const INITIAL_PENDING = [
-  { id: "p1", name: "Enzo Rossi", cpf: "123.456.789-00", phone: "(11) 98765-4321", avatar: "https://i.pravatar.cc/150?u=enzo", requestDate: "Hoje, 14:20", type: "dayuse", clubId: "1", startDate: hoje, endDate: amanha, canManageAccess: false },
-  { id: "p2", name: "Beatriz Oliveira", cpf: "987.654.321-11", phone: "(11) 91234-5678", avatar: "https://i.pravatar.cc/150?u=bia", requestDate: "Hoje, 13:15", type: "familiar", clubId: "1", startDate: hoje, endDate: "", canManageAccess: true },
-  { id: "p3", name: "Carlos Mendes", cpf: "111.222.333-44", phone: "(11) 99999-8888", avatar: "https://i.pravatar.cc/150?u=carlos", requestDate: "Hoje, 11:30", type: "prestador", clubId: "2", startDate: hoje, endDate: amanha, canManageAccess: false },
+  { id: "p1", name: "Enzo Rossi", cpf: "123.456.789-00", phone: "(11) 98765-4321", avatar: "https://i.pravatar.cc/150?u=enzo", requestDate: "Hoje, 14:20", type: "social", espacoId: "1", startDate: hoje, endDate: amanha, canManageAccess: false },
+  { id: "p2", name: "Beatriz Oliveira", cpf: "987.654.321-11", phone: "(11) 91234-5678", avatar: "https://i.pravatar.cc/150?u=bia", requestDate: "Hoje, 13:15", type: "familiar", espacoId: "1", startDate: hoje, endDate: "", canManageAccess: true },
+  { id: "p3", name: "Carlos Mendes", cpf: "111.222.333-44", phone: "(11) 99999-8888", avatar: "https://i.pravatar.cc/150?u=carlos", requestDate: "Hoje, 11:30", type: "prestador", espacoId: "2", startDate: hoje, endDate: amanha, canManageAccess: false },
 ];
 
+// Motivos de acesso — espelham as categorias que a administração descreveu:
+// sócio/dependente, visitante social (1 dia), visitante jogador (múltiplos dias),
+// prestador de serviço.
 export const MOTIVOS_ACESSO = [
-  { id: "familiar", label: "Familiar" },
-  { id: "dayuse", label: "Day Use" },
-  { id: "cuidador", label: "Cuidador" },
-  { id: "prestador", label: "Serviço" }, 
+  { id: "familiar", label: "Familiar (Dependente)" },
+  { id: "social", label: "Convidado Social (1 dia)" },
+  { id: "jogador", label: "Convidado Jogador" },
+  { id: "prestador", label: "Prestador de Serviço" },
 ];
 
 export const MOCK_CONTACTS = [

@@ -8,7 +8,7 @@ export function Dashboard() {
   const stats = [
     { label: "Acessos Hoje", value: MOCK_DASHBOARD.totalAcessosHoje, icon: Activity, color: "text-blue-600", bg: "bg-blue-50" },
     { label: "Pendentes", value: MOCK_DASHBOARD.acessosPendentes, icon: Clock, color: "text-amber-600", bg: "bg-amber-50" },
-    { label: "Clubes Ativos", value: MOCK_DASHBOARD.clubesAtivos, icon: CheckCircle, color: "text-emerald-600", bg: "bg-emerald-50" },
+    { label: "Eventos Ativos", value: MOCK_DASHBOARD.eventosAtivos, icon: CheckCircle, color: "text-emerald-600", bg: "bg-emerald-50" },
     { label: "Visitantes (Semana)", value: MOCK_DASHBOARD.visitantesSemana, icon: Users, color: "text-purple-600", bg: "bg-purple-50" },
   ];
 

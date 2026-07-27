@@ -47,7 +47,7 @@ export function VisaoSocio() {
                   </div>
                   <div className="flex items-center gap-3 text-gray-700">
                      <MapPin size={16} className="text-gray-400" />
-                     <span className="text-[14px] font-medium">Clube Principal</span>
+                     <span className="text-[14px] font-medium">Porto Alegre Country Club</span>
                   </div>
                </div>
             </div>

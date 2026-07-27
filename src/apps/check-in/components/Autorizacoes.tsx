@@ -14,7 +14,7 @@ import {
 import { ImageWithFallback } from "@/shared/components/ImageWithFallback";
 import { toast, Toaster } from "sonner";
 
-import { CLUBS } from "@/shared/data/clubs";
+import { ESPACOS } from "@/shared/data/spaces";
 import {
   DEPENDENTS_ACTIVE,
   DEPENDENTS_HISTORY,
@@ -28,7 +28,7 @@ type RevokeModalState = {
   depId: string;
   guestId?: string;
   name: string;
-  clubId?: string;
+  espacoId?: string;
 } | null;
 
 function SlideToApprove({ onApprove }: { onApprove: () => void }) {
@@ -146,7 +146,7 @@ export function Autorizacoes() {
 
   const updateRequestField = (
     reqId: string,
-    field: "type" | "startDate" | "endDate" | "clubId" | "canManageAccess",
+    field: "type" | "startDate" | "endDate" | "espacoId" | "canManageAccess",
     value: string | boolean,
   ) => {
     setPendingRequests((prev) =>
@@ -156,13 +156,13 @@ export function Autorizacoes() {
 
   const handleAccept = (req: (typeof INITIAL_PENDING)[0]) => {
     const label = MOTIVOS_ACESSO.find((m) => m.id === req.type)?.label || "Visitante";
-    const clubSelected = CLUBS.find((c) => c.id === req.clubId);
+    const espacoSelected = ESPACOS.find((c) => c.id === req.espacoId);
 
     const newActive = {
       id: `d_new_${Date.now()}`,
       name: req.name,
       type: label,
-      clubId: req.clubId,
+      espacoId: req.espacoId,
       avatar: req.avatar,
       pending: false,
       invites: 0,
@@ -172,14 +172,14 @@ export function Autorizacoes() {
 
     setActiveDependents((prev) => [newActive, ...prev]);
     setPendingRequests((prev) => prev.filter((p) => p.id !== req.id));
-    toast.success(`${req.name} autorizado em: ${clubSelected?.name}!`);
+    toast.success(`${req.name} autorizado em: ${espacoSelected?.name}!`);
   };
 
   const handleDecline = (req: (typeof INITIAL_PENDING)[0]) => {
     const newHistory = {
       id: `h_new_${Date.now()}`,
       name: req.name,
-      clubId: req.clubId,
+      espacoId: req.espacoId,
       status: "Recusado",
       endDate: new Date().toLocaleDateString("pt-BR"),
       cancelledBy: "Titular",
@@ -208,7 +208,7 @@ export function Autorizacoes() {
         {
           id: `h_rev_${Date.now()}`,
           name: revokeModal.name,
-          clubId: revokeModal.clubId || "1",
+          espacoId: revokeModal.espacoId || "1",
           status: "Revogado",
           endDate: new Date().toLocaleDateString("pt-BR"),
           cancelledBy: "Titular",
@@ -223,7 +223,7 @@ export function Autorizacoes() {
         {
           id: `h_new_${Date.now()}`,
           name: revokeModal.name,
-          clubId: revokeModal.clubId || "1",
+          espacoId: revokeModal.espacoId || "1",
           status: "Recusado",
           endDate: new Date().toLocaleDateString("pt-BR"),
           cancelledBy: "Titular",
@@ -243,7 +243,7 @@ export function Autorizacoes() {
       <div className="bg-white/75 backdrop-blur-xl sticky top-0 z-20 border-b border-black/[0.08]">
         <div className="flex items-center justify-between px-4 h-[44px]">
           <button
-            onClick={() => navigate("/check-in/clubes")}
+            onClick={() => navigate("/check-in/espacos")}
             className="text-[#007AFF] flex items-center -ml-2 ios-press"
           >
             <ChevronLeft size={28} strokeWidth={1.5} />
@@ -348,15 +348,15 @@ export function Autorizacoes() {
                   <div className="px-4 pb-5 space-y-4 border-t border-gray-100 pt-4 animate-fade-blur-in">
                     <div className="flex flex-col gap-1.5">
                       <label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-                        Clube de Destino
+                        Espaço de Destino
                       </label>
                       <div className="relative">
                         <select
-                          value={req.clubId}
-                          onChange={(e) => updateRequestField(req.id, "clubId", e.target.value)}
+                          value={req.espacoId}
+                          onChange={(e) => updateRequestField(req.id, "espacoId", e.target.value)}
                           className="w-full appearance-none bg-[#f2f2f7] px-3.5 py-2.5 rounded-xl border-0 text-[15px] text-gray-900 font-semibold focus:ring-2 focus:ring-[#007AFF]/20"
                         >
-                          {CLUBS.map((club) => (
+                          {ESPACOS.map((club) => (
                             <option key={club.id} value={club.id}>{club.name}</option>
                           ))}
                         </select>
@@ -427,7 +427,7 @@ export function Autorizacoes() {
                       />
                       <button
                         onClick={() =>
-                          setRevokeModal({ isOpen: true, type: "pending", depId: req.id, name: req.name, clubId: req.clubId })
+                          setRevokeModal({ isOpen: true, type: "pending", depId: req.id, name: req.name, espacoId: req.espacoId })
                         }
                         className="w-full bg-[#f2f2f7] text-red-500 font-semibold text-[15px] py-3 rounded-xl ios-press"
                       >
@@ -444,7 +444,7 @@ export function Autorizacoes() {
         {activeTab === "ativos" && (
           <div className="space-y-2.5 pb-10">
             {activeDependents.map((dep, i) => {
-              const userClub = CLUBS.find((c) => c.id === dep.clubId);
+              const userEspaco = ESPACOS.find((c) => c.id === dep.espacoId);
               const isExpanded = expandedDependentId === dep.id;
 
               return (
@@ -462,9 +462,9 @@ export function Autorizacoes() {
                     <div className="ml-3 flex-1 min-w-0">
                       <h3 className="text-[16px] font-semibold text-gray-900 leading-tight">{dep.name}</h3>
                       <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
-                        {userClub && (
-                          <span className={`text-[10px] font-bold text-white px-2 py-0.5 rounded-md uppercase tracking-wide ${userClub.color || "bg-gray-500"}`}>
-                            {userClub.name}
+                        {userEspaco && (
+                          <span className={`text-[10px] font-bold text-white px-2 py-0.5 rounded-md uppercase tracking-wide ${userEspaco.color || "bg-gray-500"}`}>
+                            {userEspaco.name}
                           </span>
                         )}
                         <span className="text-[10px] font-bold text-gray-500 bg-gray-100 px-2 py-0.5 rounded-md uppercase tracking-wide">
@@ -496,7 +496,7 @@ export function Autorizacoes() {
 
                     <button
                       onClick={() =>
-                        setRevokeModal({ isOpen: true, type: "titular", depId: dep.id, name: dep.name, clubId: dep.clubId })
+                        setRevokeModal({ isOpen: true, type: "titular", depId: dep.id, name: dep.name, espacoId: dep.espacoId })
                       }
                       className="text-red-500 text-[14px] font-semibold px-3 py-1.5 rounded-xl bg-red-50 ios-press ml-2 shrink-0"
                     >
@@ -534,7 +534,7 @@ export function Autorizacoes() {
                       ))}
                       {dep.guestList.length > 10 && (
                         <button
-                          onClick={() => navigate(`/check-in/club/${dep.clubId || "1"}/guests?dep=${dep.id}&name=${encodeURIComponent(dep.name)}`)}
+                          onClick={() => navigate(`/check-in/espaco/${dep.espacoId || "1"}/guests?dep=${dep.id}&name=${encodeURIComponent(dep.name)}`)}
                           className="w-full py-3.5 text-[#007AFF] font-semibold text-[14px] text-center border-t border-gray-100 ios-press bg-gray-50/50"
                         >
                           Ver todos →
@@ -551,7 +551,7 @@ export function Autorizacoes() {
         {activeTab === "historico" && (
           <div className="space-y-2.5 pb-10">
             {historyDependents.map((item, i) => {
-              const historicClub = CLUBS.find((c) => c.id === item.clubId);
+              const historicEspaco = ESPACOS.find((c) => c.id === item.espacoId);
               const isExpanded = expandedHistoryId === item.id;
               const isNegative = item.status === "Revogado" || item.status === "Recusado";
 
@@ -568,7 +568,7 @@ export function Autorizacoes() {
                       <div className="flex items-center gap-1.5 mt-1">
                         <MapPin size={11} className="text-gray-400 shrink-0" />
                         <span className="text-[12px] font-medium text-gray-500 truncate">
-                          {historicClub?.name || "Clube Geral"}
+                          {historicEspaco?.name || "Área Comum"}
                         </span>
                       </div>
                     </div>

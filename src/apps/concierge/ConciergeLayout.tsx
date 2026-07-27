@@ -15,7 +15,7 @@ export function ConciergeLayout() {
           <div>
             <p className="text-[15px] font-extrabold text-gray-900 leading-tight">PORTARIA</p>
             <p className="text-[10px] text-gray-400 font-medium uppercase tracking-widest leading-none mt-0.5">
-              Condomínios
+              PACC Clube
             </p>
           </div>
         </div>

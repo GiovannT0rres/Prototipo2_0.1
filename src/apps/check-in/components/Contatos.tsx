@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { ChevronLeft, ChevronDown, Check } from "lucide-react";
 import { toast, Toaster } from "sonner";
 
-import { CLUBS } from "@/shared/data/clubs"; 
+import { ESPACOS } from "@/shared/data/spaces"; 
 import { MOTIVOS_ACESSO, MOCK_CONTACTS } from "../mocks/mockCheckIn";
 
 type ReauthorizeModalState = {
@@ -16,15 +16,15 @@ export function Contatos() {
   
   const [expandedContactId, setExpandedContactId] = useState<string | null>(null);
   const [reauthorizeModal, setReauthorizeModal] = useState<ReauthorizeModalState>(null);
-  const [selectedClubId, setSelectedClubId] = useState(CLUBS[0]?.id || "1");
+  const [selectedEspacoId, setSelectedEspacoId] = useState(ESPACOS[0]?.id || "1");
   const [selectedMotivo, setSelectedMotivo] = useState(MOTIVOS_ACESSO[0]?.id || "familiar");
   const [startDate, setStartDate] = useState(new Date().toISOString().split("T")[0]);
   const [endDate, setEndDate] = useState("");
   const [canManageAccess, setCanManageAccess] = useState(false);
 
   const handleQuickReauthorize = (contact: typeof MOCK_CONTACTS[0]) => {
-    const clubSelected = CLUBS.find((c) => c.id === selectedClubId);
-    toast.success(`${contact.name} foi reautorizado em: ${clubSelected?.name}!`);
+    const espacoSelected = ESPACOS.find((c) => c.id === selectedEspacoId);
+    toast.success(`${contact.name} foi reautorizado em: ${espacoSelected?.name}!`);
     setReauthorizeModal(null);
   };
 
@@ -114,7 +114,7 @@ export function Contatos() {
                   <div className="pt-2">
                     <button
                       onClick={() => {
-                        setSelectedClubId(CLUBS[0]?.id || "1");
+                        setSelectedEspacoId(ESPACOS[0]?.id || "1");
                         setReauthorizeModal({ isOpen: true, contact });
                       }}
                       className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-[15px] py-3 rounded-xl transition-colors shadow-sm flex items-center justify-center gap-1.5 active:bg-blue-800"
@@ -157,17 +157,17 @@ export function Contatos() {
             <div className="space-y-4 mb-6">
               <div className="flex flex-col gap-1.5">
                 <label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-                  Clube de Destino
+                  Espaço de Destino
                 </label>
                 <div className="relative">
                   <select
-                    value={selectedClubId}
-                    onChange={(e) => setSelectedClubId(e.target.value)}
+                    value={selectedEspacoId}
+                    onChange={(e) => setSelectedEspacoId(e.target.value)}
                     className="w-full appearance-none bg-gray-50 px-3.5 py-3 rounded-xl border border-gray-200 text-[15px] text-gray-900 font-semibold focus:ring-2 focus:ring-blue-500/20"
                   >
-                    {CLUBS.map((club) => (
-                      <option key={club.id} value={club.id}>
-                        {club.name}
+                    {ESPACOS.map((espaco) => (
+                      <option key={espaco.id} value={espaco.id}>
+                        {espaco.name}
                       </option>
                     ))}
                   </select>

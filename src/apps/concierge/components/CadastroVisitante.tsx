@@ -3,10 +3,16 @@ import { ArrowLeft, UserPlus, Camera, CheckCircle2, ChevronDown } from "lucide-r
 import { motion, AnimatePresence } from "motion/react";
 import { toast, Toaster } from "sonner";
 
-// Mock de clubes (caso não tenha o arquivo data/clubs no novo formato)
-const CLUBS = [
-  { id: "1", name: "Clube Principal" },
-  { id: "2", name: "Clube Sul" }
+import { ESPACOS } from "@/shared/data/spaces";
+
+// Tipos de acesso reais do clube (ver respostas_PERGUNTAS-PARA-O-CLUBE, seções A e F):
+// visitante social (1 dia), visitante jogador (múltiplos dias), prestador de serviço,
+// funcionário. Hoje a portaria só coleta CPF em papel — este cadastro digitaliza isso.
+const TIPOS_VISITANTE = [
+  { id: "social", label: "Convidado Social (1 dia)" },
+  { id: "jogador", label: "Convidado Jogador" },
+  { id: "prestador", label: "Prestador de Serviço" },
+  { id: "funcionario", label: "Funcionário" },
 ];
 
 interface Props {
@@ -20,8 +26,9 @@ export function CadastroVisitante({ cpfInicial, onVoltar, onConcluir }: Props) {
     name: "",
     cpf: cpfInicial, // Inicializa com o CPF que veio da tela de busca
     phone: "",
-    reason: "Visitante",
-    clubId: CLUBS[0]?.id || "1",
+    placa: "", // A liberação hoje é majoritariamente por placa (LPR já existe na portaria)
+    tipo: TIPOS_VISITANTE[0].id,
+    espacoId: ESPACOS[0]?.id || "1",
   });
   
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -120,19 +127,49 @@ export function CadastroVisitante({ cpfInicial, onVoltar, onConcluir }: Props) {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-[12px] font-bold text-gray-500 uppercase tracking-wider">Clube de Destino</label>
+                <label className="text-[12px] font-bold text-gray-500 uppercase tracking-wider">Tipo de Acesso</label>
+                <div className="flex flex-wrap gap-2">
+                  {TIPOS_VISITANTE.map((t) => (
+                    <button
+                      key={t.id}
+                      type="button"
+                      onClick={() => setForm({ ...form, tipo: t.id })}
+                      className={`px-3.5 py-1.5 rounded-full text-[13px] font-semibold transition-all ${
+                        form.tipo === t.id ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                      }`}
+                    >
+                      {t.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-[12px] font-bold text-gray-500 uppercase tracking-wider">Espaço de Destino</label>
                 <div className="relative">
                   <select
-                    value={form.clubId}
-                    onChange={(e) => setForm({ ...form, clubId: e.target.value })}
+                    value={form.espacoId}
+                    onChange={(e) => setForm({ ...form, espacoId: e.target.value })}
                     className="w-full appearance-none bg-gray-50 border border-gray-200 px-4 py-3.5 rounded-xl text-[15px] font-medium focus:outline-none focus:ring-2 focus:ring-gray-900/10 text-gray-900"
                   >
-                    {CLUBS.map((c) => (
-                      <option key={c.id} value={c.id}>{c.name}</option>
+                    {ESPACOS.map((e) => (
+                      <option key={e.id} value={e.id}>{e.name}</option>
                     ))}
                   </select>
                   <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
                 </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-[12px] font-bold text-gray-500 uppercase tracking-wider">Placa do Veículo (opcional)</label>
+                <input
+                  value={form.placa}
+                  onChange={(e) => setForm({ ...form, placa: e.target.value.toUpperCase() })}
+                  placeholder="ABC1D23"
+                  maxLength={7}
+                  className="w-full bg-gray-50 border border-gray-200 px-4 py-3.5 rounded-xl text-[15px] font-medium focus:outline-none focus:ring-2 focus:ring-gray-900/10 text-gray-900 uppercase"
+                />
+                <p className="text-[12px] text-gray-400 px-1">O LPR do clube já libera acesso por placa — vincula esta pessoa ao veículo.</p>
               </div>
 
               <div className="pt-4">

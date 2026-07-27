@@ -1,11 +1,18 @@
-import { useState } from "react";
-import { useNavigate } from "react-router";
-import { ChevronLeft, Copy, Check } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router";
+import { ChevronLeft, Copy, Check, Ticket } from "lucide-react";
 
-export function NewInvite() {
+export function EspacoDetail() {
   const navigate = useNavigate();
+  const { id } = useParams();
   const [copied, setCopied] = useState(false);
-  const inviteUrl = "go.paccclube.com.br/convite/exemplo123";
+
+  // Guardamos o ID no localStorage para sabermos o último espaço visitado
+  useEffect(() => {
+    if (id) localStorage.setItem("lastEspacoId", id);
+  }, [id]);
+
+  const inviteUrl = `go.paccclube.com.br/convite/${id}/exemplo123`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(inviteUrl);
@@ -20,30 +27,29 @@ export function NewInvite() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans animate-in fade-in duration-300">
+      {/* Navigation Bar */}
       <div className="bg-white/80 backdrop-blur-md sticky top-0 z-10 border-b border-gray-200">
         <div className="flex items-center px-4 h-12">
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => navigate("/check-in/espacos")}
             className="text-blue-600 flex items-center -ml-2 active:opacity-70"
           >
             <ChevronLeft size={28} strokeWidth={1.5} />
-            <span className="text-[17px] -ml-1">Voltar</span>
+            <span className="text-[17px] -ml-1">Espaços</span>
           </button>
         </div>
       </div>
 
       <div className="p-6 max-w-md mx-auto w-full flex-1 flex flex-col justify-center items-center">
         <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-6 shadow-sm">
-          <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-key">
-            <path d="m21 2-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 1.5 1.5M15.5 7.5 14 6"></path>
-          </svg>
+          <Ticket size={28} strokeWidth={1.5} />
         </div>
 
         <h1 className="text-[24px] font-bold tracking-tight text-gray-900 mb-2 text-center">
           Passe de Convidado
         </h1>
         <p className="text-center text-[15px] text-gray-500 mb-8 px-4 leading-relaxed">
-          O convidado utilizará este link para realizar o cadastro e liberar o acesso.
+          O convidado utilizará este link para se cadastrar e liberar o acesso a este espaço do clube.
         </p>
 
         <div className="w-full mb-6 relative">
@@ -61,11 +67,11 @@ export function NewInvite() {
           </div>
         </div>
 
-        <button 
+        <button
           onClick={handleWhatsApp}
           className="w-full bg-[#25D366] text-white font-semibold text-[17px] py-4 rounded-2xl active:bg-[#1da851] shadow-sm hover:shadow transition-all flex items-center justify-center gap-2.5"
         >
-          <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-message-circle">
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
              <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path>
           </svg>
           Convidar via WhatsApp

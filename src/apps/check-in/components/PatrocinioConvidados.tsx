@@ -143,7 +143,7 @@ export function PatrocinioConvidados() {
                             : "bg-white border-gray-100 text-gray-500 hover:border-gray-200"
                          }`}
                        >
-                         Esportiva
+                         Jogador
                        </button>
                     </div>
                   </div>

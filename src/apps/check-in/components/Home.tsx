@@ -2,7 +2,7 @@ import { useNavigate } from "react-router";
 import { ChevronRight, MapPin, FileText, Contact, Users, UserPlus, Calendar } from "lucide-react";
 import { useRef, useState } from "react";
 
-import { CLUBS } from "@/shared/data/clubs";
+import { ESPACOS } from "@/shared/data/spaces";
 
 interface Authorization {
   id: string;
@@ -13,7 +13,7 @@ interface Authorization {
 
 const AUTHORIZATIONS: Authorization[] = [
   { id: "101", title: "Entrada de Visitante (João)", status: "Aprovado", date: "Hoje, 14:30" },
-  { id: "102", title: "Reserva da Churrasqueira", status: "Pendente", date: "Amanhã, 10:00" },
+  { id: "102", title: "Reserva do Salão Social 1", status: "Pendente", date: "Amanhã, 10:00" },
 ];
 
 export function Home() {
@@ -46,10 +46,10 @@ export function Home() {
   return (
     <div className="pt-12 max-w-md mx-auto pb-10">
       
-      {/* SEÇÃO DOS CLUBES */}
+      {/* SEÇÃO DOS ESPAÇOS — gerar convite/passe de acesso por espaço do clube */}
       <div className="px-4 mb-8">
         <h1 className="text-3xl font-bold tracking-tight text-gray-900 mb-6">
-          Portarias
+          Espaços do Clube
         </h1>
         {/* CONTÊINER COM EVENTOS DE ARRASTO */}
         <div 
@@ -63,24 +63,24 @@ export function Home() {
           }`}
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }} 
         >
-          {CLUBS.map((club) => (
+          {ESPACOS.map((espaco) => (
             <div
-              key={club.id}
+              key={espaco.id}
               onClick={() => {
-                if (!isDragging) navigate(`/check-in/club/${club.id}`);
+                if (!isDragging) navigate(`/check-in/espaco/${espaco.id}`);
               }}
               className="bg-white rounded-2xl p-4 flex flex-col justify-between shadow-sm border border-gray-100 active:scale-[0.98] transition-transform w-40 h-40 shrink-0 snap-start"
             >
-              <div className={`w-12 h-12 rounded-full ${club.color} flex items-center justify-center text-white`}>
+              <div className={`w-12 h-12 rounded-full ${espaco.color} flex items-center justify-center text-white`}>
                 <MapPin size={22} strokeWidth={1.5} />
               </div>
 
               <div>
                 <h2 className="text-[15px] font-semibold text-gray-900 leading-tight line-clamp-2">
-                  {club.name}
+                  {espaco.name}
                 </h2>
                 <p className="text-[13px] text-gray-500 mt-1">
-                  Mat. {club.matricula}
+                  {espaco.tipo}{espaco.ageRestriction ? ` · ${espaco.ageRestriction}` : ""}
                 </p>
               </div>
             </div>

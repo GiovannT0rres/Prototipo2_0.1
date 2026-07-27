@@ -11,7 +11,7 @@ export function GestaoDependentes() {
   const [dependents, setDependents] = useState(DEPENDENTS_ACTIVE);
   const [isModalOpen, setIsModalOpen] = useState(false);
   
-  const [formData, setFormData] = useState({ name: "", cpf: "", relation: "Filho(a)" });
+  const [formData, setFormData] = useState({ name: "", cpf: "", relation: "Filho(a)", birthDate: "" });
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -26,7 +26,7 @@ export function GestaoDependentes() {
         id: `d_${Date.now()}`,
         name: formData.name,
         type: formData.relation,
-        clubId: "1",
+        birthDate: formData.birthDate,
         avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.name)}&background=random`,
         pending: true,
         invites: 0,
@@ -36,7 +36,7 @@ export function GestaoDependentes() {
       
       setDependents((prev) => [newDep, ...prev]);
       setIsModalOpen(false);
-      setFormData({ name: "", cpf: "", relation: "Filho(a)" });
+      setFormData({ name: "", cpf: "", relation: "Filho(a)", birthDate: "" });
       setIsLoading(false);
       
       toast.success("Solicitação enviada com sucesso! Aguarde a aprovação do clube.");
@@ -210,6 +210,18 @@ export function GestaoDependentes() {
                     <option>Pai/Mãe</option>
                     <option>Enteado(a)</option>
                   </select>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-[12px] font-bold text-gray-500 uppercase tracking-wider">Data de Nascimento</label>
+                  <input
+                    type="date"
+                    required
+                    value={formData.birthDate}
+                    onChange={(e) => setFormData({...formData, birthDate: e.target.value})}
+                    className="w-full bg-gray-50 border border-gray-200 px-4 py-3.5 rounded-xl text-[15px] focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  />
+                  <p className="text-[12px] text-gray-400 px-1">Usada para liberar áreas com restrição de idade (ex: Novo Bar, 18+).</p>
                 </div>
 
                 <button

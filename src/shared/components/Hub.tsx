@@ -9,7 +9,7 @@ export function Hub() {
     {
       id: "check-in",
       title: "Check-in",
-      description: "App do Sócio (Convites, Dependentes, Contatos)",
+      description: "App do Sócio (Convidados, Dependentes, Eventos)",
       icon: Smartphone,
       color: "bg-blue-600",
       textColor: "text-blue-600",
@@ -53,7 +53,7 @@ export function Hub() {
       <div className="w-full max-w-3xl">
         <div className="text-center mb-12">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900 mb-2">
-            Entrada Segura Hub
+            PACC Clube
           </h1>
           <p className="text-[15px] text-gray-500">
             Selecione a aplicação que deseja acessar
