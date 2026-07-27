@@ -1,3 +1,11 @@
+// Fila de trabalho isolada do domínio Manager (aprovações de dependentes e convidados)
+export const INITIAL_PENDING = [
+  { id: "mp1", name: "Enzo Rossi", cpf: "123.456.789-00", avatar: "https://i.pravatar.cc/150?u=enzo", type: "Filho(a)" },
+  { id: "mp2", name: "Beatriz Oliveira", cpf: "987.654.321-11", avatar: "https://i.pravatar.cc/150?u=bia", type: "Cônjuge" },
+  { id: "mp3", name: "Carlos Mendes", cpf: "111.222.333-44", avatar: "https://i.pravatar.cc/150?u=carlos", type: "Social (1 Dia)" },
+  { id: "mp4", name: "Juliana Costa", cpf: "222.333.444-55", avatar: "https://i.pravatar.cc/150?u=juliana", type: "Esportiva" },
+];
+
 export const MOCK_DASHBOARD = {
   totalAcessosHoje: 145,
   acessosPendentes: 12,

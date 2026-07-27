@@ -1,12 +1,13 @@
 import { Outlet, useNavigate, useLocation } from "react-router";
-import { BarChart3, Database, Home, Settings, LogOut } from "lucide-react";
+import { BarChart3, Database, Home, Settings, LogOut, ListChecks } from "lucide-react";
 
 export function ManagerLayout() {
   const navigate = useNavigate();
   const location = useLocation();
 
   const navItems = [
-    { name: "Fila de Trabalho", icon: BarChart3, path: "/manager" },
+    { name: "Dashboard", icon: BarChart3, path: "/manager" },
+    { name: "Fila de Trabalho", icon: ListChecks, path: "/manager/aprovacoes" },
     { name: "Prestadores", icon: Database, path: "/manager/prestadores" },
     { name: "Sócio (ERP Forza)", icon: Settings, path: "/manager/socio/8493" },
     { name: "Movimentações", icon: Database, path: "/manager/logs" },

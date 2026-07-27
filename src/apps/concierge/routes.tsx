@@ -1,7 +1,11 @@
-import { PortariaDesktop } from "./components/PortariaDesktop";
-import { DashboardPresenca } from "./components/DashboardPresenca";
+// routes.tsx
+
+import { PortariaWizard } from "./components/PortariaWizard";
 
 export const conciergeRoutes = [
-  { index: true, Component: PortariaDesktop },
-  { path: "presenca", Component: DashboardPresenca },
+  { 
+    index: true, 
+    Component: PortariaWizard 
+  }
+
 ];

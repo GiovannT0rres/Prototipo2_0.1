@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Users, FileText, Check, X, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { toast, Toaster } from "sonner";
-import { INITIAL_PENDING } from "../mocks/mockCheckIn";
+import { INITIAL_PENDING } from "../mocks/mockManager";
 
 export function DashboardAprovacoes() {
   const [activeTab, setActiveTab] = useState<"dependentes" | "convidados">("dependentes");
