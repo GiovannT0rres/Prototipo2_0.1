@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ArrowLeft, UserPlus, Camera, CheckCircle2, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-import { toast, Toaster } from "sonner";
+import { toast } from "sonner";
 
 import { ESPACOS } from "@/shared/data/spaces";
 
@@ -206,7 +206,6 @@ export function CadastroVisitante({ cpfInicial, onVoltar, onConcluir }: Props) {
           )}
         </AnimatePresence>
       </div>
-      <Toaster position="top-center" richColors />
     </motion.div>
   );
 }

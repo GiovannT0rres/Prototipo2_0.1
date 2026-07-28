@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ArrowLeft, HardHat, Briefcase, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-import { toast, Toaster } from "sonner";
+import { toast } from "sonner";
 
 interface Props {
   cpfInicial: string;
@@ -174,7 +174,6 @@ export function CadastroPrestador({ cpfInicial, onVoltar, onConcluir }: Props) {
           )}
         </AnimatePresence>
       </div>
-      <Toaster position="top-center" richColors />
     </motion.div>
   );
 }

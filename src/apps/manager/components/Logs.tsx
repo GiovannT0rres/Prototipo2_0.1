@@ -1,9 +1,28 @@
 import { useState } from "react";
-import { Search, ChevronDown, Filter, FileText, Database } from "lucide-react";
+import { Search, ChevronDown, Filter, FileText, Database, Check } from "lucide-react";
+import { toast, Toaster } from "sonner";
 import { LOGS } from "../mocks/mockManager";
+
+const TIPOS_FILTRO = [
+  { id: "criacao", label: "Criação" },
+  { id: "acesso", label: "Acesso" },
+  { id: "revogacao", label: "Revogação" },
+  { id: "sistema", label: "Sistema" },
+];
 
 export function Logs() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [tiposAtivos, setTiposAtivos] = useState<string[]>([]);
+  const [showFiltros, setShowFiltros] = useState(false);
+
+  const toggleTipo = (tipo: string) => {
+    setTiposAtivos((prev) => (prev.includes(tipo) ? prev.filter((t) => t !== tipo) : [...prev, tipo]));
+  };
+
+  const handleExportar = () => {
+    const qtd = filteredLogs.length;
+    toast.success(`Relatório exportado com ${qtd} movimentaç${qtd === 1 ? "ão" : "ões"}.`);
+  };
 
   const getIconAndColor = (tipo: string) => {
     switch (tipo) {
@@ -20,11 +39,14 @@ export function Logs() {
     }
   };
 
-  const filteredLogs = LOGS.filter((log) => 
-    log.usuario.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    log.acao.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    log.detalhes.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredLogs = LOGS.filter((log) => {
+    const matchesQuery =
+      log.usuario.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      log.acao.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      log.detalhes.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesTipo = tiposAtivos.length === 0 || tiposAtivos.includes(log.tipo);
+    return matchesQuery && matchesTipo;
+  });
 
   return (
     <div className="space-y-6">
@@ -35,7 +57,10 @@ export function Logs() {
             Histórico completo de ações no sistema.
           </p>
         </div>
-        <button className="flex items-center justify-center gap-2 bg-white border border-gray-200 text-gray-700 px-4 py-2.5 rounded-xl font-semibold text-[14px] shadow-sm hover:bg-gray-50 transition-colors">
+        <button
+          onClick={handleExportar}
+          className="flex items-center justify-center gap-2 bg-white border border-gray-200 text-gray-700 px-4 py-2.5 rounded-xl font-semibold text-[14px] shadow-sm hover:bg-gray-50 transition-colors"
+        >
           <FileText size={16} />
           Exportar Relatório
         </button>
@@ -53,11 +78,46 @@ export function Logs() {
               className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-[14px] text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             />
           </div>
-          <button className="flex items-center justify-center gap-2 bg-gray-50 border border-gray-200 text-gray-700 px-4 py-3 rounded-xl font-semibold text-[14px] hover:bg-gray-100 transition-colors">
-            <Filter size={16} />
-            Filtros
-            <ChevronDown size={14} />
-          </button>
+          <div className="relative">
+            <button
+              onClick={() => setShowFiltros((v) => !v)}
+              className={`flex items-center justify-center gap-2 border px-4 py-3 rounded-xl font-semibold text-[14px] transition-colors ${
+                tiposAtivos.length > 0
+                  ? "bg-blue-50 border-blue-200 text-blue-700"
+                  : "bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              <Filter size={16} />
+              Filtros{tiposAtivos.length > 0 ? ` (${tiposAtivos.length})` : ""}
+              <ChevronDown size={14} className={`transition-transform ${showFiltros ? "rotate-180" : ""}`} />
+            </button>
+
+            {showFiltros && (
+              <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-lg z-10 p-2">
+                {TIPOS_FILTRO.map((tipo) => {
+                  const ativo = tiposAtivos.includes(tipo.id);
+                  return (
+                    <button
+                      key={tipo.id}
+                      onClick={() => toggleTipo(tipo.id)}
+                      className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-gray-50 transition-colors text-left"
+                    >
+                      <span className="text-[13px] font-semibold text-gray-700">{tipo.label}</span>
+                      {ativo && <Check size={16} className="text-blue-600" />}
+                    </button>
+                  );
+                })}
+                {tiposAtivos.length > 0 && (
+                  <button
+                    onClick={() => setTiposAtivos([])}
+                    className="w-full text-center px-3 py-2 mt-1 border-t border-gray-100 text-[12px] font-semibold text-gray-400 hover:text-gray-600"
+                  >
+                    Limpar filtros
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="space-y-4">
@@ -89,6 +149,7 @@ export function Logs() {
           )}
         </div>
       </div>
+      <Toaster position="top-right" richColors />
     </div>
   );
 }

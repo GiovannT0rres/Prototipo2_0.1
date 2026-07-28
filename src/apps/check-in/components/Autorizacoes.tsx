@@ -191,6 +191,24 @@ export function Autorizacoes() {
     toast.error(`A solicitação de ${req.name} foi recusada.`);
   };
 
+  const handleRenew = (item: (typeof DEPENDENTS_HISTORY)[0]) => {
+    const newActive = {
+      id: `d_renew_${Date.now()}`,
+      name: item.name,
+      type: (item as any).type || "Visitante",
+      espacoId: item.espacoId,
+      avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(item.name)}&background=random`,
+      pending: false,
+      invites: 0,
+      canManageAccess: false,
+      guestList: [] as any[],
+    };
+    setActiveDependents((prev) => [newActive, ...prev]);
+    setHistoryDependents((prev) => prev.filter((h) => h.id !== item.id));
+    setExpandedHistoryId(null);
+    toast.success(`Autorização de ${item.name} renovada!`);
+  };
+
   const confirmRevoke = () => {
     if (!revokeModal) return;
     if (revokeModal.type === "guest") {
@@ -602,6 +620,18 @@ export function Autorizacoes() {
                           </div>
                         ))}
                       </div>
+
+                      {item.status === "Expirado" && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleRenew(item);
+                          }}
+                          className="w-full mt-3 bg-[#007AFF] text-white font-semibold text-[14px] py-3 rounded-xl ios-press"
+                        >
+                          Renovar Autorização
+                        </button>
+                      )}
                     </div>
                   )}
                 </div>

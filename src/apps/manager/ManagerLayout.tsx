@@ -1,5 +1,5 @@
 import { Outlet, useNavigate, useLocation } from "react-router";
-import { BarChart3, Database, Home, Settings, LogOut, ListChecks } from "lucide-react";
+import { BarChart3, Database, Home, Settings, LogOut, ListChecks, Map, Users2, ShieldCheck, Network, ShieldAlert } from "lucide-react";
 
 export function ManagerLayout() {
   const navigate = useNavigate();
@@ -7,9 +7,14 @@ export function ManagerLayout() {
 
   const navItems = [
     { name: "Dashboard", icon: BarChart3, path: "/manager" },
+    { name: "Mapa Operacional", icon: Map, path: "/manager/mapa" },
     { name: "Fila de Trabalho", icon: ListChecks, path: "/manager/aprovacoes" },
     { name: "Prestadores", icon: Database, path: "/manager/prestadores" },
-    { name: "Sócio (ERP Forza)", icon: Settings, path: "/manager/socio/8493" },
+    { name: "Dependentes", icon: Users2, path: "/manager/dependentes" },
+    { name: "Access Managers", icon: ShieldCheck, path: "/manager/gestores-eventos" },
+    { name: "Hierarquia de Autorizações", icon: Network, path: "/manager/hierarquia" },
+    { name: "Alertas de Segurança", icon: ShieldAlert, path: "/manager/alertas" },
+    { name: "Sócios (ERP Forza)", icon: Settings, path: "/manager/socios" },
     { name: "Movimentações", icon: Database, path: "/manager/logs" },
   ];
 

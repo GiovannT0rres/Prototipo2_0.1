@@ -77,3 +77,24 @@ export const REGISTERED_PEOPLE = [
     avatar: "https://i.pravatar.cc/150?u=pedro"
   },
 ];
+
+// Histórico de acessos por pessoa (chave = REGISTERED_PEOPLE.id), consultado
+// na tela de Perfil da Pessoa na portaria.
+export const MOCK_ACCESS_HISTORY: Record<string, { id: string; data: string; gate: string; status: "Entrada" | "Saída" }[]> = {
+  r1: [
+    { id: "h1", data: "Hoje, 07:10", gate: "Portaria Principal (placa)", status: "Entrada" },
+    { id: "h2", data: "Ontem, 19:45", gate: "Portaria Principal (placa)", status: "Saída" },
+    { id: "h3", data: "Ontem, 07:05", gate: "Portaria Principal (placa)", status: "Entrada" },
+  ],
+  r2: [
+    { id: "h4", data: "Hoje, 10:20", gate: "Portaria Principal", status: "Entrada" },
+    { id: "h5", data: "05/07/2026, 18:30", gate: "Portaria Principal", status: "Saída" },
+  ],
+  r3: [
+    { id: "h6", data: "Hoje, 10:30", gate: "Portaria Principal", status: "Entrada" },
+  ],
+  r4: [
+    { id: "h7", data: "20/07/2026, 09:00", gate: "Portaria do Campo", status: "Entrada" },
+    { id: "h8", data: "20/07/2026, 16:15", gate: "Portaria do Campo", status: "Saída" },
+  ],
+};

@@ -1,13 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
 import { User, Phone, Mail, MapPin, DollarSign, AlertCircle, ChevronLeft } from "lucide-react";
+import { MOCK_SOCIOS, MOCK_DEPENDENTES_ADMIN } from "../mocks/mockManager";
 
 export function VisaoSocio() {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const socio = MOCK_SOCIOS.find((s) => s.id === id) ?? MOCK_SOCIOS[0];
+  const dependentes = MOCK_DEPENDENTES_ADMIN.filter((d) => d.titularId === socio.id);
+
   // Mocked state to simulate ERP toggle for demonstration
-  const [isInadimplente, setIsInadimplente] = useState(false);
+  const [isInadimplente, setIsInadimplente] = useState(socio.inadimplente);
+
+  useEffect(() => {
+    setIsInadimplente(socio.inadimplente);
+  }, [socio.id, socio.inadimplente]);
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
@@ -25,25 +33,25 @@ export function VisaoSocio() {
          
          {/* Perfil Principal */}
          <div className="md:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col sm:flex-row gap-6 items-start">
-            <img src={`https://ui-avatars.com/api/?name=Roberto+Almeida&background=random&size=128`} alt="Sócio" className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl object-cover shadow-sm" />
+            <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(socio.name)}&background=random&size=128`} alt={socio.name} className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl object-cover shadow-sm" />
             <div className="flex-1 space-y-4">
                <div>
-                 <h2 className="text-[22px] font-bold text-gray-900">Roberto Almeida</h2>
-                 <p className="text-[14px] text-gray-500 font-medium">Titular • Título Nº 8493</p>
+                 <h2 className="text-[22px] font-bold text-gray-900">{socio.name}</h2>
+                 <p className="text-[14px] text-gray-500 font-medium">{socio.categoria} • Título Nº {socio.id}</p>
                </div>
-               
+
                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="flex items-center gap-3 text-gray-700">
                      <User size={16} className="text-gray-400" />
-                     <span className="text-[14px] font-medium">CPF: 123.456.789-00</span>
+                     <span className="text-[14px] font-medium">CPF: {socio.cpf}</span>
                   </div>
                   <div className="flex items-center gap-3 text-gray-700">
                      <Phone size={16} className="text-gray-400" />
-                     <span className="text-[14px] font-medium">(11) 99999-8888</span>
+                     <span className="text-[14px] font-medium">{socio.telefone}</span>
                   </div>
                   <div className="flex items-center gap-3 text-gray-700">
                      <Mail size={16} className="text-gray-400" />
-                     <span className="text-[14px] font-medium">roberto@email.com</span>
+                     <span className="text-[14px] font-medium">{socio.email}</span>
                   </div>
                   <div className="flex items-center gap-3 text-gray-700">
                      <MapPin size={16} className="text-gray-400" />
@@ -86,16 +94,27 @@ export function VisaoSocio() {
       </div>
 
       <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-         <h3 className="text-[16px] font-bold text-gray-900 mb-4">Dependentes Ativos</h3>
+         <h3 className="text-[16px] font-bold text-gray-900 mb-4">Dependentes</h3>
          <div className="space-y-3">
-            {["Ana Almeida (Cônjuge)", "Lucas Almeida (Filho)"].map((dep, i) => (
-              <div key={i} className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100">
-                 <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+            {dependentes.map((dep) => (
+              <div key={dep.id} className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100">
+                 <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 shrink-0">
                     <User size={18} />
                  </div>
-                 <span className="text-[14px] font-semibold text-gray-800">{dep}</span>
+                 <span className="text-[14px] font-semibold text-gray-800 flex-1">
+                   {dep.name} ({dep.parentesco})
+                 </span>
+                 <span className={`text-[11px] font-bold uppercase tracking-wide px-2 py-1 rounded-md shrink-0 ${
+                   dep.status === "Ativo" ? "bg-emerald-50 text-emerald-700" : dep.status === "Pendente" ? "bg-amber-50 text-amber-700" : "bg-red-50 text-red-700"
+                 }`}>
+                   {dep.status}
+                 </span>
               </div>
             ))}
+
+            {dependentes.length === 0 && (
+              <p className="text-[13px] text-gray-400 font-medium py-2">Nenhum dependente vinculado a este titular.</p>
+            )}
          </div>
       </div>
     </div>

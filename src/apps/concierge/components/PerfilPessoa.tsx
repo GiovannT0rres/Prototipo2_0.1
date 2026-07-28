@@ -1,14 +1,17 @@
-import { ArrowLeft, Plus, CheckCircle2, Clock } from "lucide-react";
+import { ArrowLeft, Plus, CheckCircle2, Clock, History, LogIn, LogOut } from "lucide-react";
 import { motion } from "motion/react";
+import { MOCK_ACCESS_HISTORY } from "../mocks/mockConcierge";
 
 interface Props {
   dados: any;
   onNovaAutorizacao: () => void;
+  onLiberarAcesso: (auth: any) => void;
   onVoltar: () => void;
 }
 
-export function PerfilPessoa({ dados, onNovaAutorizacao, onVoltar }: Props) {
+export function PerfilPessoa({ dados, onNovaAutorizacao, onLiberarAcesso, onVoltar }: Props) {
   const autorizacoes = dados.autorizacoes || [];
+  const historico = MOCK_ACCESS_HISTORY[dados.id] || [];
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 flex flex-col h-full bg-gray-50">
@@ -51,10 +54,40 @@ export function PerfilPessoa({ dados, onNovaAutorizacao, onVoltar }: Props) {
                 </div>
                 <p className="text-[16px] font-bold text-gray-900">{auth.spot}</p>
                 <p className="text-[13px] text-gray-500 mb-4">{auth.details || "Acesso liberado"}</p>
-                
-                <button className="w-full py-2.5 bg-gray-900 text-white rounded-xl text-[13px] font-bold flex items-center justify-center gap-2">
+
+                <button
+                  onClick={() => onLiberarAcesso(auth)}
+                  className="w-full py-2.5 bg-gray-900 text-white rounded-xl text-[13px] font-bold flex items-center justify-center gap-2 hover:bg-gray-800 transition-colors"
+                >
                   <CheckCircle2 size={16} /> Dar Entrada Usando Esta
                 </button>
+              </div>
+            ))
+          )}
+        </div>
+
+        <div className="flex items-center gap-2 mb-4 mt-8">
+          <History size={16} className="text-gray-400" />
+          <h3 className="text-[13px] font-bold text-gray-400 uppercase tracking-wider">Histórico de Acessos</h3>
+        </div>
+
+        <div className="space-y-2">
+          {historico.length === 0 ? (
+            <div className="bg-white p-5 rounded-2xl border border-gray-200 text-center text-gray-500 text-[13px]">
+              Nenhum acesso registrado ainda.
+            </div>
+          ) : (
+            historico.map((h) => (
+              <div key={h.id} className="bg-white p-3.5 rounded-xl border border-gray-200 flex items-center gap-3">
+                <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 ${
+                  h.status === "Entrada" ? "bg-emerald-50 text-emerald-600" : "bg-gray-100 text-gray-500"
+                }`}>
+                  {h.status === "Entrada" ? <LogIn size={16} /> : <LogOut size={16} />}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[13px] font-bold text-gray-900">{h.status} • {h.gate}</p>
+                  <p className="text-[12px] text-gray-500">{h.data}</p>
+                </div>
               </div>
             ))
           )}

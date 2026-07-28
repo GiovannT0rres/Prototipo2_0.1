@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { Search, Shield, RefreshCw, LogOut, Clock, Users, User } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-import { toast, Toaster } from "sonner";
+import { toast } from "sonner";
 import { MOCK_AUTHORIZATIONS } from "../mocks/mockConcierge";
 
 interface Props {
@@ -199,8 +199,6 @@ export function HomeBusca({ onBuscar }: Props) {
           </div>
         </div>
       </div>
-
-      <Toaster position="top-center" richColors />
     </motion.div>
   );
 }

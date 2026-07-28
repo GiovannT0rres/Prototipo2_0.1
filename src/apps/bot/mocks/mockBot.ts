@@ -10,10 +10,11 @@ export const MENU_OPTIONS: { id: ScenarioId; label: string }[] = [
   { id: "visitante", label: "Concluir cadastro de Visitante" },
   { id: "dependente", label: "Cadastrar Dependente" },
   { id: "prestador", label: "Concluir cadastro de Prestador" },
+  { id: "checkin", label: "Fazer check-in (já estou na portaria)" },
   { id: "atualizar", label: "Atualizar meus dados" },
 ];
 
-export type ScenarioId = "visitante" | "dependente" | "prestador" | "atualizar";
+export type ScenarioId = "visitante" | "dependente" | "prestador" | "checkin" | "atualizar";
 
 export type ChatMessage = {
   id: string;
@@ -63,6 +64,16 @@ export const SCENARIOS: Record<ScenarioId, ChatMessage[]> = {
     { id: "p5", type: "received", text: "Para concluir, envie uma *selfie* com documento com foto para confirmação de identidade.", time: "10:03", isSelfieRequest: true },
     { id: "p6", type: "sent", text: "", time: "10:03", isSelfieReply: true },
     { id: "p7", type: "received", text: "Identidade confirmada ✅\n\nSeu cadastro foi enviado para o *Manager* solicitar o Background Check. Avisaremos assim que seu acesso for liberado.", time: "10:04" },
+  ],
+
+  // Caso de uso: Realizar check-in (pessoa já cadastrada e autorizada, chegando ao clube)
+  checkin: [
+    { id: "c1", type: "received", text: "Certo! Vamos confirmar sua chegada. Qual o *CPF* usado no seu cadastro?", time: "10:01" },
+    { id: "c2", type: "sent", text: "222.333.444-55", time: "10:01" },
+    { id: "c3", type: "received", text: "Encontrei sua autorização ativa como *Convidado Social*, patrocinado por Ana Costa (Titular). Para confirmar, envie uma *selfie* rápida.", time: "10:02", isSelfieRequest: true },
+    { id: "c4", type: "sent", text: "", time: "10:02", isSelfieReply: true },
+    { id: "c5", type: "received", text: "Identidade confirmada ✅\n\nCheck-in realizado! A portaria já foi avisada da sua chegada.", time: "10:03" },
+    { id: "c6", type: "received", text: "PASSE", isPass: true, time: "10:03", passInfo: { name: "Convidado no local", subtitle: "Convidado Social • Hoje" } },
   ],
 
   // Caso de uso: Atualizar informações cadastrais + Confirmar identidade

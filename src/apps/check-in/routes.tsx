@@ -2,6 +2,7 @@ import { Navigate } from "react-router";
 
 import { Home } from "./components/Home";
 import { EspacoDetail } from "./components/EspacoDetail";
+import { ClubDetail } from "./components/ClubDetail";
 import { GuestListPage } from "./components/GuestListPage";
 import { Autorizacoes } from "./components/Autorizacoes";
 import { Contatos } from "./components/Contatos";
@@ -17,6 +18,7 @@ function DefaultRedirect() {
 export const checkInRoutes = [
   { index: true, Component: DefaultRedirect },
   { path: "espacos", Component: Home },
+  { path: "clubes", Component: Home },
   { path: "autorizacoes", Component: Autorizacoes },
   { path: "contatos", Component: Contatos },
   { path: "dependentes", Component: GestaoDependentes },
@@ -25,4 +27,5 @@ export const checkInRoutes = [
   { path: "profile", Component: Profile },
   { path: "espaco/:id", Component: EspacoDetail },
   { path: "espaco/:id/guests", Component: GuestListPage },
+  { path: "clube/:id", Component: ClubDetail },
 ];

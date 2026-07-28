@@ -20,13 +20,19 @@ out/
 .output/
 
 # Secrets, Credentials, and Environment Variables (CRÍTICO: Segurança contra vazamentos)
+# Catch-all para qualquer variante de .env, com exceção explícita para templates
+# (que devem ser versionados para documentar quais variáveis existem).
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 .env.*.local
+.env.*
 *.env
+!.env.example
+!.env.sample
+!.env.template
 *.pem
 *.key
 *.cert
@@ -40,22 +46,52 @@ secring.gpg
 jwt.keys
 *credentials*.json
 *secret*.json
+*token*.json
 client_secret.json
 service-account.json
 config/jwt/
 .npmrc
 .yarnrc
+.netrc
+.git-credentials
+id_rsa*
+id_ed25519*
+id_dsa*
+*.ppk
+*.keystore
+*.jks
+
+# Dados pessoais/sensíveis do domínio (CPF, telefone, selfies, documentos, listas
+# de sócios) — este produto lida com KYP/biometria (ver CLAUDE.md §5); nenhum
+# dado real de sócio/dependente/prestador deve ser commitado no repositório.
+*.xlsx
+*.xls
+*.csv
+*.sql
+*.sqlite
+*.sqlite3
+*.db
+*.dump
+/data/
+/uploads/
+/selfies/
+/documents/
+/exports/
 
 # IDEs, Editors, and OS Files (Configurações locais de desenvolvedor)
 .vscode/*
 !.vscode/extensions.json
 .idea/
+.history/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.swp
 *.swo
+*~
+*.bak
+*.orig
 .DS_Store
 .DS_Store?
 Thumbs.db
@@ -83,3 +119,7 @@ lerna-debug.log*
 
 # Vercel Configuration & Deployment Cache
 .vercel
+
+# Notas internas do projeto (contexto de negócio/cliente — não deve ir para o
+# histórico do git nem ser exposto caso o repo seja compartilhado/publicado)
+CLAUDE.md

@@ -8,11 +8,11 @@ export function BottomTabBar() {
   const handleInicioClick = (e: React.MouseEvent) => {
     e.preventDefault();
     const lastClubId = localStorage.getItem("lastClubId") || "1";
-    navigate(`/check-in/club/${lastClubId}`);
+    navigate(`/check-in/clube/${lastClubId}`);
   };
 
   // Verifica se estamos na rota de um clube para destacar o botão Início
-  const isClubRoute = pathname.startsWith("/check-in/club/") || pathname === "/check-in";
+  const isClubRoute = pathname.startsWith("/check-in/clube/") || pathname === "/check-in";
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md border-t border-gray-200 pb-4 pt-1">

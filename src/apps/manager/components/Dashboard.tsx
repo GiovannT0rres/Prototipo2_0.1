@@ -76,9 +76,17 @@ export function Dashboard() {
 
       {/* Alertas de Segurança */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-        <div className="flex items-center gap-2 mb-4">
-          <ShieldAlert size={18} className="text-red-500" />
-          <h2 className="text-[17px] font-bold text-gray-900">Alertas de Segurança</h2>
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <ShieldAlert size={18} className="text-red-500" />
+            <h2 className="text-[17px] font-bold text-gray-900">Alertas de Segurança</h2>
+          </div>
+          <button
+            onClick={() => navigate("/manager/alertas")}
+            className="flex items-center gap-1.5 text-emerald-600 font-semibold text-[14px] hover:text-emerald-700"
+          >
+            Ver todos <ArrowRight size={16} />
+          </button>
         </div>
         <div className="space-y-3">
           <div className="flex items-start gap-3 p-3.5 bg-red-50 border border-red-100 rounded-xl">
