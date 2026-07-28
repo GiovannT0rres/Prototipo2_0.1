@@ -106,6 +106,13 @@ export function HomeBusca({ onBuscar }: Props) {
             </button>
           </div>
         </form>
+
+        {/* Dica de teste: qual CPF simula usuário existente vs novo */}
+        <p className="text-[11px] text-gray-400 mt-2 leading-relaxed">
+          💡 Para testar: <span className="font-mono font-semibold text-gray-500">111.222.333-44</span> (João
+          Silva) simula usuário já cadastrado → Confirmação de Selfie. Qualquer outro CPF simula usuário novo →
+          Validação + Cadastro.
+        </p>
       </div>
 
       {/* ================= SEÇÃO INFERIOR: PESSOAS NO LOCAL ================= */}

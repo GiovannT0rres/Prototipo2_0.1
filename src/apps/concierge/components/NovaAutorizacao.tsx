@@ -1,7 +1,12 @@
 import { useState } from "react";
-import { ArrowLeft, UserPlus, Building2 } from "lucide-react";
+import { ArrowLeft, CheckCircle2, ChevronDown } from "lucide-react";
 import { motion } from "motion/react";
 import { toast } from "sonner";
+import { ESPACOS } from "@/shared/data/spaces";
+
+// Mesmo sentinel usado em Check-in/Autorizacoes.tsx — liberação pro clube
+// inteiro em vez de um espaço específico.
+const CLUBE_INTEIRO_ID = "all";
 
 interface Props {
   dados: any;
@@ -10,19 +15,28 @@ interface Props {
 }
 
 export function NovaAutorizacao({ dados, onConcluir, onVoltar }: Props) {
-  const [tipo, setTipo] = useState<"visitante" | "prestador">("visitante");
-  const [empresa, setEmpresa] = useState("");
-  const [destino, setDestino] = useState("");
+  // O perfil já foi definido no cadastro da pessoa (Check-in, evento ou
+  // CadastroVisitante/CadastroPrestador do Concierge) — a portaria só
+  // consulta, não redefine quem a pessoa é.
+  const perfil: string = dados?.type || "Visitante";
+  const temLivreAcesso = perfil === "Sócio Titular" || perfil === "Familiar";
+  const isPrestador = perfil === "Prestador de Serviço";
+
+  const [espacoId, setEspacoId] = useState(
+    temLivreAcesso ? CLUBE_INTEIRO_ID : ESPACOS[0]?.id || "1"
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!destino) return;
-    
     setIsSubmitting(true);
     setTimeout(() => {
       setIsSubmitting(false);
-      toast.success(`${tipo === 'visitante' ? 'Visitante' : 'Prestador'} autorizado com sucesso!`);
+      const destinoLabel =
+        espacoId === CLUBE_INTEIRO_ID
+          ? "Clube Inteiro"
+          : ESPACOS.find((c) => c.id === espacoId)?.name;
+      toast.success(`Acesso autorizado: ${dados?.name} → ${destinoLabel}`);
       setTimeout(onConcluir, 1500);
     }, 1000);
   };
@@ -34,65 +48,52 @@ export function NovaAutorizacao({ dados, onConcluir, onVoltar }: Props) {
           <ArrowLeft size={20} />
         </button>
         <div>
-          <p className="font-bold text-gray-900 text-[15px]">Definir Autorização</p>
-          <p className="text-[12px] text-gray-500 font-medium">{dados?.name || "Novo Usuário"}</p>
+          <p className="font-bold text-gray-900 text-[15px]">Nova Autorização</p>
+          <p className="text-[12px] text-gray-500 font-medium">{dados?.name || "Usuário"}</p>
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 space-y-6">
-        
-        <div>
-          <label className="text-[12px] font-bold text-gray-500 uppercase tracking-wider block mb-3">Qual o Perfil?</label>
-          <div className="grid grid-cols-2 gap-3">
-            <button
-              type="button"
-              onClick={() => setTipo("visitante")}
-              className={`py-3 px-2 rounded-xl text-[14px] font-bold border-2 transition-all ${
-                tipo === "visitante" ? "bg-gray-900 border-gray-900 text-white" : "bg-white border-gray-200 text-gray-500"
-              }`}
-            >
-              Visitante
-            </button>
-            <button
-              type="button"
-              onClick={() => setTipo("prestador")}
-              className={`py-3 px-2 rounded-xl text-[14px] font-bold border-2 transition-all ${
-                tipo === "prestador" ? "bg-gray-900 border-gray-900 text-white" : "bg-white border-gray-200 text-gray-500"
-              }`}
-            >
-              Prestador
-            </button>
+        <div className="space-y-1.5">
+          <label className="text-[12px] font-bold text-gray-500 uppercase tracking-wider block">Perfil</label>
+          <div className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5">
+            <span className="text-[15px] font-bold text-gray-900">{perfil}</span>
+            <p className="text-[12px] text-gray-400 mt-0.5">Definido no cadastro da pessoa — não é redefinido aqui.</p>
           </div>
         </div>
 
-        <motion.div layout>
-          {tipo === "prestador" && (
-            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} className="mb-6 space-y-1.5 overflow-hidden">
-              <label className="text-[12px] font-bold text-gray-500 uppercase tracking-wider">Empresa / Terceirizada</label>
-              <div className="relative">
-                <Building2 size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input
-                  required
-                  value={empresa}
-                  onChange={(e) => setEmpresa(e.target.value)}
-                  placeholder="Nome da empresa..."
-                  className="w-full bg-gray-50 border border-gray-200 pl-11 pr-4 py-3.5 rounded-xl text-[15px] font-medium focus:ring-2 focus:ring-gray-900/10 outline-none"
-                />
-              </div>
-            </motion.div>
-          )}
-
-          <div className="space-y-1.5">
-            <label className="text-[12px] font-bold text-gray-500 uppercase tracking-wider">Local de Destino</label>
-            <input
-              required
-              value={destino}
-              onChange={(e) => setDestino(e.target.value)}
-              placeholder="Ex: Bloco B, Apto 204"
-              className="w-full bg-gray-50 border border-gray-200 px-4 py-3.5 rounded-xl text-[15px] font-medium focus:ring-2 focus:ring-gray-900/10 outline-none"
-            />
+        {temLivreAcesso ? (
+          <div className="bg-gray-50 p-3.5 rounded-xl text-[13px] text-gray-500 font-medium">
+            {perfil === "Sócio Titular" ? "Sócio" : "Dependente"} tem livre acesso a todos os espaços do clube —
+            sem espaço de destino a definir.
           </div>
-        </motion.div>
+        ) : (
+          <div className="space-y-1.5">
+            <label className="text-[12px] font-bold text-gray-500 uppercase tracking-wider block">Espaço de Destino</label>
+            <div className="relative">
+              <select
+                value={espacoId}
+                onChange={(e) => setEspacoId(e.target.value)}
+                className="w-full appearance-none bg-gray-50 border border-gray-200 px-4 py-3.5 rounded-xl text-[15px] font-semibold text-gray-900 focus:ring-2 focus:ring-gray-900/10 outline-none"
+              >
+                {ESPACOS.map((espaco) => (
+                  <option key={espaco.id} value={espaco.id}>{espaco.name}</option>
+                ))}
+                {!isPrestador && (
+                  <option value={CLUBE_INTEIRO_ID}>Clube Inteiro (Convidado Patrocinado)</option>
+                )}
+              </select>
+              <ChevronDown size={16} className="absolute right-4 top-4 text-gray-400 pointer-events-none" />
+            </div>
+          </div>
+        )}
+
+        {!temLivreAcesso && (
+          <div className="bg-amber-50 border border-amber-100 p-3.5 rounded-xl text-[13px] text-amber-800 font-medium">
+            Responsável por este acesso: <strong>Portaria (você)</strong>. Como não há sócio patrocinando essa
+            entrada, quem autoriza e registra é a própria portaria.
+          </div>
+        )}
       </form>
 
       <div className="p-6 border-t border-gray-100">
@@ -101,7 +102,7 @@ export function NovaAutorizacao({ dados, onConcluir, onVoltar }: Props) {
           disabled={isSubmitting}
           className="w-full py-4 rounded-xl font-bold text-[16px] text-white bg-gray-900 hover:bg-gray-800 transition-all flex justify-center items-center gap-2"
         >
-          {isSubmitting ? "Processando..." : <><UserPlus size={20} /> Salvar e Liberar</>}
+          {isSubmitting ? "Processando..." : <><CheckCircle2 size={20} /> Salvar e Liberar</>}
         </button>
       </div>
     </motion.div>

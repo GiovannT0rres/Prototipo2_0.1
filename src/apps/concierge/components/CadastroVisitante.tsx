@@ -1,24 +1,13 @@
 import { useState } from "react";
-import { ArrowLeft, UserPlus, MessageCircleMore, CheckCircle2, ChevronDown, ArrowRight } from "lucide-react";
+import { ArrowLeft, UserPlus, MessageCircleMore, CheckCircle2, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { toast } from "sonner";
-
-import { ESPACOS } from "@/shared/data/spaces";
-
-// Status genéricos — na hora de gerar o acesso só existem 3 categorias em
-// todo o sistema: Familiar, Visitante, Prestador de Serviço (ver CLAUDE.md §5).
-// Duração da visita (1 dia vs. múltiplos dias) é detalhe do convite, não uma
-// categoria própria.
-const TIPOS_VISITANTE = [
-  { id: "visitante", label: "Visitante" },
-  { id: "prestador", label: "Prestador de Serviço" },
-];
 
 interface Props {
   cpfInicial: string;
   nomeInicial?: string;
   onVoltar: () => void;
-  onConcluir: () => void;
+  onConcluir: (dados: { name: string; cpf: string }) => void;
 }
 
 export function CadastroVisitante({ cpfInicial, nomeInicial, onVoltar, onConcluir }: Props) {
@@ -27,8 +16,6 @@ export function CadastroVisitante({ cpfInicial, nomeInicial, onVoltar, onConclui
     cpf: cpfInicial, // Inicializa com o CPF que veio da tela de busca
     phone: "",
     placa: "", // A liberação hoje é majoritariamente por placa (LPR já existe na portaria)
-    tipo: TIPOS_VISITANTE[0].id,
-    espacoId: ESPACOS[0]?.id || "1",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -123,40 +110,6 @@ export function CadastroVisitante({ cpfInicial, nomeInicial, onVoltar, onConclui
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-[12px] font-bold text-gray-500 uppercase tracking-wider">Tipo de Acesso</label>
-                <div className="flex flex-wrap gap-2">
-                  {TIPOS_VISITANTE.map((t) => (
-                    <button
-                      key={t.id}
-                      type="button"
-                      onClick={() => setForm({ ...form, tipo: t.id })}
-                      className={`px-3.5 py-1.5 rounded-full text-[13px] font-semibold transition-all ${
-                        form.tipo === t.id ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                      }`}
-                    >
-                      {t.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-[12px] font-bold text-gray-500 uppercase tracking-wider">Espaço de Destino</label>
-                <div className="relative">
-                  <select
-                    value={form.espacoId}
-                    onChange={(e) => setForm({ ...form, espacoId: e.target.value })}
-                    className="w-full appearance-none bg-gray-50 border border-gray-200 px-4 py-3.5 rounded-xl text-[15px] font-medium focus:outline-none focus:ring-2 focus:ring-gray-900/10 text-gray-900"
-                  >
-                    {ESPACOS.map((e) => (
-                      <option key={e.id} value={e.id}>{e.name}</option>
-                    ))}
-                  </select>
-                  <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-                </div>
-              </div>
-
-              <div className="space-y-1.5">
                 <label className="text-[12px] font-bold text-gray-500 uppercase tracking-wider">Placa do Veículo (opcional)</label>
                 <input
                   value={form.placa}
@@ -209,10 +162,10 @@ export function CadastroVisitante({ cpfInicial, nomeInicial, onVoltar, onConclui
                   Enviar Link por WhatsApp
                 </button>
                 <button
-                  onClick={onConcluir}
+                  onClick={() => onConcluir({ name: form.name, cpf: form.cpf })}
                   className="w-full bg-gray-100 text-gray-700 font-semibold text-[15px] py-3.5 rounded-xl hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
                 >
-                  Voltar ao Menu <ArrowRight size={16} />
+                  Continuar para Autorização <ArrowRight size={16} />
                 </button>
               </div>
             </motion.div>

@@ -52,7 +52,11 @@ export function PortariaWizard() {
   };
 
   const handleLiberarAcesso = (auth: any) => {
-    toast.success(`Acesso liberado: ${dadosPessoa?.name} → ${auth.spot}`);
+    if (auth._saida) {
+      toast.success(`Saída registrada: ${dadosPessoa?.name}`);
+    } else {
+      toast.success(`Entrada registrada: ${dadosPessoa?.name} → ${auth.spot}`);
+    }
     resetarFluxo();
   };
 
@@ -89,7 +93,13 @@ export function PortariaWizard() {
             cpfInicial={cpfAtual}
             nomeInicial={dadosPessoa?.name}
             onVoltar={() => setStep("tipo-cadastro")}
-            onConcluir={resetarFluxo}
+            onConcluir={(d) => {
+              // Cadastro só registra a identidade — a autorização (espaço +
+              // responsável) é decidida a seguir, na mesma tela usada por
+              // quem já é cadastrado.
+              setDadosPessoa({ ...d, type: "Visitante" });
+              setStep("nova-autorizacao");
+            }}
           />
         )}
 
@@ -120,7 +130,10 @@ export function PortariaWizard() {
           />
         )}
 
-        {/* TELA COMPARTILHADA DE AUTORIZAÇÃO (usada a partir do perfil de quem já é cadastrado) */}
+        {/* TELA COMPARTILHADA DE AUTORIZAÇÃO — mesma lógica pra usuário novo
+            (logo após o cadastro) e usuário existente (botão "Nova
+            Autorização" no Perfil): a portaria é quem gera e assume a
+            responsabilidade por esse acesso. */}
         {step === "nova-autorizacao" && (
           <NovaAutorizacao
             dados={dadosPessoa}
