@@ -17,7 +17,7 @@ export function GestaoDependentes() {
   const [dependentes, setDependentes] = useState(MOCK_DEPENDENTES_ADMIN);
 
   const filtrados = dependentes.filter((dep) =>
-    [dep.name, dep.titular, dep.parentesco].some((campo) =>
+    [dep.name, dep.titular, dep.tipo].some((campo) =>
       campo.toLowerCase().includes(query.toLowerCase())
     )
   );
@@ -66,7 +66,7 @@ export function GestaoDependentes() {
                 <div className="min-w-0">
                   <p className="text-[15px] font-bold text-gray-900 truncate">{dep.name}</p>
                   <p className="text-[12px] text-gray-500">
-                    {dep.parentesco} • {dep.idade} anos
+                    {dep.tipo} • {dep.idade} anos
                   </p>
                 </div>
               </div>

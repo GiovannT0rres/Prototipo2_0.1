@@ -1,16 +1,19 @@
 import { useState } from "react";
-import { UserPlus, Mail, ShieldCheck, X } from "lucide-react";
-import { MOCK_ACCESS_MANAGERS } from "../mocks/mockManager";
+import { UserPlus, Mail, ShieldCheck, X, Clock, UserCog, ChevronDown, ChevronRight } from "lucide-react";
+import { MOCK_ACCESS_MANAGERS, type AccessManagerSubordinado } from "../mocks/mockManager";
 
-const CARGOS = ["Coordenador de Eventos", "Gestor de Portaria", "Administração"];
+const CARGOS = ["Cerimonialista", "Coordenador de Eventos", "Gestor de Portaria", "Administração"];
 
 export function GestaoAccessManagers() {
   const [gestores, setGestores] = useState(MOCK_ACCESS_MANAGERS);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [cargo, setCargo] = useState(CARGOS[0]);
-  const [escopo, setEscopo] = useState("");
+  const [vinculo, setVinculo] = useState("");
+  const [temporario, setTemporario] = useState(true);
+  const [validade, setValidade] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,13 +25,19 @@ export function GestaoAccessManagers() {
         name,
         email,
         cargo,
-        escopo: escopo || "A definir",
+        vinculo: vinculo || "A definir",
+        temporario,
+        validade: temporario ? (validade || "A definir") : null,
+        promovidoPor: "Administração",
         status: "Convite Pendente",
+        subordinados: [] as AccessManagerSubordinado[],
       },
     ]);
     setName("");
     setEmail("");
-    setEscopo("");
+    setVinculo("");
+    setValidade("");
+    setTemporario(true);
     setShowForm(false);
   };
 
@@ -38,7 +47,8 @@ export function GestaoAccessManagers() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Access Managers</h1>
           <p className="text-[14px] text-gray-500 mt-1">
-            Equipe com permissão para gerenciar eventos e autorizações (RBAC — sem hierarquia de delegação).
+            Poder temporário de convidar pessoas e vinculá-las a um lugar (ex.: um cerimonialista
+            de evento) — o Manager acompanha quem promoveu quem e quem cada um trouxe abaixo.
           </p>
         </div>
         <button
@@ -56,7 +66,7 @@ export function GestaoAccessManagers() {
           className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-4"
         >
           <div className="flex items-center justify-between">
-            <h2 className="text-[16px] font-bold text-gray-900">Convidar novo Access Manager</h2>
+            <h2 className="text-[16px] font-bold text-gray-900">Promover novo Access Manager</h2>
             <button type="button" onClick={() => setShowForm(false)} className="text-gray-400 hover:text-gray-600">
               <X size={18} />
             </button>
@@ -97,15 +107,43 @@ export function GestaoAccessManagers() {
               </select>
             </div>
             <div className="space-y-1.5">
-              <label className="text-[12px] font-bold text-gray-500 uppercase tracking-wider">Escopo (opcional)</label>
+              <label className="text-[12px] font-bold text-gray-500 uppercase tracking-wider">Vinculado a (evento/espaço)</label>
               <input
-                value={escopo}
-                onChange={(e) => setEscopo(e.target.value)}
-                placeholder="Ex.: Salão Social 1, Baile de Debutantes"
+                value={vinculo}
+                onChange={(e) => setVinculo(e.target.value)}
+                placeholder="Ex.: Baile de Debutantes, Salão Social 1"
                 className="w-full bg-gray-50 border border-gray-200 px-4 py-3 rounded-xl text-[14px] focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
               />
             </div>
           </div>
+
+          <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 flex items-center justify-between">
+            <div>
+              <p className="text-[14px] font-semibold text-gray-900">Poder temporário?</p>
+              <p className="text-[12px] text-gray-500">Desligado, vira uma função permanente da equipe (ex.: portaria).</p>
+            </div>
+            <label className="relative inline-flex items-center cursor-pointer shrink-0 ml-4">
+              <input
+                type="checkbox"
+                className="sr-only peer"
+                checked={temporario}
+                onChange={(e) => setTemporario(e.target.checked)}
+              />
+              <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600" />
+            </label>
+          </div>
+
+          {temporario && (
+            <div className="space-y-1.5">
+              <label className="text-[12px] font-bold text-gray-500 uppercase tracking-wider">Validade</label>
+              <input
+                value={validade}
+                onChange={(e) => setValidade(e.target.value)}
+                placeholder="Ex.: 22/08/2026 a 23/08/2026"
+                className="w-full bg-gray-50 border border-gray-200 px-4 py-3 rounded-xl text-[14px] focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+              />
+            </div>
+          )}
 
           <button
             type="submit"
@@ -117,32 +155,71 @@ export function GestaoAccessManagers() {
       )}
 
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 divide-y divide-gray-50">
-        {gestores.map((gestor) => (
-          <div key={gestor.id} className="flex flex-col sm:flex-row sm:items-center gap-3 px-6 py-4">
-            <div className="w-11 h-11 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
-              <ShieldCheck size={20} />
+        {gestores.map((gestor) => {
+          const isExpanded = expandedId === gestor.id;
+          const temSubordinados = gestor.subordinados.length > 0;
+          return (
+            <div key={gestor.id}>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-3 px-6 py-4">
+                <div className="w-11 h-11 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                  <ShieldCheck size={20} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[15px] font-bold text-gray-900">{gestor.name}</p>
+                  <p className="text-[12px] text-gray-500 flex items-center gap-1.5">
+                    <Mail size={12} /> {gestor.email}
+                  </p>
+                  <p className="text-[12px] text-gray-500 mt-0.5">
+                    Vinculado a: <span className="font-semibold text-gray-700">{gestor.vinculo}</span> • Promovido por: <span className="font-semibold text-gray-700">{gestor.promovidoPor}</span>
+                  </p>
+                </div>
+                <div className="flex flex-wrap items-center gap-2 shrink-0">
+                  <span className="text-[11px] font-bold uppercase tracking-wide bg-blue-50 text-blue-700 px-2.5 py-1 rounded-md">
+                    {gestor.cargo}
+                  </span>
+                  {gestor.temporario && (
+                    <span className="text-[11px] font-bold uppercase tracking-wide bg-purple-50 text-purple-700 px-2.5 py-1 rounded-md flex items-center gap-1">
+                      <Clock size={11} /> {gestor.validade}
+                    </span>
+                  )}
+                  <span
+                    className={`text-[11px] font-bold uppercase tracking-wide px-2.5 py-1 rounded-md ${
+                      gestor.status === "Ativo" ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700"
+                    }`}
+                  >
+                    {gestor.status}
+                  </span>
+                </div>
+              </div>
+
+              {temSubordinados && (
+                <div className="px-6 pb-4">
+                  <button
+                    onClick={() => setExpandedId(isExpanded ? null : gestor.id)}
+                    className="flex items-center gap-1.5 text-[13px] font-semibold text-emerald-700 hover:text-emerald-800"
+                  >
+                    <UserCog size={14} />
+                    {gestor.subordinados.length} pessoa(s) vinculada(s) abaixo
+                    {isExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                  </button>
+
+                  {isExpanded && (
+                    <div className="mt-3 ml-2 pl-4 border-l-2 border-emerald-100 space-y-2">
+                      {gestor.subordinados.map((sub) => (
+                        <div key={sub.id} className="flex items-center justify-between bg-gray-50 rounded-lg px-3.5 py-2.5">
+                          <span className="text-[13px] font-semibold text-gray-800">{sub.name}</span>
+                          <span className="text-[11px] font-bold uppercase tracking-wide bg-gray-200 text-gray-600 px-2 py-0.5 rounded-md">
+                            {sub.categoria}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-[15px] font-bold text-gray-900">{gestor.name}</p>
-              <p className="text-[12px] text-gray-500 flex items-center gap-1.5">
-                <Mail size={12} /> {gestor.email}
-              </p>
-            </div>
-            <div className="flex flex-wrap items-center gap-2 shrink-0">
-              <span className="text-[11px] font-bold uppercase tracking-wide bg-blue-50 text-blue-700 px-2.5 py-1 rounded-md">
-                {gestor.cargo}
-              </span>
-              <span className="text-[12px] text-gray-500">{gestor.escopo}</span>
-              <span
-                className={`text-[11px] font-bold uppercase tracking-wide px-2.5 py-1 rounded-md ${
-                  gestor.status === "Ativo" ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700"
-                }`}
-              >
-                {gestor.status}
-              </span>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

@@ -67,7 +67,7 @@ export function ValidacaoNovoUser({ dadosBigData, onSucesso, onFalha, onVoltar }
               Pergunta {etapa} de 2
             </p>
             <p className="text-[22px] font-bold text-gray-900 mb-6 leading-tight">
-              {etapa === 1 ? "Qual é o NOME COMPLETO do motorista?" : "Qual é o ANO DE NASCIMENTO do motorista?"}
+              {etapa === 1 ? "Qual é o NOME COMPLETO da pessoa?" : "Qual é o ANO DE NASCIMENTO da pessoa?"}
             </p>
 
             <div className="space-y-3">

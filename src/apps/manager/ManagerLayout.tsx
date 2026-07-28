@@ -1,5 +1,5 @@
 import { Outlet, useNavigate, useLocation } from "react-router";
-import { BarChart3, Database, Home, Settings, LogOut, ListChecks, Map, Users2, ShieldCheck, Network, ShieldAlert } from "lucide-react";
+import { BarChart3, Home, Settings, LogOut, ListChecks, Map } from "lucide-react";
 
 export function ManagerLayout() {
   const navigate = useNavigate();
@@ -9,17 +9,19 @@ export function ManagerLayout() {
     { name: "Dashboard", icon: BarChart3, path: "/manager" },
     { name: "Mapa Operacional", icon: Map, path: "/manager/mapa" },
     { name: "Fila de Trabalho", icon: ListChecks, path: "/manager/aprovacoes" },
-    { name: "Prestadores", icon: Database, path: "/manager/prestadores" },
-    { name: "Dependentes", icon: Users2, path: "/manager/dependentes" },
-    { name: "Access Managers", icon: ShieldCheck, path: "/manager/gestores-eventos" },
-    { name: "Hierarquia de Autorizações", icon: Network, path: "/manager/hierarquia" },
-    { name: "Alertas de Segurança", icon: ShieldAlert, path: "/manager/alertas" },
-    { name: "Sócios (ERP Forza)", icon: Settings, path: "/manager/socios" },
-    { name: "Movimentações", icon: Database, path: "/manager/logs" },
+    { name: "Sócios", icon: Settings, path: "/manager/socios" },
   ];
 
   return (
     <div className="min-h-screen bg-[#f0f2f5] font-sans flex flex-col md:flex-row">
+      <button
+        onClick={() => navigate("/")}
+        className="fixed top-4 right-4 z-50 flex items-center gap-2 bg-white border border-gray-200 text-gray-700 px-3.5 py-2 rounded-full shadow-sm hover:bg-gray-50 transition-colors text-[13px] font-semibold"
+      >
+        <Home size={16} />
+        <span className="hidden sm:inline">Voltar ao Hub</span>
+      </button>
+
       <aside className="w-64 bg-white border-r border-gray-200 hidden md:flex flex-col">
         <div className="p-6 flex items-center gap-3">
           <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center">
@@ -34,16 +36,6 @@ export function ManagerLayout() {
         </div>
 
         <nav className="flex-1 px-4 space-y-2 mt-4">
-          <button
-            onClick={() => navigate("/")}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
-          >
-            <Home size={18} />
-            <span className="text-[14px] font-semibold">Voltar ao Hub</span>
-          </button>
-          
-          <div className="h-px bg-gray-200 my-4" />
-          
           {navItems.map((item) => (
             <button
               key={item.path}

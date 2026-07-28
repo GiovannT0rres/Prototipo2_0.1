@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import { MOCK_DASHBOARD, INITIAL_PENDING } from "../mocks/mockManager";
+import { MOCK_DASHBOARD, MOCK_FILA_DEPENDENTES } from "../mocks/mockManager";
 import { Users, Activity, CheckCircle, Clock, ArrowRight, ShieldAlert } from "lucide-react";
 
 export function Dashboard() {
@@ -42,7 +42,7 @@ export function Dashboard() {
           <div>
             <h2 className="text-[17px] font-bold text-gray-900">Cockpit de Autorizações</h2>
             <p className="text-[13px] text-gray-500 mt-0.5">
-              {INITIAL_PENDING.length} solicitações aguardando decisão agora.
+              {MOCK_FILA_DEPENDENTES.length} dependente(s) aguardando aprovação agora.
             </p>
           </div>
           <button
@@ -54,19 +54,19 @@ export function Dashboard() {
         </div>
 
         <div className="divide-y divide-gray-50">
-          {INITIAL_PENDING.slice(0, 3).map((item) => (
+          {MOCK_FILA_DEPENDENTES.slice(0, 3).map((item) => (
             <div key={item.id} className="flex items-center gap-4 px-6 py-3.5">
               <img src={item.avatar} alt={item.name} className="w-10 h-10 rounded-full object-cover border border-gray-100" />
               <div className="flex-1 min-w-0">
                 <p className="text-[14px] font-semibold text-gray-900 truncate">{item.name}</p>
-                <p className="text-[12px] text-gray-500">{item.cpf} • {item.type}</p>
+                <p className="text-[12px] text-gray-500">{item.type} • Titular: {item.titular}</p>
               </div>
               <span className="text-[11px] font-bold uppercase tracking-wide bg-amber-50 text-amber-600 px-2 py-1 rounded-md shrink-0">
                 Pendente
               </span>
             </div>
           ))}
-          {INITIAL_PENDING.length === 0 && (
+          {MOCK_FILA_DEPENDENTES.length === 0 && (
             <div className="px-6 py-8 text-center text-[14px] text-gray-400 font-medium">
               Nenhuma solicitação pendente no momento.
             </div>
@@ -93,7 +93,7 @@ export function Dashboard() {
             <div className="w-2 h-2 rounded-full bg-red-500 mt-1.5 shrink-0" />
             <div>
               <p className="text-[14px] font-semibold text-red-800">Prestador com restrição encontrada</p>
-              <p className="text-[12px] text-red-600 mt-0.5">Background check reprovado para um CPF cadastrado hoje. Verifique em Prestadores.</p>
+              <p className="text-[12px] text-red-600 mt-0.5">Background check reprovado para um CPF cadastrado hoje na Concierge. O acesso não deve ser liberado na portaria.</p>
             </div>
           </div>
           <div className="flex items-start gap-3 p-3.5 bg-amber-50 border border-amber-100 rounded-xl">

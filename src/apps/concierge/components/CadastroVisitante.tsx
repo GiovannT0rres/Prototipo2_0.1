@@ -1,36 +1,36 @@
 import { useState } from "react";
-import { ArrowLeft, UserPlus, Camera, CheckCircle2, ChevronDown } from "lucide-react";
+import { ArrowLeft, UserPlus, MessageCircleMore, CheckCircle2, ChevronDown, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { toast } from "sonner";
 
 import { ESPACOS } from "@/shared/data/spaces";
 
-// Tipos de acesso reais do clube (ver respostas_PERGUNTAS-PARA-O-CLUBE, seções A e F):
-// visitante social (1 dia), visitante jogador (múltiplos dias), prestador de serviço,
-// funcionário. Hoje a portaria só coleta CPF em papel — este cadastro digitaliza isso.
+// Status genéricos — na hora de gerar o acesso só existem 3 categorias em
+// todo o sistema: Familiar, Visitante, Prestador de Serviço (ver CLAUDE.md §5).
+// Duração da visita (1 dia vs. múltiplos dias) é detalhe do convite, não uma
+// categoria própria.
 const TIPOS_VISITANTE = [
-  { id: "social", label: "Convidado Social (1 dia)" },
-  { id: "jogador", label: "Convidado Jogador" },
+  { id: "visitante", label: "Visitante" },
   { id: "prestador", label: "Prestador de Serviço" },
-  { id: "funcionario", label: "Funcionário" },
 ];
 
 interface Props {
   cpfInicial: string;
+  nomeInicial?: string;
   onVoltar: () => void;
   onConcluir: () => void;
 }
 
-export function CadastroVisitante({ cpfInicial, onVoltar, onConcluir }: Props) {
+export function CadastroVisitante({ cpfInicial, nomeInicial, onVoltar, onConcluir }: Props) {
   const [form, setForm] = useState({
-    name: "",
+    name: nomeInicial || "",
     cpf: cpfInicial, // Inicializa com o CPF que veio da tela de busca
     phone: "",
     placa: "", // A liberação hoje é majoritariamente por placa (LPR já existe na portaria)
     tipo: TIPOS_VISITANTE[0].id,
     espacoId: ESPACOS[0]?.id || "1",
   });
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -46,20 +46,25 @@ export function CadastroVisitante({ cpfInicial, onVoltar, onConcluir }: Props) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name || !form.cpf) return;
-    
+
     setIsSubmitting(true);
-    
-    // Simulação de chamada na API
+
+    // Simulação de chamada na API — cria o pré-cadastro + primeira autorização.
+    // A identidade só é confirmada depois, quando a pessoa concluir com o Bot no WhatsApp.
     setTimeout(() => {
       setIsSubmitting(false);
       setSuccess(true);
-      toast.success("Visitante cadastrado com sucesso!");
-      
-      // Aguarda 2 segundos para o usuário ler a mensagem de sucesso e conclui
-      setTimeout(() => {
-        onConcluir();
-      }, 2000);
+      toast.success("Template para conclusão de cadastro enviado!");
     }, 1000);
+  };
+
+  const handleEnviarWhatsApp = () => {
+    const phoneDigits = form.phone.replace(/\D/g, "");
+    const text = encodeURIComponent(
+      `Olá! A Portaria iniciou seu cadastro no clube. Para concluir, envie uma selfie e um documento com foto: #${form.cpf.replace(/\D/g, "")}-cadastro#`
+    );
+    const target = phoneDigits ? `phone=55${phoneDigits}&` : "";
+    window.open(`https://api.whatsapp.com/send?${target}text=${text}`, "_blank");
   };
 
   return (
@@ -85,15 +90,6 @@ export function CadastroVisitante({ cpfInicial, onVoltar, onConcluir }: Props) {
               onSubmit={handleSubmit}
               className="p-6 space-y-5"
             >
-              <div className="flex flex-col items-center gap-3 pb-2">
-                <div className="w-20 h-20 rounded-full bg-gray-50 border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-400 cursor-pointer hover:bg-gray-100 transition-colors">
-                  <Camera size={26} />
-                </div>
-                <button type="button" className="text-[13px] font-semibold text-gray-900">
-                  Capturar Foto
-                </button>
-              </div>
-
               <div className="space-y-1.5">
                 <label className="text-[12px] font-bold text-gray-500 uppercase tracking-wider">Nome Completo</label>
                 <input
@@ -117,7 +113,7 @@ export function CadastroVisitante({ cpfInicial, onVoltar, onConcluir }: Props) {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-[12px] font-bold text-gray-500 uppercase tracking-wider">Telefone</label>
+                <label className="text-[12px] font-bold text-gray-500 uppercase tracking-wider">Telefone (WhatsApp)</label>
                 <input
                   value={form.phone}
                   onChange={(e) => setForm({ ...form, phone: e.target.value })}
@@ -182,7 +178,7 @@ export function CadastroVisitante({ cpfInicial, onVoltar, onConcluir }: Props) {
                     <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }} className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full" />
                   ) : (
                     <>
-                      <UserPlus size={20} /> Concluir Cadastro
+                      <UserPlus size={20} /> Criar Pré-Cadastro
                     </>
                   )}
                 </button>
@@ -193,15 +189,32 @@ export function CadastroVisitante({ cpfInicial, onVoltar, onConcluir }: Props) {
               key="success"
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="p-10 flex flex-col items-center justify-center h-full text-center mt-10"
+              className="p-8 flex flex-col items-center justify-center h-full text-center"
             >
               <div className="w-20 h-20 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mb-6">
                 <CheckCircle2 size={40} />
               </div>
-              <h2 className="text-[22px] font-bold text-gray-900">Visitante Cadastrado!</h2>
+              <h2 className="text-[22px] font-bold text-gray-900">Template para conclusão de cadastro enviado!</h2>
               <p className="text-[15px] text-gray-500 mt-2 max-w-sm">
-                Retornando ao menu principal...
+                Para concluir, <strong className="text-gray-700">{form.name}</strong> precisa enviar selfie e
+                documento com foto conversando com o Bot do clube no WhatsApp.
               </p>
+
+              <div className="w-full max-w-xs mt-8 space-y-3">
+                <button
+                  onClick={handleEnviarWhatsApp}
+                  className="w-full bg-[#25D366] hover:bg-[#1da851] text-white font-semibold text-[15px] py-3.5 rounded-xl transition-colors shadow-sm flex items-center justify-center gap-2"
+                >
+                  <MessageCircleMore size={20} />
+                  Enviar Link por WhatsApp
+                </button>
+                <button
+                  onClick={onConcluir}
+                  className="w-full bg-gray-100 text-gray-700 font-semibold text-[15px] py-3.5 rounded-xl hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
+                >
+                  Voltar ao Menu <ArrowRight size={16} />
+                </button>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>

@@ -1,23 +1,25 @@
 import { useState } from "react";
-import { ArrowLeft, HardHat, Briefcase, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, HardHat, Briefcase, MessageCircleMore, CheckCircle2, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { toast } from "sonner";
 
 interface Props {
   cpfInicial: string;
+  nomeInicial?: string;
   onVoltar: () => void;
   onConcluir: () => void;
 }
 
-export function CadastroPrestador({ cpfInicial, onVoltar, onConcluir }: Props) {
-  const [form, setForm] = useState({ 
-    name: "", 
+export function CadastroPrestador({ cpfInicial, nomeInicial, onVoltar, onConcluir }: Props) {
+  const [form, setForm] = useState({
+    name: nomeInicial || "",
     cpf: cpfInicial, // Inicializa com o CPF que veio da tela de busca
-    empresa: "", 
-    tipo: "temporario", 
-    spot: "" 
+    phone: "",
+    empresa: "",
+    tipo: "temporario",
+    spot: ""
   });
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -33,18 +35,25 @@ export function CadastroPrestador({ cpfInicial, onVoltar, onConcluir }: Props) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name || !form.cpf || !form.empresa) return;
-    
+
     setIsSubmitting(true);
-    
+
+    // Cria o pré-cadastro + primeira autorização. Selfie/documento (e o background
+    // check no Manager) só acontecem depois, quando o prestador falar com o Bot.
     setTimeout(() => {
       setIsSubmitting(false);
       setSuccess(true);
-      toast.success("Prestador cadastrado com sucesso!");
-      
-      setTimeout(() => {
-        onConcluir();
-      }, 3000);
+      toast.success("Template para conclusão de cadastro enviado!");
     }, 1000);
+  };
+
+  const handleEnviarWhatsApp = () => {
+    const phoneDigits = form.phone.replace(/\D/g, "");
+    const text = encodeURIComponent(
+      `Olá! A Portaria iniciou seu cadastro como Prestador de Serviço. Para concluir, envie uma selfie e um documento com foto: #${form.cpf.replace(/\D/g, "")}-cadastro#`
+    );
+    const target = phoneDigits ? `phone=55${phoneDigits}&` : "";
+    window.open(`https://api.whatsapp.com/send?${target}text=${text}`, "_blank");
   };
 
   return (
@@ -88,6 +97,16 @@ export function CadastroPrestador({ cpfInicial, onVoltar, onConcluir }: Props) {
                   value={form.cpf}
                   onChange={handleCpfChange}
                   placeholder="000.000.000-00"
+                  className="w-full bg-gray-50 border border-gray-200 px-4 py-3.5 rounded-xl text-[15px] font-medium focus:outline-none focus:ring-2 focus:ring-gray-900/10 text-gray-900"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-[12px] font-bold text-gray-500 uppercase tracking-wider">Telefone (WhatsApp)</label>
+                <input
+                  value={form.phone}
+                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                  placeholder="(11) 99999-9999"
                   className="w-full bg-gray-50 border border-gray-200 px-4 py-3.5 rounded-xl text-[15px] font-medium focus:outline-none focus:ring-2 focus:ring-gray-900/10 text-gray-900"
                 />
               </div>
@@ -150,7 +169,7 @@ export function CadastroPrestador({ cpfInicial, onVoltar, onConcluir }: Props) {
                     <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }} className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full" />
                   ) : (
                     <>
-                      <HardHat size={20} /> Concluir Cadastro
+                      <HardHat size={20} /> Criar Pré-Cadastro
                     </>
                   )}
                 </button>
@@ -161,15 +180,33 @@ export function CadastroPrestador({ cpfInicial, onVoltar, onConcluir }: Props) {
               key="success"
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="p-10 flex flex-col items-center justify-center h-full text-center mt-10"
+              className="p-8 flex flex-col items-center justify-center h-full text-center"
             >
               <div className="w-20 h-20 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center mb-6">
                 <CheckCircle2 size={40} />
               </div>
-              <h2 className="text-[22px] font-bold text-gray-900">Prestador Cadastrado!</h2>
+              <h2 className="text-[22px] font-bold text-gray-900">Template para conclusão de cadastro enviado!</h2>
               <p className="text-[15px] text-gray-500 mt-2 max-w-sm">
-                Aguardando background check no App Manager. Retornando ao menu principal...
+                Para concluir, <strong className="text-gray-700">{form.name}</strong> precisa enviar selfie e
+                documento com foto conversando com o Bot no WhatsApp. Depois disso, o
+                acesso aguarda o background check no App Manager.
               </p>
+
+              <div className="w-full max-w-xs mt-8 space-y-3">
+                <button
+                  onClick={handleEnviarWhatsApp}
+                  className="w-full bg-[#25D366] hover:bg-[#1da851] text-white font-semibold text-[15px] py-3.5 rounded-xl transition-colors shadow-sm flex items-center justify-center gap-2"
+                >
+                  <MessageCircleMore size={20} />
+                  Enviar Link por WhatsApp
+                </button>
+                <button
+                  onClick={onConcluir}
+                  className="w-full bg-gray-100 text-gray-700 font-semibold text-[15px] py-3.5 rounded-xl hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
+                >
+                  Voltar ao Menu <ArrowRight size={16} />
+                </button>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>

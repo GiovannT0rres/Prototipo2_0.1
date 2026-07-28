@@ -1,8 +1,8 @@
-import { ArrowLeft, Ticket, Briefcase, Wrench } from "lucide-react";
+import { ArrowLeft, Ticket, Briefcase } from "lucide-react";
 import { motion } from "motion/react";
 
 interface Props {
-  onSelecionar: (tipo: 'convidado' | 'prestador-socio' | 'funcionario-clube') => void;
+  onSelecionar: (tipo: 'visitante' | 'prestador') => void;
   onVoltar: () => void;
 }
 
@@ -20,50 +20,36 @@ export function TipoCadastro({ onSelecionar, onVoltar }: Props) {
         <div className="text-center mb-6 max-w-sm">
           <h2 className="text-[22px] font-bold text-gray-900">Pessoa não encontrada</h2>
           <p className="text-[14px] text-gray-500 mt-2">
-            Este CPF não possui registro. Selecione o tipo de vínculo para iniciar o cadastro.
+            Este CPF não possui registro. Selecione a categoria para iniciar o cadastro.
           </p>
         </div>
 
         <div className="w-full max-w-sm space-y-3">
-          {/* Opção 1: Convidado de Sócio */}
+          {/* Opção 1: Visitante (convidado de sócio, jogador em reciprocidade, etc.) */}
           <button
-            onClick={() => onSelecionar('convidado')}
+            onClick={() => onSelecionar('visitante')}
             className="w-full p-5 border-2 border-gray-200 bg-white rounded-2xl flex items-center gap-4 hover:border-blue-600 hover:bg-blue-50 transition-all group text-left"
           >
             <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
               <Ticket size={24} className="text-blue-600" />
             </div>
             <div>
-              <p className="font-bold text-[16px] text-gray-900">Convidado</p>
-              <p className="text-[12px] text-gray-500 mt-0.5">Vem a convite de um Sócio (Patrocinado).</p>
+              <p className="font-bold text-[16px] text-gray-900">Visitante</p>
+              <p className="text-[12px] text-gray-500 mt-0.5">Convidado de um sócio ou visitante em reciprocidade.</p>
             </div>
           </button>
 
-          {/* Opção 2: Prestador do Sócio */}
+          {/* Opção 2: Prestador de Serviço (particular ou do próprio clube) */}
           <button
-            onClick={() => onSelecionar('prestador-socio')}
+            onClick={() => onSelecionar('prestador')}
             className="w-full p-5 border-2 border-gray-200 bg-white rounded-2xl flex items-center gap-4 hover:border-emerald-600 hover:bg-emerald-50 transition-all group text-left"
           >
             <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
               <Briefcase size={24} className="text-emerald-600" />
             </div>
             <div>
-              <p className="font-bold text-[16px] text-gray-900">Prestador Particular</p>
-              <p className="text-[12px] text-gray-500 mt-0.5">Personal, babá, etc. (Vinculado a Sócio).</p>
-            </div>
-          </button>
-
-          {/* Opção 3: Funcionário/Serviço do Clube */}
-          <button
-            onClick={() => onSelecionar('funcionario-clube')}
-            className="w-full p-5 border-2 border-gray-200 bg-white rounded-2xl flex items-center gap-4 hover:border-amber-600 hover:bg-amber-50 transition-all group text-left"
-          >
-            <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
-              <Wrench size={24} className="text-amber-600" />
-            </div>
-            <div>
-              <p className="font-bold text-[16px] text-gray-900">Serviço do Clube</p>
-              <p className="text-[12px] text-gray-500 mt-0.5">Funcionários e manutenções do próprio clube.</p>
+              <p className="font-bold text-[16px] text-gray-900">Prestador de Serviço</p>
+              <p className="text-[12px] text-gray-500 mt-0.5">Personal, babá, manutenção — vinculado a um sócio ou ao clube.</p>
             </div>
           </button>
         </div>

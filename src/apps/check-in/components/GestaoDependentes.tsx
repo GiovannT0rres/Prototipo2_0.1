@@ -11,7 +11,7 @@ export function GestaoDependentes() {
   const [dependents, setDependents] = useState(DEPENDENTS_ACTIVE);
   const [isModalOpen, setIsModalOpen] = useState(false);
   
-  const [formData, setFormData] = useState({ name: "", cpf: "", relation: "Filho(a)", birthDate: "" });
+  const [formData, setFormData] = useState({ name: "", cpf: "", birthDate: "" });
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -25,7 +25,7 @@ export function GestaoDependentes() {
       const newDep = {
         id: `d_${Date.now()}`,
         name: formData.name,
-        type: formData.relation,
+        type: "Familiar", // status genérico — não importa o parentesco específico
         birthDate: formData.birthDate,
         avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.name)}&background=random`,
         pending: true,
@@ -33,10 +33,10 @@ export function GestaoDependentes() {
         canManageAccess: false,
         guestList: []
       };
-      
+
       setDependents((prev) => [newDep, ...prev]);
       setIsModalOpen(false);
-      setFormData({ name: "", cpf: "", relation: "Filho(a)", birthDate: "" });
+      setFormData({ name: "", cpf: "", birthDate: "" });
       setIsLoading(false);
       
       toast.success("Solicitação enviada com sucesso! Aguarde a aprovação do clube.");
@@ -196,20 +196,6 @@ export function GestaoDependentes() {
                     placeholder="000.000.000-00"
                     className="w-full bg-gray-50 border border-gray-200 px-4 py-3.5 rounded-xl text-[15px] focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                   />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-[12px] font-bold text-gray-500 uppercase tracking-wider">Parentesco</label>
-                  <select
-                    value={formData.relation}
-                    onChange={(e) => setFormData({...formData, relation: e.target.value})}
-                    className="w-full bg-gray-50 border border-gray-200 px-4 py-3.5 rounded-xl text-[15px] focus:outline-none focus:ring-2 focus:ring-blue-500/20 appearance-none"
-                  >
-                    <option>Filho(a)</option>
-                    <option>Cônjuge</option>
-                    <option>Pai/Mãe</option>
-                    <option>Enteado(a)</option>
-                  </select>
                 </div>
 
                 <div className="space-y-1.5">

@@ -1,31 +1,29 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { ChevronLeft, ChevronDown, Check } from "lucide-react";
-import { toast, Toaster } from "sonner";
+import { ChevronLeft, ChevronDown, Copy, Check } from "lucide-react";
 
-import { ESPACOS } from "@/shared/data/spaces"; 
-import { MOTIVOS_ACESSO, MOCK_CONTACTS } from "../mocks/mockCheckIn";
-
-type ReauthorizeModalState = {
-  isOpen: boolean;
-  contact: typeof MOCK_CONTACTS[0];
-} | null;
+import { MOCK_CONTACTS } from "../mocks/mockCheckIn";
 
 export function Contatos() {
   const navigate = useNavigate();
-  
-  const [expandedContactId, setExpandedContactId] = useState<string | null>(null);
-  const [reauthorizeModal, setReauthorizeModal] = useState<ReauthorizeModalState>(null);
-  const [selectedEspacoId, setSelectedEspacoId] = useState(ESPACOS[0]?.id || "1");
-  const [selectedMotivo, setSelectedMotivo] = useState(MOTIVOS_ACESSO[0]?.id || "familiar");
-  const [startDate, setStartDate] = useState(new Date().toISOString().split("T")[0]);
-  const [endDate, setEndDate] = useState("");
-  const [canManageAccess, setCanManageAccess] = useState(false);
 
-  const handleQuickReauthorize = (contact: typeof MOCK_CONTACTS[0]) => {
-    const espacoSelected = ESPACOS.find((c) => c.id === selectedEspacoId);
-    toast.success(`${contact.name} foi reautorizado em: ${espacoSelected?.name}!`);
-    setReauthorizeModal(null);
+  const [expandedContactId, setExpandedContactId] = useState<string | null>(null);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  // Convites são sempre um código que o convidado usa para conversar com o Bot
+  // e concluir o próprio cadastro — nunca uma liberação instantânea pelo app.
+  const inviteUrl = (contactId: string) => `go.paccclube.com.br/convite/${contactId}`;
+
+  const handleCopy = (contact: (typeof MOCK_CONTACTS)[0]) => {
+    navigator.clipboard.writeText(inviteUrl(contact.id));
+    setCopiedId(contact.id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  const handleWhatsApp = (contact: (typeof MOCK_CONTACTS)[0]) => {
+    const phoneDigits = contact.phone.replace(/\D/g, "");
+    const text = encodeURIComponent(`Olá quero concluir o meu check-in: #${contact.id}-conv2026#`);
+    window.open(`https://api.whatsapp.com/send?phone=55${phoneDigits}&text=${text}`, "_blank");
   };
 
   return (
@@ -42,14 +40,16 @@ export function Contatos() {
           <span className="text-[17px] font-semibold text-gray-900">
             Meus Contatos
           </span>
-          <div className="w-10" /> 
+          <div className="w-10" />
         </div>
       </div>
 
       <div className="p-4 max-w-md mx-auto w-full flex-1">
         <div className="mb-6">
           <p className="text-[14px] text-gray-500 leading-relaxed px-1">
-            Pessoas que você já autorizou anteriormente. Toque em um contato para gerenciar detalhes ou renovar o acesso rapidamente.
+            Como os contatos salvos no seu celular. Toque em alguém para reenviar
+            o convite de acesso por WhatsApp — o próprio convidado conclui o
+            cadastro conversando com o Bot do clube.
           </p>
         </div>
 
@@ -74,7 +74,7 @@ export function Contatos() {
                       {contact.name}
                     </h3>
                     <span className="text-[12px] text-gray-400 font-medium">
-                      Ver detalhes
+                      {contact.phone}
                     </span>
                   </div>
                 </div>
@@ -111,159 +111,36 @@ export function Contatos() {
                     </span>
                   </div>
 
-                  <div className="pt-2">
-                    <button
-                      onClick={() => {
-                        setSelectedEspacoId(ESPACOS[0]?.id || "1");
-                        setReauthorizeModal({ isOpen: true, contact });
-                      }}
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-[15px] py-3 rounded-xl transition-colors shadow-sm flex items-center justify-center gap-1.5 active:bg-blue-800"
-                    >
-                      <Check size={18} />
-                      Autorizar Novamente
-                    </button>
+                  <div className="pt-1">
+                    <span className="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">
+                      Endereço do Convite
+                    </span>
+                    <div className="relative flex items-center bg-gray-50 border border-gray-200 rounded-xl py-3 pl-3.5 pr-11 text-[14px] text-gray-800 font-medium">
+                      <span className="truncate">{inviteUrl(contact.id)}</span>
+                      <button
+                        onClick={() => handleCopy(contact)}
+                        className="absolute right-2.5 p-1.5 text-gray-400 hover:text-gray-600 active:scale-95 transition-all"
+                      >
+                        {copiedId === contact.id ? <Check size={18} className="text-green-500" /> : <Copy size={18} />}
+                      </button>
+                    </div>
                   </div>
+
+                  <button
+                    onClick={() => handleWhatsApp(contact)}
+                    className="w-full bg-[#25D366] hover:bg-[#1da851] text-white font-semibold text-[15px] py-3 rounded-xl transition-colors shadow-sm flex items-center justify-center gap-2"
+                  >
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path>
+                    </svg>
+                    Convidar via WhatsApp
+                  </button>
                 </div>
               )}
             </div>
           ))}
         </div>
       </div>
-
-      {reauthorizeModal?.isOpen && (
-        <div
-          onClick={() => setReauthorizeModal(null)}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
-        >
-          <div
-            className="bg-white w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl flex flex-col p-6 animate-in zoom-in-95 duration-200"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex flex-col items-center text-center mb-4">
-              <img
-                src={reauthorizeModal.contact.avatar}
-                alt={reauthorizeModal.contact.name}
-                className="w-16 h-16 rounded-full border border-gray-200 object-cover shadow-sm mb-3"
-              />
-              <h3 className="text-[18px] font-bold text-gray-900 leading-tight">
-                Nova Autorização Rápida
-              </h3>
-              <p className="text-[14px] text-gray-500 mt-1">
-                Selecione o destino para{" "}
-                <strong className="text-gray-700">{reauthorizeModal.contact.name}</strong>
-              </p>
-            </div>
-
-            <div className="space-y-4 mb-6">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-                  Espaço de Destino
-                </label>
-                <div className="relative">
-                  <select
-                    value={selectedEspacoId}
-                    onChange={(e) => setSelectedEspacoId(e.target.value)}
-                    className="w-full appearance-none bg-gray-50 px-3.5 py-3 rounded-xl border border-gray-200 text-[15px] text-gray-900 font-semibold focus:ring-2 focus:ring-blue-500/20"
-                  >
-                    {ESPACOS.map((espaco) => (
-                      <option key={espaco.id} value={espaco.id}>
-                        {espaco.name}
-                      </option>
-                    ))}
-                  </select>
-                  <ChevronDown
-                    size={18}
-                    className="absolute right-3.5 top-3.5 text-gray-400 pointer-events-none"
-                  />
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-                  Motivo do Acesso
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {MOTIVOS_ACESSO.map((motivo) => (
-                    <button
-                      key={motivo.id}
-                      onClick={() => setSelectedMotivo(motivo.id)}
-                      className={`px-3.5 py-1.5 rounded-full text-[13px] font-semibold transition-all ${
-                        selectedMotivo === motivo.id
-                          ? "bg-gray-900 text-white shadow-sm"
-                          : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                      }`}
-                    >
-                      {motivo.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex gap-3">
-                <div className="flex-1 flex flex-col gap-1.5">
-                  <label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-                    Entrada
-                  </label>
-                  <input
-                    type="date"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                    className="w-full bg-gray-50 border border-gray-200 px-3 py-2.5 rounded-xl text-[14px] text-gray-900 font-semibold"
-                  />
-                </div>
-                <div className="flex-1 flex flex-col gap-1.5">
-                  <label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-                    Saída
-                  </label>
-                  <input
-                    type="date"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
-                    className="w-full bg-gray-50 border border-gray-200 px-3 py-2.5 rounded-xl text-[14px] text-gray-900 font-semibold"
-                  />
-                </div>
-              </div>
-
-              <div className="bg-gray-50 p-3.5 rounded-xl border border-gray-100 flex items-center justify-between">
-                <div className="flex flex-col">
-                  <span className="text-[14px] font-semibold text-gray-900">
-                    Permitir criar convites?
-                  </span>
-                  <span className="text-[12px] text-gray-500">
-                    Esta pessoa será um Autorizador.
-                  </span>
-                </div>
-                <label className="relative inline-flex items-center cursor-pointer">
-                  <input
-                    type="checkbox"
-                    className="sr-only peer"
-                    checked={canManageAccess}
-                    onChange={(e) => setCanManageAccess(e.target.checked)}
-                  />
-                  <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
-                </label>
-              </div>
-            </div>
-
-            <div className="flex gap-3">
-              <button
-                onClick={() => setReauthorizeModal(null)}
-                className="flex-1 bg-gray-100 text-gray-700 font-semibold text-[15px] py-3.5 rounded-xl active:bg-gray-200 transition-colors"
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={() => handleQuickReauthorize(reauthorizeModal.contact)}
-                className="flex-1 bg-blue-600 text-white font-semibold text-[15px] py-3.5 rounded-xl active:bg-blue-700 shadow-sm transition-colors"
-              >
-                Confirmar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      <Toaster position="top-center" richColors />
     </div>
   );
 }

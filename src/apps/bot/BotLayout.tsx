@@ -1,5 +1,5 @@
 import { Outlet } from "react-router";
-import { ArrowLeft, MoreVertical, Phone, Video } from "lucide-react";
+import { ArrowLeft, Home, MoreVertical, Phone, Video } from "lucide-react";
 import { useNavigate } from "react-router";
 
 export function BotLayout() {
@@ -30,6 +30,9 @@ export function BotLayout() {
           <div className="flex items-center gap-4">
             <Video size={20} />
             <Phone size={20} />
+            <button onClick={() => navigate("/")} title="Voltar ao Hub" className="active:opacity-70 transition-opacity">
+              <Home size={20} />
+            </button>
             <MoreVertical size={20} />
           </div>
         </div>

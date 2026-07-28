@@ -39,9 +39,9 @@ export const SCENARIOS: Record<ScenarioId, ChatMessage[]> = {
     { id: "v6", type: "sent", text: "15/06/2026", time: "10:03" },
     { id: "v7", type: "received", text: "Última etapa: para confirmar sua identidade, envie uma *selfie* segurando um documento com foto.", time: "10:03", isSelfieRequest: true },
     { id: "v8", type: "sent", text: "", time: "10:04", isSelfieReply: true },
-    { id: "v9", type: "received", text: "Identidade confirmada ✅\n\n*Resumo do Cadastro:*\nNome: João da Silva\nCPF: 111.222.333-44\nMotivo: Convidado Social\nData: 15/06/2026\n\nSua solicitação foi enviada para o titular aprovar no App Check-in.", time: "10:05" },
+    { id: "v9", type: "received", text: "Identidade confirmada ✅\n\n*Resumo do Cadastro:*\nNome: João da Silva\nCPF: 111.222.333-44\nCategoria: Visitante\nData: 15/06/2026\n\nSua solicitação foi enviada para o titular aprovar no App Check-in.", time: "10:05" },
     { id: "v10", type: "received", text: "O Titular *aprovou* o seu acesso! ✅\n\nAqui está o seu Passe de Acesso. Apresente-o na portaria junto com seu documento oficial.", time: "10:15" },
-    { id: "v11", type: "received", text: "PASSE", isPass: true, time: "10:15", passInfo: { name: "João da Silva", subtitle: "Convidado Social • 15/06" } },
+    { id: "v11", type: "received", text: "PASSE", isPass: true, time: "10:15", passInfo: { name: "João da Silva", subtitle: "Visitante • 15/06" } },
   ],
 
   // Caso de uso: Cadastrar dependentes + Concluir cadastro iniciado pelo App Check-in
@@ -52,7 +52,7 @@ export const SCENARIOS: Record<ScenarioId, ChatMessage[]> = {
     { id: "d4", type: "sent", text: "1", time: "10:02" },
     { id: "d5", type: "received", text: "Para confirmar a identidade do dependente, envie uma *selfie* dele com documento com foto.", time: "10:03", isSelfieRequest: true },
     { id: "d6", type: "sent", text: "", time: "10:03", isSelfieReply: true },
-    { id: "d7", type: "received", text: "Identidade confirmada ✅\n\n*Resumo:*\nNome: Lucas Almeida\nParentesco: Filho(a)\n\nSeu cadastro foi enviado para aprovação do clube. Você será avisado por aqui assim que for aprovado.", time: "10:04" },
+    { id: "d7", type: "received", text: "Identidade confirmada ✅\n\n*Resumo:*\nNome: Lucas Almeida\nCategoria: Familiar\n\nSeu cadastro foi enviado para aprovação do clube. Você será avisado por aqui assim que for aprovado.", time: "10:04" },
   ],
 
   // Caso de uso: Cadastrar prestadores de serviço + Concluir cadastro iniciado pelo App Concierge
@@ -70,10 +70,10 @@ export const SCENARIOS: Record<ScenarioId, ChatMessage[]> = {
   checkin: [
     { id: "c1", type: "received", text: "Certo! Vamos confirmar sua chegada. Qual o *CPF* usado no seu cadastro?", time: "10:01" },
     { id: "c2", type: "sent", text: "222.333.444-55", time: "10:01" },
-    { id: "c3", type: "received", text: "Encontrei sua autorização ativa como *Convidado Social*, patrocinado por Ana Costa (Titular). Para confirmar, envie uma *selfie* rápida.", time: "10:02", isSelfieRequest: true },
+    { id: "c3", type: "received", text: "Encontrei sua autorização ativa como *Visitante*, patrocinado por Ana Costa (Titular). Para confirmar, envie uma *selfie* rápida.", time: "10:02", isSelfieRequest: true },
     { id: "c4", type: "sent", text: "", time: "10:02", isSelfieReply: true },
     { id: "c5", type: "received", text: "Identidade confirmada ✅\n\nCheck-in realizado! A portaria já foi avisada da sua chegada.", time: "10:03" },
-    { id: "c6", type: "received", text: "PASSE", isPass: true, time: "10:03", passInfo: { name: "Convidado no local", subtitle: "Convidado Social • Hoje" } },
+    { id: "c6", type: "received", text: "PASSE", isPass: true, time: "10:03", passInfo: { name: "Convidado no local", subtitle: "Visitante • Hoje" } },
   ],
 
   // Caso de uso: Atualizar informações cadastrais + Confirmar identidade

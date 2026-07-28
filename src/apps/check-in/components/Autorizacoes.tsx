@@ -22,6 +22,11 @@ import {
   MOTIVOS_ACESSO,
 } from "../mocks/mockCheckIn";
 
+// Sentinel usado quando a pessoa é liberada para o clube todo, em vez de um
+// espaço específico — dependentes têm isso implícito; convidados patrocinados
+// podem escolher isso como alternativa a um espaço fixo.
+const CLUBE_INTEIRO_ID = "all";
+
 type RevokeModalState = {
   isOpen: boolean;
   type: "titular" | "guest" | "pending";
@@ -156,13 +161,16 @@ export function Autorizacoes() {
 
   const handleAccept = (req: (typeof INITIAL_PENDING)[0]) => {
     const label = MOTIVOS_ACESSO.find((m) => m.id === req.type)?.label || "Visitante";
-    const espacoSelected = ESPACOS.find((c) => c.id === req.espacoId);
+    // Dependente tem acesso livre por natureza — não depende do que ficou selecionado no campo (que nem aparece pra esse motivo).
+    const espacoFinal = req.type === "familiar" ? CLUBE_INTEIRO_ID : req.espacoId;
+    const espacoSelected = ESPACOS.find((c) => c.id === espacoFinal);
+    const destinoLabel = espacoFinal === CLUBE_INTEIRO_ID ? "Clube Inteiro" : espacoSelected?.name;
 
     const newActive = {
       id: `d_new_${Date.now()}`,
       name: req.name,
       type: label,
-      espacoId: req.espacoId,
+      espacoId: espacoFinal,
       avatar: req.avatar,
       pending: false,
       invites: 0,
@@ -172,7 +180,7 @@ export function Autorizacoes() {
 
     setActiveDependents((prev) => [newActive, ...prev]);
     setPendingRequests((prev) => prev.filter((p) => p.id !== req.id));
-    toast.success(`${req.name} autorizado em: ${espacoSelected?.name}!`);
+    toast.success(`${req.name} autorizado em: ${destinoLabel}!`);
   };
 
   const handleDecline = (req: (typeof INITIAL_PENDING)[0]) => {
@@ -364,24 +372,6 @@ export function Autorizacoes() {
 
                 {expandedRequestId === req.id && (
                   <div className="px-4 pb-5 space-y-4 border-t border-gray-100 pt-4 animate-fade-blur-in">
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-                        Espaço de Destino
-                      </label>
-                      <div className="relative">
-                        <select
-                          value={req.espacoId}
-                          onChange={(e) => updateRequestField(req.id, "espacoId", e.target.value)}
-                          className="w-full appearance-none bg-[#f2f2f7] px-3.5 py-2.5 rounded-xl border-0 text-[15px] text-gray-900 font-semibold focus:ring-2 focus:ring-[#007AFF]/20"
-                        >
-                          {ESPACOS.map((club) => (
-                            <option key={club.id} value={club.id}>{club.name}</option>
-                          ))}
-                        </select>
-                        <ChevronDown size={15} className="absolute right-3.5 top-3.5 text-gray-400 pointer-events-none" />
-                      </div>
-                    </div>
-
                     <div className="flex flex-col gap-2">
                       <label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
                         Motivo
@@ -390,7 +380,13 @@ export function Autorizacoes() {
                         {MOTIVOS_ACESSO.map((motivo) => (
                           <button
                             key={motivo.id}
-                            onClick={() => updateRequestField(req.id, "type", motivo.id)}
+                            onClick={() => {
+                              updateRequestField(req.id, "type", motivo.id);
+                              // Prestador exige espaço específico — se estava em "Clube Inteiro", volta pro primeiro espaço real.
+                              if (motivo.id === "prestador" && req.espacoId === CLUBE_INTEIRO_ID) {
+                                updateRequestField(req.id, "espacoId", ESPACOS[0]?.id || "1");
+                              }
+                            }}
                             className={`px-4 py-1.5 rounded-full text-[13px] font-semibold transition-all ${
                               req.type === motivo.id
                                 ? "bg-gray-900 text-white"
@@ -402,6 +398,33 @@ export function Autorizacoes() {
                         ))}
                       </div>
                     </div>
+
+                    {req.type === "familiar" ? (
+                      <div className="bg-[#f2f2f7] p-3.5 rounded-xl text-[13px] text-gray-500 font-medium">
+                        Dependente tem livre acesso a todos os espaços do clube — sem espaço de destino a definir.
+                      </div>
+                    ) : (
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+                          Espaço de Destino
+                        </label>
+                        <div className="relative">
+                          <select
+                            value={req.espacoId}
+                            onChange={(e) => updateRequestField(req.id, "espacoId", e.target.value)}
+                            className="w-full appearance-none bg-[#f2f2f7] px-3.5 py-2.5 rounded-xl border-0 text-[15px] text-gray-900 font-semibold focus:ring-2 focus:ring-[#007AFF]/20"
+                          >
+                            {ESPACOS.map((club) => (
+                              <option key={club.id} value={club.id}>{club.name}</option>
+                            ))}
+                            {req.type !== "prestador" && (
+                              <option value={CLUBE_INTEIRO_ID}>Clube Inteiro (Convidado Patrocinado)</option>
+                            )}
+                          </select>
+                          <ChevronDown size={15} className="absolute right-3.5 top-3.5 text-gray-400 pointer-events-none" />
+                        </div>
+                      </div>
+                    )}
 
                     <div className="flex gap-3">
                       {[
@@ -480,10 +503,16 @@ export function Autorizacoes() {
                     <div className="ml-3 flex-1 min-w-0">
                       <h3 className="text-[16px] font-semibold text-gray-900 leading-tight">{dep.name}</h3>
                       <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
-                        {userEspaco && (
-                          <span className={`text-[10px] font-bold text-white px-2 py-0.5 rounded-md uppercase tracking-wide ${userEspaco.color || "bg-gray-500"}`}>
-                            {userEspaco.name}
+                        {dep.espacoId === CLUBE_INTEIRO_ID ? (
+                          <span className="text-[10px] font-bold text-white px-2 py-0.5 rounded-md uppercase tracking-wide bg-gray-700">
+                            Clube Inteiro
                           </span>
+                        ) : (
+                          userEspaco && (
+                            <span className={`text-[10px] font-bold text-white px-2 py-0.5 rounded-md uppercase tracking-wide ${userEspaco.color || "bg-gray-500"}`}>
+                              {userEspaco.name}
+                            </span>
+                          )
                         )}
                         <span className="text-[10px] font-bold text-gray-500 bg-gray-100 px-2 py-0.5 rounded-md uppercase tracking-wide">
                           {dep.type}
@@ -586,7 +615,7 @@ export function Autorizacoes() {
                       <div className="flex items-center gap-1.5 mt-1">
                         <MapPin size={11} className="text-gray-400 shrink-0" />
                         <span className="text-[12px] font-medium text-gray-500 truncate">
-                          {historicEspaco?.name || "Área Comum"}
+                          {item.espacoId === CLUBE_INTEIRO_ID ? "Clube Inteiro" : historicEspaco?.name || "Área Comum"}
                         </span>
                       </div>
                     </div>

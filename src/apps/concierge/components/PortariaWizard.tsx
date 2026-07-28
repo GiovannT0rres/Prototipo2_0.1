@@ -78,7 +78,7 @@ export function PortariaWizard() {
         {step === "tipo-cadastro" && (
           <TipoCadastro
             onSelecionar={(tipo) =>
-              setStep(tipo === "prestador-socio" ? "cadastro-prestador" : "cadastro-visitante")
+              setStep(tipo === "prestador" ? "cadastro-prestador" : "cadastro-visitante")
             }
             onVoltar={resetarFluxo}
           />
@@ -87,6 +87,7 @@ export function PortariaWizard() {
         {step === "cadastro-visitante" && (
           <CadastroVisitante
             cpfInicial={cpfAtual}
+            nomeInicial={dadosPessoa?.name}
             onVoltar={() => setStep("tipo-cadastro")}
             onConcluir={resetarFluxo}
           />
@@ -95,6 +96,7 @@ export function PortariaWizard() {
         {step === "cadastro-prestador" && (
           <CadastroPrestador
             cpfInicial={cpfAtual}
+            nomeInicial={dadosPessoa?.name}
             onVoltar={() => setStep("tipo-cadastro")}
             onConcluir={resetarFluxo}
           />
