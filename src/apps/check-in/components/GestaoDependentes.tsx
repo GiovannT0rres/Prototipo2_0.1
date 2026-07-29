@@ -1,13 +1,11 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
-import { ChevronLeft, Plus, Users, UserPlus, X, AlertCircle } from "lucide-react";
+import { Plus, Users, UserPlus, X, AlertCircle } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { toast, Toaster } from "sonner";
 import { DEPENDENTS_ACTIVE } from "../mocks/mockCheckIn";
 
 export function GestaoDependentes() {
-  const navigate = useNavigate();
-  
+
   const [dependents, setDependents] = useState(DEPENDENTS_ACTIVE);
   const [isModalOpen, setIsModalOpen] = useState(false);
   
@@ -25,7 +23,7 @@ export function GestaoDependentes() {
       const newDep = {
         id: `d_${Date.now()}`,
         name: formData.name,
-        type: "Familiar", // status genérico — não importa o parentesco específico
+        type: "Familiar", 
         birthDate: formData.birthDate,
         avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.name)}&background=random`,
         pending: true,
@@ -57,17 +55,12 @@ export function GestaoDependentes() {
       {/* Header */}
       <div className="bg-white/80 backdrop-blur-md sticky top-0 z-10 border-b border-gray-200">
         <div className="flex items-center justify-between px-4 h-12">
-          <button
-            onClick={() => navigate(-1)}
-            className="text-blue-600 flex items-center -ml-2 active:opacity-70"
-          >
-            <ChevronLeft size={28} strokeWidth={1.5} />
-            <span className="text-[17px] -ml-1">Voltar</span>
-          </button>
+          {/* Sem botão de "Voltar" aqui — a navegação global (sidebar/drawer) já cobre isso, não precisa de dois menus */}
+          <div className="w-10" />
           <span className="text-[17px] font-semibold text-gray-900">
             Dependentes
           </span>
-          <div className="w-10" /> 
+          <div className="w-10" />
         </div>
       </div>
 

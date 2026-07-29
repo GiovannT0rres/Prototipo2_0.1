@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
-import { ChevronLeft, Calendar, MapPin, Clock, CheckCircle2 } from "lucide-react";
+import { Calendar, MapPin, Clock, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { toast, Toaster } from "sonner";
 
@@ -13,8 +12,7 @@ const ESPACOS = [
 const HORARIOS = ["08:00 - 12:00", "13:00 - 17:00", "18:00 - 22:00"];
 
 export function EventosReservas() {
-  const navigate = useNavigate();
-  
+
   const [selectedSpace, setSelectedSpace] = useState<string | null>(null);
   const [date, setDate] = useState("");
   const [time, setTime] = useState<string | null>(null);
@@ -47,17 +45,12 @@ export function EventosReservas() {
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans pb-24">
       <div className="bg-white/80 backdrop-blur-md sticky top-0 z-10 border-b border-gray-200">
         <div className="flex items-center justify-between px-4 h-12">
-          <button
-            onClick={() => navigate(-1)}
-            className="text-blue-600 flex items-center -ml-2 active:opacity-70"
-          >
-            <ChevronLeft size={28} strokeWidth={1.5} />
-            <span className="text-[17px] -ml-1">Voltar</span>
-          </button>
+          {/* Sem botão de "Voltar" aqui — a navegação global (sidebar/drawer) já cobre isso, não precisa de dois menus */}
+          <div className="w-10" />
           <span className="text-[17px] font-semibold text-gray-900">
             Reservas
           </span>
-          <div className="w-10" /> 
+          <div className="w-10" />
         </div>
       </div>
 

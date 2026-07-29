@@ -44,10 +44,10 @@ export function Home() {
   };
 
   return (
-    <div className="pt-12 max-w-md mx-auto pb-10">
-      
+    <div className="max-w-5xl mx-auto p-6 md:p-8">
+
       {/* SEÇÃO DOS CLUBES — gerar convite/passe de acesso por clube */}
-      <div className="px-4 mb-8">
+      <div className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight text-gray-900 mb-6">
           Clubes
         </h1>
@@ -58,7 +58,7 @@ export function Home() {
           onMouseLeave={handleMouseLeave}
           onMouseUp={handleMouseUp}
           onMouseMove={handleMouseMove}
-          className={`flex overflow-x-auto gap-4 pb-4 -mx-4 px-4 snap-x select-none scrollbar-hide ${
+          className={`flex overflow-x-auto gap-4 pb-4 snap-x select-none scrollbar-hide ${
             isDragging ? "cursor-grabbing" : "cursor-grab"
           }`}
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }} 
@@ -92,91 +92,31 @@ export function Home() {
 
       <hr className="border-gray-100 my-2" />
 
-      {/* BOTÃO DE AUTORIZAÇÕES */}
-      <div className="px-4 mt-6">
-        <button
-          onClick={() => navigate('/check-in/autorizacoes')}
-          className="w-full bg-white flex items-center justify-between p-4 rounded-xl shadow-sm border border-gray-100 active:scale-[0.98] active:bg-gray-50 transition-all"
-        >
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
-              <FileText size={20} strokeWidth={2} />
+      {/* ATALHOS — mesmas seções já disponíveis na barra lateral, em formato de grid pra tela larga */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+        {[
+          { path: "/check-in/autorizacoes", label: "Autorizações", icon: FileText },
+          { path: "/check-in/contatos", label: "Contatos", icon: Contact },
+          { path: "/check-in/dependentes", label: "Gestão de Dependentes", icon: Users },
+          { path: "/check-in/patrocinio", label: "Patrocínio de Visitantes", icon: UserPlus },
+          { path: "/check-in/reservas", label: "Eventos e Reservas", icon: Calendar },
+        ].map((item) => (
+          <button
+            key={item.path}
+            onClick={() => navigate(item.path)}
+            className="bg-white flex items-center justify-between p-4 rounded-xl shadow-sm border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all text-left"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 shrink-0">
+                <item.icon size={20} strokeWidth={2} />
+              </div>
+              <span className="text-[15px] font-medium text-gray-900">
+                {item.label}
+              </span>
             </div>
-            <span className="text-[17px] font-medium text-gray-900">
-              Autorizações
-            </span>
-          </div>
-          <ChevronRight size={22} className="text-gray-400" strokeWidth={1.5} />
-        </button>
-      </div>
-
-      {/* BOTÃO DE CONTATOS */}
-      <div className="px-4 mt-6">
-        <button
-          onClick={() => navigate('/check-in/contatos')}
-          className="w-full bg-white flex items-center justify-between p-4 rounded-xl shadow-sm border border-gray-100 active:scale-[0.98] active:bg-gray-50 transition-all"
-        >
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
-              <Contact size={20} strokeWidth={2} />
-            </div>
-            <span className="text-[17px] font-medium text-gray-900">
-              Contatos
-            </span>
-          </div>
-          <ChevronRight size={22} className="text-gray-400" strokeWidth={1.5} />
-        </button>
-      </div>
-
-      <div className="px-4 mt-6">
-        <button
-          onClick={() => navigate('/check-in/dependentes')}
-          className="w-full bg-white flex items-center justify-between p-4 rounded-xl shadow-sm border border-gray-100 active:scale-[0.98] active:bg-gray-50 transition-all"
-        >
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
-              <Users size={20} strokeWidth={2} />
-            </div>
-            <span className="text-[17px] font-medium text-gray-900">
-              Gestão de Dependentes
-            </span>
-          </div>
-          <ChevronRight size={22} className="text-gray-400" strokeWidth={1.5} />
-        </button>
-      </div>
-
-      <div className="px-4 mt-6">
-        <button
-          onClick={() => navigate('/check-in/patrocinio')}
-          className="w-full bg-white flex items-center justify-between p-4 rounded-xl shadow-sm border border-gray-100 active:scale-[0.98] active:bg-gray-50 transition-all"
-        >
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
-              <UserPlus size={20} strokeWidth={2} />
-            </div>
-            <span className="text-[17px] font-medium text-gray-900">
-              Patrocínio de Visitantes
-            </span>
-          </div>
-          <ChevronRight size={22} className="text-gray-400" strokeWidth={1.5} />
-        </button>
-      </div>
-
-      <div className="px-4 mt-6">
-        <button
-          onClick={() => navigate('/check-in/reservas')}
-          className="w-full bg-white flex items-center justify-between p-4 rounded-xl shadow-sm border border-gray-100 active:scale-[0.98] active:bg-gray-50 transition-all"
-        >
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
-              <Calendar size={20} strokeWidth={2} />
-            </div>
-            <span className="text-[17px] font-medium text-gray-900">
-              Eventos e Reservas
-            </span>
-          </div>
-          <ChevronRight size={22} className="text-gray-400" strokeWidth={1.5} />
-        </button>
+            <ChevronRight size={20} className="text-gray-400 shrink-0" strokeWidth={1.5} />
+          </button>
+        ))}
       </div>
 
     </div>

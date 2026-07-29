@@ -1,7 +1,6 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router";
 import {
-  ChevronLeft,
   ChevronRight,
   Check,
   X,
@@ -22,9 +21,7 @@ import {
   MOTIVOS_ACESSO,
 } from "../mocks/mockCheckIn";
 
-// Sentinel usado quando a pessoa é liberada para o clube todo, em vez de um
-// espaço específico — dependentes têm isso implícito; convidados patrocinados
-// podem escolher isso como alternativa a um espaço fixo.
+
 const CLUBE_INTEIRO_ID = "all";
 
 type RevokeModalState = {
@@ -268,13 +265,8 @@ export function Autorizacoes() {
     <div className="min-h-screen bg-[#f2f2f7] flex flex-col">
       <div className="bg-white/75 backdrop-blur-xl sticky top-0 z-20 border-b border-black/[0.08]">
         <div className="flex items-center justify-between px-4 h-[44px]">
-          <button
-            onClick={() => navigate("/check-in/espacos")}
-            className="text-[#007AFF] flex items-center -ml-2 ios-press"
-          >
-            <ChevronLeft size={28} strokeWidth={1.5} />
-            <span className="text-[17px] -ml-1 font-normal">Início</span>
-          </button>
+          {/* Sem botão de "Início" aqui — a navegação global (sidebar/drawer) já cobre isso, não precisa de dois menus */}
+          <div className="w-10" />
           <span className="text-[17px] font-semibold text-gray-900 absolute left-1/2 -translate-x-1/2">
             Painel Geral
           </span>
@@ -386,6 +378,10 @@ export function Autorizacoes() {
                               if (motivo.id === "prestador" && req.espacoId === CLUBE_INTEIRO_ID) {
                                 updateRequestField(req.id, "espacoId", ESPACOS[0]?.id || "1");
                               }
+                              // Visitante é convidado patrocinado — não pode virar Autorizador (não convida outros).
+                              if (motivo.id === "visitante" && req.canManageAccess) {
+                                updateRequestField(req.id, "canManageAccess", false);
+                              }
                             }}
                             className={`px-4 py-1.5 rounded-full text-[13px] font-semibold transition-all ${
                               req.type === motivo.id
@@ -443,21 +439,23 @@ export function Autorizacoes() {
                       ))}
                     </div>
 
-                    <div className="bg-[#f2f2f7] p-3.5 rounded-xl flex items-center justify-between">
-                      <div>
-                        <span className="text-[14px] font-semibold text-gray-900">Permitir criar convites</span>
-                        <p className="text-[12px] text-gray-400 mt-0.5">Será um Autorizador</p>
+                    {req.type !== "visitante" && (
+                      <div className="bg-[#f2f2f7] p-3.5 rounded-xl flex items-center justify-between">
+                        <div>
+                          <span className="text-[14px] font-semibold text-gray-900">Permitir criar convites</span>
+                          <p className="text-[12px] text-gray-400 mt-0.5">Será um Autorizador</p>
+                        </div>
+                        <label className="relative inline-flex items-center cursor-pointer">
+                          <input
+                            type="checkbox"
+                            className="sr-only peer"
+                            checked={req.canManageAccess}
+                            onChange={(e) => updateRequestField(req.id, "canManageAccess", e.target.checked)}
+                          />
+                          <div className="w-[51px] h-[31px] bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-[20px] peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-[27px] after:w-[27px] after:transition-all after:shadow-sm peer-checked:bg-[#34C759]" />
+                        </label>
                       </div>
-                      <label className="relative inline-flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          className="sr-only peer"
-                          checked={req.canManageAccess}
-                          onChange={(e) => updateRequestField(req.id, "canManageAccess", e.target.checked)}
-                        />
-                        <div className="w-[51px] h-[31px] bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-[20px] peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-[27px] after:w-[27px] after:transition-all after:shadow-sm peer-checked:bg-[#34C759]" />
-                      </label>
-                    </div>
+                    )}
 
                     <div className="space-y-2.5 pt-1">
                       <SlideToApprove

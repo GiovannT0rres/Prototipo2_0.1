@@ -1,11 +1,9 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
-import { ChevronLeft, ChevronDown, Copy, Check } from "lucide-react";
+import { ChevronDown, Copy, Check } from "lucide-react";
 
 import { MOCK_CONTACTS } from "../mocks/mockCheckIn";
 
 export function Contatos() {
-  const navigate = useNavigate();
 
   const [expandedContactId, setExpandedContactId] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -30,13 +28,8 @@ export function Contatos() {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <div className="bg-white/80 backdrop-blur-md sticky top-0 z-10 border-b border-gray-200">
         <div className="flex items-center justify-between px-4 h-12">
-          <button
-            onClick={() => navigate(-1)}
-            className="text-blue-600 flex items-center -ml-2 active:opacity-70"
-          >
-            <ChevronLeft size={28} strokeWidth={1.5} />
-            <span className="text-[17px] -ml-1">Voltar</span>
-          </button>
+          {/* Sem botão de "Voltar" aqui — a navegação global (sidebar/drawer) já cobre isso, não precisa de dois menus */}
+          <div className="w-10" />
           <span className="text-[17px] font-semibold text-gray-900">
             Meus Contatos
           </span>

@@ -1,12 +1,10 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
-import { ChevronLeft, Search, Calendar, UserPlus, CheckCircle2 } from "lucide-react";
+import { Search, Calendar, UserPlus, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { toast, Toaster } from "sonner";
 
 export function PatrocinioConvidados() {
-  const navigate = useNavigate();
-  
+
   const [cpf, setCpf] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [guestFound, setGuestFound] = useState<{name: string} | null>(null);
@@ -57,17 +55,12 @@ export function PatrocinioConvidados() {
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
       <div className="bg-white/80 backdrop-blur-md sticky top-0 z-10 border-b border-gray-200">
         <div className="flex items-center justify-between px-4 h-12">
-          <button
-            onClick={() => navigate(-1)}
-            className="text-blue-600 flex items-center -ml-2 active:opacity-70"
-          >
-            <ChevronLeft size={28} strokeWidth={1.5} />
-            <span className="text-[17px] -ml-1">Voltar</span>
-          </button>
+          {/* Sem botão de "Voltar" aqui — a navegação global (sidebar/drawer) já cobre isso, não precisa de dois menus */}
+          <div className="w-10" />
           <span className="text-[17px] font-semibold text-gray-900">
             Convites
           </span>
-          <div className="w-10" /> 
+          <div className="w-10" />
         </div>
       </div>
 

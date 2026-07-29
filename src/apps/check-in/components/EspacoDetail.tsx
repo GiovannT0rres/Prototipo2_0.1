@@ -7,7 +7,6 @@ export function EspacoDetail() {
   const { id } = useParams();
   const [copied, setCopied] = useState(false);
 
-  // Guardamos o ID no localStorage para sabermos o último espaço visitado
   useEffect(() => {
     if (id) localStorage.setItem("lastEspacoId", id);
   }, [id]);
