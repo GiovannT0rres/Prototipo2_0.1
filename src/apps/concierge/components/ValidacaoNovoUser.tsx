@@ -10,30 +10,29 @@ interface Props {
   onVoltar: () => void;
 }
 
-const NOMES_FALSOS = ["Marcos Silva Pinto", "Roberto Nunes Alves", "Julio Cesar Rocha"];
-const ANOS_FALSOS = ["1982", "1988", "1991"];
+const NOMES_FALSOS = ["Marcos Silva Pinto", "Roberto Nunes Alves"];
+const ANOS_FALSOS = ["1982", "1988"];
 const NENHUMA_OPCAO = "Nenhuma das alternativas";
 
 export function ValidacaoNovoUser({ dadosBigData, onSucesso, onFalha, onVoltar }: Props) {
   const [etapa, setEtapa] = useState<1 | 2>(1);
-  const [resposta, setResposta] = useState<string | null>(null);
-  
-  // Mistura as opções para a pergunta 1 (Nome), mantendo "Nenhuma" no final
+
+  // Mistura as opções para a pergunta 1 (Nome) — 2 falsas + a real, sem "Nenhuma" na lista
   const opcoesNome = useMemo(() => {
-    const misturadas = [...NOMES_FALSOS, dadosBigData.name].sort(() => Math.random() - 0.5);
-    return [...misturadas, NENHUMA_OPCAO];
+    return [...NOMES_FALSOS, dadosBigData.name].sort(() => Math.random() - 0.5);
   }, [dadosBigData]);
 
-  // Mistura as opções para a pergunta 2 (Ano), mantendo "Nenhuma" no final
+  // Mistura as opções para a pergunta 2 (Ano) — 2 falsas + a real, sem "Nenhuma" na lista
   const opcoesAno = useMemo(() => {
-    const misturadas = [...ANOS_FALSOS, dadosBigData.birthYear].sort(() => Math.random() - 0.5);
-    return [...misturadas, NENHUMA_OPCAO];
+    return [...ANOS_FALSOS, dadosBigData.birthYear].sort(() => Math.random() - 0.5);
   }, [dadosBigData]);
 
   const opcoesAtuais = etapa === 1 ? opcoesNome : opcoesAno;
   const respostaCorreta = etapa === 1 ? dadosBigData.name : dadosBigData.birthYear;
 
-  const handleVerificar = () => {
+  // Cada opção (inclusive o botão "Nenhuma das alternativas" no rodapé) já
+  // valida e avança sozinha — um único clique por pergunta, sem passo de confirmação.
+  const handleResposta = (resposta: string) => {
     if (resposta !== respostaCorreta) {
       toast.error("Resposta incorreta. Processo de segurança cancelado.");
       onFalha();
@@ -42,7 +41,6 @@ export function ValidacaoNovoUser({ dadosBigData, onSucesso, onFalha, onVoltar }
 
     if (etapa === 1) {
       setEtapa(2);
-      setResposta(null);
     } else {
       toast.success("Identidade confirmada!");
       onSucesso();
@@ -73,19 +71,15 @@ export function ValidacaoNovoUser({ dadosBigData, onSucesso, onFalha, onVoltar }
             <div className="space-y-3">
               {opcoesAtuais.map((opcao) => {
                 const isCorreta = opcao === respostaCorreta;
-                
+
                 return (
                   <button
                     key={opcao}
-                    onClick={() => setResposta(opcao)}
-                    className={`w-full text-left px-5 py-4 rounded-xl border-2 transition-colors flex items-center justify-between ${
-                      resposta === opcao
-                        ? "border-blue-600 bg-blue-50 text-blue-700 font-bold"
-                        : "border-gray-200 bg-white text-gray-700 font-semibold hover:border-gray-300"
-                    }`}
+                    onClick={() => handleResposta(opcao)}
+                    className="w-full text-left px-5 py-4 rounded-xl border-2 border-gray-200 bg-white text-gray-700 font-semibold hover:border-gray-300 transition-colors flex items-center justify-between"
                   >
                     <span>{opcao}</span>
-                    
+
                     {/* DICA DE PROTÓTIPO: Marca a correta visualmente */}
                     {isCorreta && (
                       <span className="text-[10px] bg-amber-100 text-amber-700 px-2 py-1 rounded-md flex items-center gap-1 font-bold uppercase tracking-wider">
@@ -102,11 +96,10 @@ export function ValidacaoNovoUser({ dadosBigData, onSucesso, onFalha, onVoltar }
 
       <div className="p-6 border-t border-gray-100 bg-white">
         <button
-          onClick={handleVerificar}
-          disabled={!resposta}
-          className="w-full py-4 rounded-xl font-bold text-[16px] text-white transition-opacity disabled:opacity-40 bg-gray-900 flex justify-center items-center gap-2"
+          onClick={() => handleResposta(NENHUMA_OPCAO)}
+          className="w-full py-4 rounded-xl font-bold text-[16px] text-white transition-opacity bg-gray-900 flex justify-center items-center gap-2"
         >
-          <ShieldAlert size={20} /> Validar Resposta
+          <ShieldAlert size={20} /> Nenhuma das Alternativas
         </button>
       </div>
     </motion.div>

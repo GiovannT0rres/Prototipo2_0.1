@@ -2,26 +2,20 @@ import { useState, useMemo } from "react";
 import { Search, Shield, RefreshCw, LogOut, Clock, Users, User } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { toast } from "sonner";
-import { MOCK_AUTHORIZATIONS } from "../mocks/mockConcierge";
 
 interface Props {
   onBuscar: (cpf: string) => void;
+  pessoasNoLocal: any[];
+  onSaida: (id: string, nome: string) => void;
 }
 
-export function HomeBusca({ onBuscar }: Props) {
+export function HomeBusca({ onBuscar, pessoasNoLocal, onSaida }: Props) {
   // Estado do input principal (Busca de CPF para nova entrada)
   const [cpfPrincipal, setCpfPrincipal] = useState("");
-  
+
   // Estados da lista de pessoas no local
   const [filtroLista, setFiltroLista] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(false);
-  
-  // Carrega as pessoas que estão "No local" e injeta um horário de entrada fictício para o protótipo
-  const [pessoasNoLocal, setPessoasNoLocal] = useState(() => 
-    MOCK_AUTHORIZATIONS
-      .filter((a) => a.status === "No local")
-      .map((p) => ({ ...p, entrada: "Hoje, 08:30" })) // Mock de horário
-  );
 
   // --- LÓGICA DO INPUT PRINCIPAL ---
   const handleCpfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,11 +40,6 @@ export function HomeBusca({ onBuscar }: Props) {
       setIsRefreshing(false);
       toast.success("Lista atualizada com sucesso!");
     }, 1000);
-  };
-
-  const handleSaida = (id: string, nome: string) => {
-    setPessoasNoLocal((prev) => prev.filter((p) => p.id !== id));
-    toast.success(`Saída de ${nome} registrada.`);
   };
 
   const censurarCpf = (cpf: string) => {
@@ -107,10 +96,12 @@ export function HomeBusca({ onBuscar }: Props) {
           </div>
         </form>
 
-        {/* Dica de teste: qual CPF simula usuário existente vs novo */}
+        {/* Dica de teste: quais CPFs simulam cada cenário de usuário existente vs novo */}
         <p className="text-[11px] text-gray-400 mt-2 leading-relaxed">
-          💡 Para testar: <span className="font-mono font-semibold text-gray-500">111.222.333-44</span> (João
-          Silva) simula usuário já cadastrado → Confirmação de Selfie. Qualquer outro CPF simula usuário novo →
+          💡 Para testar usuário já cadastrado → Confirmação de Selfie:{" "}
+          <span className="font-mono font-semibold text-gray-500">111.222.333-44</span> (João Silva, Sócio
+          Titular — acesso livre) ou <span className="font-mono font-semibold text-gray-500">555.666.777-88</span>{" "}
+          (Maria Souza, Visitante — já tem 2 autorizações vigentes). Qualquer outro CPF simula usuário novo →
           Validação + Cadastro.
         </p>
       </div>
@@ -183,7 +174,7 @@ export function HomeBusca({ onBuscar }: Props) {
                   </div>
 
                   <button
-                    onClick={() => handleSaida(pessoa.id, pessoa.name)}
+                    onClick={() => onSaida(pessoa.id, pessoa.name)}
                     className="w-full sm:w-auto px-4 py-2.5 bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 rounded-lg text-[13px] font-bold flex items-center justify-center gap-2 transition-colors"
                   >
                     <LogOut size={16} /> Registrar Saída
@@ -197,10 +188,21 @@ export function HomeBusca({ onBuscar }: Props) {
                 <div className="w-12 h-12 bg-gray-100 text-gray-400 rounded-full flex items-center justify-center mb-3">
                   <Users size={24} />
                 </div>
-                <p className="text-[15px] font-bold text-gray-900">Nenhuma pessoa encontrada</p>
-                <p className="text-[13px] text-gray-500 mt-1">
-                  Não há registros que correspondam à sua busca atual.
-                </p>
+                {pessoasNoLocal.length === 0 ? (
+                  <>
+                    <p className="text-[15px] font-bold text-gray-900">Ninguém no clube no momento</p>
+                    <p className="text-[13px] text-gray-500 mt-1">
+                      Assim que alguém der entrada, a pessoa aparece aqui.
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-[15px] font-bold text-gray-900">Nenhuma pessoa encontrada</p>
+                    <p className="text-[13px] text-gray-500 mt-1">
+                      Não há registros que correspondam à sua busca atual.
+                    </p>
+                  </>
+                )}
               </div>
             )}
           </div>

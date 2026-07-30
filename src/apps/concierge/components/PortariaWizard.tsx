@@ -2,28 +2,34 @@ import { useState } from "react";
 import { toast, Toaster } from "sonner";
 import { HomeBusca } from "./HomeBusca";
 import { ValidacaoNovoUser } from "./ValidacaoNovoUser";
+import { PerguntaWhatsapp } from "./PerguntaWhatsapp";
+import { PerguntaPlaca } from "./PerguntaPlaca";
 import { ConfirmacaoSelfie } from "./ConfirmacaoSelfie";
 import { PerfilPessoa } from "./PerfilPessoa";
 import { NovaAutorizacao } from "./NovaAutorizacao";
-import { TipoCadastro } from "./TipoCadastro";
-import { CadastroVisitante } from "./CadastroVisitante";
-import { CadastroPrestador } from "./CadastroPrestador";
 import { MOCK_AUTHORIZATIONS, REGISTERED_PEOPLE } from "../mocks/mockConcierge";
 
 type Step =
   | "home"
   | "validacao-novo"
-  | "tipo-cadastro"
-  | "cadastro-visitante"
-  | "cadastro-prestador"
+  | "pergunta-whatsapp"
+  | "pergunta-placa"
   | "nova-autorizacao"
   | "confirmacao-selfie"
+  | "pergunta-placa-existente"
   | "perfil";
 
 export function PortariaWizard() {
   const [step, setStep] = useState<Step>("home");
   const [cpfAtual, setCpfAtual] = useState("");
   const [dadosPessoa, setDadosPessoa] = useState<any>(null);
+
+  // "Quem está no clube agora" — vive aqui (não dentro da HomeBusca) porque
+  // Dar Entrada/Registrar Saída acontece na tela de Perfil, e precisa
+  // continuar refletido quando o porteiro voltar pra Home.
+  const [pessoasNoLocal, setPessoasNoLocal] = useState(() =>
+    MOCK_AUTHORIZATIONS.filter((a) => a.status === "No local").map((p) => ({ ...p, entrada: p.entrada || "Hoje, 08:30" }))
+  );
 
   const processarCpf = (cpf: string) => {
     setCpfAtual(cpf);
@@ -51,13 +57,37 @@ export function PortariaWizard() {
     setDadosPessoa(null);
   };
 
+  // Só troca o status e atualiza quem está no clube — não navega pra lugar
+  // nenhum, o porteiro continua na tela de Perfil vendo o resultado.
   const handleLiberarAcesso = (auth: any) => {
     if (auth._saida) {
-      toast.success(`Saída registrada: ${dadosPessoa?.name}`);
+      toast.success(`Saída registrada: ${auth.name || dadosPessoa?.name}`);
+      setPessoasNoLocal((prev) => prev.filter((p) => p.id !== auth.id));
     } else {
-      toast.success(`Entrada registrada: ${dadosPessoa?.name} → ${auth.spot}`);
+      toast.success(`Entrada registrada: ${auth.name || dadosPessoa?.name} → ${auth.destino}`);
+      setPessoasNoLocal((prev) => (prev.some((p) => p.id === auth.id) ? prev : [...prev, auth]));
     }
-    resetarFluxo();
+  };
+
+  const handleSaidaDaLista = (id: string, nome: string) => {
+    setPessoasNoLocal((prev) => prev.filter((p) => p.id !== id));
+    toast.success(`Saída de ${nome} registrada.`);
+  };
+
+  // Pessoa já cadastrada pode acumular várias autorizações (destinos e
+  // autorizadores diferentes) — a nova entra na lista e a portaria volta pro
+  // Perfil pra poder escolher qual delas usar pra dar entrada. Cadastro novo
+  // não tem lista pra voltar, então só reseta o fluxo mesmo.
+  const handleConcluirAutorizacao = (novaAutorizacao?: any) => {
+    if (novaAutorizacao && dadosPessoa?.id) {
+      setDadosPessoa((prev: any) => ({
+        ...prev,
+        autorizacoes: [...(prev.autorizacoes || []), novaAutorizacao],
+      }));
+      setStep("perfil");
+    } else {
+      resetarFluxo();
+    }
   };
 
   return (
@@ -65,59 +95,58 @@ export function PortariaWizard() {
       <div className="w-full max-w-[480px] bg-white rounded-3xl shadow-xl overflow-hidden min-h-[650px] flex flex-col relative border border-gray-100">
 
         {step === "home" && (
-          <HomeBusca onBuscar={processarCpf} />
+          <HomeBusca onBuscar={processarCpf} pessoasNoLocal={pessoasNoLocal} onSaida={handleSaidaDaLista} />
         )}
 
         {/* CAMINHO A: USUÁRIO NOVO — validação de segurança (BigDataCorp) */}
         {step === "validacao-novo" && (
           <ValidacaoNovoUser
             dadosBigData={dadosPessoa}
-            onSucesso={() => setStep("tipo-cadastro")}
+            onSucesso={() => setStep("pergunta-whatsapp")}
             onFalha={resetarFluxo}
             onVoltar={resetarFluxo}
           />
         )}
 
-        {/* CAMINHO A: escolhe que tipo de cadastro fazer */}
-        {step === "tipo-cadastro" && (
-          <TipoCadastro
-            onSelecionar={(tipo) =>
-              setStep(tipo === "prestador" ? "cadastro-prestador" : "cadastro-visitante")
-            }
+        {/* CAMINHO A: uma pergunta por tela — WhatsApp e Placa coletados aqui
+            para não pedir de novo na Autorização/Empresa */}
+        {step === "pergunta-whatsapp" && (
+          <PerguntaWhatsapp
+            onConfirmar={(phone) => {
+              setDadosPessoa({ ...dadosPessoa, phone });
+              setStep("pergunta-placa");
+            }}
             onVoltar={resetarFluxo}
           />
         )}
 
-        {step === "cadastro-visitante" && (
-          <CadastroVisitante
-            cpfInicial={cpfAtual}
-            nomeInicial={dadosPessoa?.name}
-            onVoltar={() => setStep("tipo-cadastro")}
-            onConcluir={(d) => {
-              // Cadastro só registra a identidade — a autorização (espaço +
-              // responsável) é decidida a seguir, na mesma tela usada por
-              // quem já é cadastrado.
-              setDadosPessoa({ ...d, type: "Visitante" });
+        {step === "pergunta-placa" && (
+          <PerguntaPlaca
+            onConfirmar={(placa) => {
+              setDadosPessoa({ ...dadosPessoa, placa });
               setStep("nova-autorizacao");
             }}
+            onVoltar={() => setStep("pergunta-whatsapp")}
           />
         )}
 
-        {step === "cadastro-prestador" && (
-          <CadastroPrestador
-            cpfInicial={cpfAtual}
-            nomeInicial={dadosPessoa?.name}
-            onVoltar={() => setStep("tipo-cadastro")}
-            onConcluir={resetarFluxo}
-          />
-        )}
-
-        {/* CAMINHO B: USUÁRIO EXISTENTE */}
+        {/* CAMINHO B: USUÁRIO EXISTENTE — confirma identidade por selfie, pergunta
+            a placa usada hoje (pode ter trocado de carro) e vai pro perfil */}
         {step === "confirmacao-selfie" && (
           <ConfirmacaoSelfie
             dados={dadosPessoa}
-            onConfirmado={() => setStep("perfil")}
+            onConfirmado={() => setStep("pergunta-placa-existente")}
             onRejeitado={resetarFluxo}
+          />
+        )}
+
+        {step === "pergunta-placa-existente" && (
+          <PerguntaPlaca
+            onConfirmar={(placa) => {
+              setDadosPessoa({ ...dadosPessoa, placa });
+              setStep("perfil");
+            }}
+            onVoltar={resetarFluxo}
           />
         )}
 
@@ -137,8 +166,8 @@ export function PortariaWizard() {
         {step === "nova-autorizacao" && (
           <NovaAutorizacao
             dados={dadosPessoa}
-            onConcluir={resetarFluxo}
-            onVoltar={() => dadosPessoa?.id ? setStep("perfil") : resetarFluxo()}
+            onConcluir={handleConcluirAutorizacao}
+            onVoltar={() => dadosPessoa?.id ? setStep("perfil") : setStep("pergunta-placa")}
           />
         )}
 

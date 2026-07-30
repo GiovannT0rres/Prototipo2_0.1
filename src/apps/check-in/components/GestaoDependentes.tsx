@@ -55,7 +55,6 @@ export function GestaoDependentes() {
       {/* Header */}
       <div className="bg-white/80 backdrop-blur-md sticky top-0 z-10 border-b border-gray-200">
         <div className="flex items-center justify-between px-4 h-12">
-          {/* Sem botão de "Voltar" aqui — a navegação global (sidebar/drawer) já cobre isso, não precisa de dois menus */}
           <div className="w-10" />
           <span className="text-[17px] font-semibold text-gray-900">
             Dependentes
