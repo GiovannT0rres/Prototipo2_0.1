@@ -10,7 +10,7 @@ interface Props {
 
 export function ConfirmacaoSelfie({ dados, onConfirmado, onRejeitado }: Props) {
   return (
-    <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="flex-1 flex flex-col h-full bg-gray-900 text-white">
+    <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="flex-1 flex flex-col h-full bg-[#0F2744] text-white">
       <div className="flex-shrink-0 p-4 flex items-center justify-between">
         <button onClick={onRejeitado} className="p-2 rounded-xl bg-white/10 text-white hover:bg-white/20">
           <ArrowLeft size={20} />

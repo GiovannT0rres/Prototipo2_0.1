@@ -22,8 +22,8 @@ export function PerguntaPlaca({ onConfirmar, onVoltar }: Props) {
       </div>
 
       <div className="flex-1 p-6 bg-gray-50">
-        <p className="text-[22px] font-bold text-gray-900 mb-2 leading-tight">
-          Qual a Placa do Veículo?
+        <p className="text-[22px] text-gray-900 mb-2 leading-tight">
+          Qual a <strong className="font-bold">PLACA</strong> do veículo?
         </p>
         <p className="text-[13px] text-gray-500 mb-6">Opcional — o LPR do clube já libera acesso por placa.</p>
 
@@ -49,7 +49,7 @@ export function PerguntaPlaca({ onConfirmar, onVoltar }: Props) {
 
         <button
           onClick={() => onConfirmar(placa)}
-          className="w-full mt-6 py-4 rounded-xl font-bold text-[16px] text-white transition-opacity bg-gray-900 flex justify-center items-center gap-2"
+          className="w-full mt-6 py-4 rounded-xl font-bold text-[16px] text-white transition-opacity bg-[#0F2744] flex justify-center items-center gap-2"
         >
           <Car size={20} /> {placa ? "Confirmar" : "Continuar sem Placa"}
         </button>

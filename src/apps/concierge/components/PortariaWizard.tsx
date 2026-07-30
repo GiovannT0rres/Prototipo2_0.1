@@ -6,9 +6,19 @@ import { PerguntaWhatsapp } from "./PerguntaWhatsapp";
 import { PerguntaPlaca } from "./PerguntaPlaca";
 import { ConfirmacaoSelfie } from "./ConfirmacaoSelfie";
 import { PerfilPessoa } from "./PerfilPessoa";
-import { NovaAutorizacao } from "./NovaAutorizacao";
+import { PerguntaMotivo } from "./PerguntaMotivo";
+import { PerguntaEmpresa } from "./PerguntaEmpresa";
+import { PerguntaDestino } from "./PerguntaDestino";
+import { PerguntaAutorizador } from "./PerguntaAutorizador";
+import { PerguntaPeriodo } from "./PerguntaPeriodo";
 import { ProgressoAtendimento } from "./ProgressoAtendimento";
-import { MOCK_AUTHORIZATIONS, REGISTERED_PEOPLE } from "../mocks/mockConcierge";
+import { MOCK_AUTHORIZATIONS } from "../mocks/mockConcierge";
+import {
+  buscarPessoaPorCpf,
+  registrarPessoaNova,
+  buscarAutorizacoesPorCpf,
+  registrarAutorizacaoNova,
+} from "../mocks/mockConciergeStore";
 
 // Mesmas 3 etapas nos dois fluxos (cadastro novo e usuário existente) — só a
 // última muda de nome porque o destino final é diferente (gerar autorização
@@ -21,7 +31,11 @@ type Step =
   | "validacao-novo"
   | "pergunta-whatsapp"
   | "pergunta-placa"
-  | "nova-autorizacao"
+  | "pergunta-motivo"
+  | "pergunta-empresa"
+  | "pergunta-destino"
+  | "pergunta-autorizador"
+  | "pergunta-periodo"
   | "confirmacao-selfie"
   | "pergunta-placa-existente"
   | "perfil";
@@ -30,6 +44,11 @@ export function PortariaWizard() {
   const [step, setStep] = useState<Step>("home");
   const [cpfAtual, setCpfAtual] = useState("");
   const [dadosPessoa, setDadosPessoa] = useState<any>(null);
+
+  // Só existe pra fazer o botão "voltar" do WhatsApp cair na etapa 2 (Ano) da
+  // validação, e não reiniciar do zero na etapa 1 (Nome) — "voltar" tem que
+  // voltar pra pergunta anterior de verdade.
+  const [voltandoDoWhatsapp, setVoltandoDoWhatsapp] = useState(false);
 
   // "Quem está no clube agora" — vive aqui (não dentro da HomeBusca) porque
   // Dar Entrada/Registrar Saída acontece na tela de Perfil, e precisa
@@ -40,11 +59,11 @@ export function PortariaWizard() {
 
   const processarCpf = (cpf: string) => {
     setCpfAtual(cpf);
-    const pessoaEncontrada = REGISTERED_PEOPLE.find(p => p.cpf === cpf);
+    const pessoaEncontrada = buscarPessoaPorCpf(cpf);
 
     if (pessoaEncontrada) {
-      // USUÁRIO EXISTENTE
-      const autorizacoes = MOCK_AUTHORIZATIONS.filter(a => a.cpf === cpf);
+      // USUÁRIO EXISTENTE (inclui quem foi cadastrado numa sessão anterior)
+      const autorizacoes = buscarAutorizacoesPorCpf(cpf);
       setDadosPessoa({ ...pessoaEncontrada, autorizacoes });
       setStep("confirmacao-selfie");
     } else {
@@ -54,6 +73,7 @@ export function PortariaWizard() {
         name: "Carlos Eduardo Faria", // Nome retornado da API
         birthYear: "1985" // Ano retornado da API
       });
+      setVoltandoDoWhatsapp(false);
       setStep("validacao-novo");
     }
   };
@@ -62,6 +82,7 @@ export function PortariaWizard() {
     setStep("home");
     setCpfAtual("");
     setDadosPessoa(null);
+    setVoltandoDoWhatsapp(false);
   };
 
   // Só troca o status e atualiza quem está no clube — não navega pra lugar
@@ -84,15 +105,34 @@ export function PortariaWizard() {
   // Pessoa já cadastrada pode acumular várias autorizações (destinos e
   // autorizadores diferentes) — a nova entra na lista e a portaria volta pro
   // Perfil pra poder escolher qual delas usar pra dar entrada. Cadastro novo
-  // não tem lista pra voltar, então só reseta o fluxo mesmo.
+  // vira pessoa registrada de verdade (persistida), pra na próxima busca do
+  // mesmo CPF ela já aparecer como usuário existente, com essa autorização —
+  // em vez de reiniciar o fluxo de "usuário novo" e perder tudo.
   const handleConcluirAutorizacao = (novaAutorizacao?: any) => {
-    if (novaAutorizacao && dadosPessoa?.id) {
+    if (!novaAutorizacao) {
+      resetarFluxo();
+      return;
+    }
+
+    if (dadosPessoa?.id) {
       setDadosPessoa((prev: any) => ({
         ...prev,
         autorizacoes: [...(prev.autorizacoes || []), novaAutorizacao],
       }));
+      registrarAutorizacaoNova(novaAutorizacao);
       setStep("perfil");
     } else {
+      const avatar = `https://i.pravatar.cc/150?u=${dadosPessoa?.cpf}`;
+      registrarPessoaNova({
+        id: `p-${Date.now()}`,
+        name: dadosPessoa?.name,
+        cpf: dadosPessoa?.cpf,
+        type: dadosPessoa?.type,
+        phone: dadosPessoa?.phone,
+        placa: dadosPessoa?.placa || null,
+        avatar,
+      });
+      registrarAutorizacaoNova({ ...novaAutorizacao, avatar });
       resetarFluxo();
     }
   };
@@ -111,6 +151,7 @@ export function PortariaWizard() {
             <ProgressoAtendimento etapas={ETAPAS_NOVO} atual={1} />
             <ValidacaoNovoUser
               dadosBigData={dadosPessoa}
+              etapaInicial={voltandoDoWhatsapp ? 2 : 1}
               onSucesso={() => setStep("pergunta-whatsapp")}
               onFalha={resetarFluxo}
               onVoltar={resetarFluxo}
@@ -128,7 +169,10 @@ export function PortariaWizard() {
                 setDadosPessoa({ ...dadosPessoa, phone });
                 setStep("pergunta-placa");
               }}
-              onVoltar={resetarFluxo}
+              onVoltar={() => {
+                setVoltandoDoWhatsapp(true);
+                setStep("validacao-novo");
+              }}
             />
           </>
         )}
@@ -139,7 +183,7 @@ export function PortariaWizard() {
             <PerguntaPlaca
               onConfirmar={(placa) => {
                 setDadosPessoa({ ...dadosPessoa, placa });
-                setStep("nova-autorizacao");
+                setStep("pergunta-motivo");
               }}
               onVoltar={() => setStep("pergunta-whatsapp")}
             />
@@ -167,7 +211,7 @@ export function PortariaWizard() {
                 setDadosPessoa({ ...dadosPessoa, placa });
                 setStep("perfil");
               }}
-              onVoltar={resetarFluxo}
+              onVoltar={() => setStep("confirmacao-selfie")}
             />
           </>
         )}
@@ -177,26 +221,84 @@ export function PortariaWizard() {
             <ProgressoAtendimento etapas={ETAPAS_EXISTENTE} atual={3} />
             <PerfilPessoa
               dados={dadosPessoa}
-              onNovaAutorizacao={() => setStep("nova-autorizacao")}
+              onNovaAutorizacao={() => setStep("pergunta-destino")}
               onLiberarAcesso={handleLiberarAcesso}
               onVoltar={resetarFluxo}
             />
           </>
         )}
 
-        {/* TELA COMPARTILHADA DE AUTORIZAÇÃO — mesma lógica pra usuário novo
-            (logo após o cadastro) e usuário existente (botão "Nova
-            Autorização" no Perfil): a portaria é quem gera e assume a
-            responsabilidade por esse acesso. Só mostra o progresso quando faz
-            parte do atendimento inicial (cadastro novo) — pedido extra a
-            partir do Perfil de alguém já atendido não é mais "um fluxo". */}
-        {step === "nova-autorizacao" && (
+        {/* SEQUÊNCIA DE AUTORIZAÇÃO — uma pergunta por tela, igual às perguntas
+            secretas e a placa. Motivo só aparece pra cadastro novo (pessoa já
+            cadastrada já tem perfil definido); as outras 3 telas são
+            compartilhadas pelos dois fluxos. Só mostra o progresso quando faz
+            parte do atendimento inicial — pedido extra a partir do Perfil de
+            alguém já atendido não é mais "um fluxo". */}
+        {step === "pergunta-motivo" && (
+          <>
+            <ProgressoAtendimento etapas={ETAPAS_NOVO} atual={3} />
+            <PerguntaMotivo
+              onConfirmar={(motivo) => {
+                setDadosPessoa({ ...dadosPessoa, type: motivo });
+                setStep(motivo === "Prestador de Serviço" ? "pergunta-empresa" : "pergunta-destino");
+              }}
+              onVoltar={() => setStep("pergunta-placa")}
+            />
+          </>
+        )}
+
+        {/* Só existe pra Prestador de Serviço — Visitante pula direto pro Destino */}
+        {step === "pergunta-empresa" && (
           <>
             {!dadosPessoa?.id && <ProgressoAtendimento etapas={ETAPAS_NOVO} atual={3} />}
-            <NovaAutorizacao
+            <PerguntaEmpresa
+              onConfirmar={(empresa) => {
+                setDadosPessoa({ ...dadosPessoa, empresa });
+                setStep("pergunta-destino");
+              }}
+              onVoltar={() => setStep("pergunta-motivo")}
+            />
+          </>
+        )}
+
+        {step === "pergunta-destino" && (
+          <>
+            {!dadosPessoa?.id && <ProgressoAtendimento etapas={ETAPAS_NOVO} atual={3} />}
+            <PerguntaDestino
+              motivo={dadosPessoa?.type}
+              onConfirmar={(destino) => {
+                setDadosPessoa({ ...dadosPessoa, destino });
+                setStep("pergunta-autorizador");
+              }}
+              onVoltar={() => {
+                if (dadosPessoa?.id) setStep("perfil");
+                else if (dadosPessoa?.type === "Prestador de Serviço") setStep("pergunta-empresa");
+                else setStep("pergunta-motivo");
+              }}
+            />
+          </>
+        )}
+
+        {step === "pergunta-autorizador" && (
+          <>
+            {!dadosPessoa?.id && <ProgressoAtendimento etapas={ETAPAS_NOVO} atual={3} />}
+            <PerguntaAutorizador
+              onConfirmar={(autorizador) => {
+                setDadosPessoa({ ...dadosPessoa, autorizador });
+                setStep("pergunta-periodo");
+              }}
+              onVoltar={() => setStep("pergunta-destino")}
+            />
+          </>
+        )}
+
+        {step === "pergunta-periodo" && (
+          <>
+            {!dadosPessoa?.id && <ProgressoAtendimento etapas={ETAPAS_NOVO} atual={3} />}
+            <PerguntaPeriodo
               dados={dadosPessoa}
               onConcluir={handleConcluirAutorizacao}
-              onVoltar={() => dadosPessoa?.id ? setStep("perfil") : setStep("pergunta-placa")}
+              onVoltar={() => setStep("pergunta-autorizador")}
             />
           </>
         )}

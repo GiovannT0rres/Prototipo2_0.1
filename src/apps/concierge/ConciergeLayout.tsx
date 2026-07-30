@@ -9,7 +9,7 @@ export function ConciergeLayout() {
       {/* Top Header Minimalista */}
       <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gray-900 rounded-xl flex items-center justify-center">
+          <div className="w-10 h-10 bg-[#0F2744] rounded-xl flex items-center justify-center">
             <Shield size={20} className="text-white" />
           </div>
           <div>

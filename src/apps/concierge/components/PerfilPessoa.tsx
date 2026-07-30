@@ -79,7 +79,7 @@ export function PerfilPessoa({ dados, onNovaAutorizacao, onLiberarAcesso, onVolt
       return (
         <button
           onClick={() => handleToggle(auth)}
-          className="flex-1 py-2.5 rounded-lg text-[13px] font-semibold text-white bg-gray-900 hover:bg-gray-800 transition-colors flex items-center justify-center gap-1.5"
+          className="flex-1 py-2.5 rounded-lg text-[13px] font-semibold text-white bg-[#0F2744] hover:bg-[#0B1D33] transition-colors flex items-center justify-center gap-1.5"
         >
           <CheckCircle2 size={15} /> Dar Entrada
         </button>

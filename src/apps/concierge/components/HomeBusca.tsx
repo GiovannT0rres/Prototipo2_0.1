@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { Search, Shield, RefreshCw, LogOut, Clock, Users, User } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { toast } from "sonner";
+import { normalizeText } from "../utils/normalizeText";
 
 interface Props {
   onBuscar: (cpf: string) => void;
@@ -46,14 +47,18 @@ export function HomeBusca({ onBuscar, pessoasNoLocal, onSaida }: Props) {
     return cpf.replace(/^\d{3}/, "***").replace(/\d{2}$/, "**");
   };
 
-  // Filtra a lista pelo nome ou CPF digitado no input de filtro
+  // Filtra a lista pelo nome ou CPF digitado no input de filtro. Bug corrigido:
+  // ao digitar um nome (sem dígitos), a comparação por CPF virava uma busca
+  // por string vazia — e "".includes("") é sempre true, então a lista nunca
+  // filtrava de verdade. Agora só compara CPF quando a busca tem dígitos.
   const listaFiltrada = useMemo(() => {
-    const query = filtroLista.toLowerCase();
-    return pessoasNoLocal.filter(
-      (p) =>
-        p.name.toLowerCase().includes(query) ||
-        p.cpf.replace(/\D/g, "").includes(query.replace(/\D/g, ""))
-    );
+    const queryNorm = normalizeText(filtroLista);
+    const queryDigits = filtroLista.replace(/\D/g, "");
+    return pessoasNoLocal.filter((p) => {
+      const nomeConfere = normalizeText(p.name).includes(queryNorm);
+      const cpfConfere = queryDigits.length > 0 && p.cpf.replace(/\D/g, "").includes(queryDigits);
+      return nomeConfere || cpfConfere;
+    });
   }, [filtroLista, pessoasNoLocal]);
 
   return (
@@ -62,7 +67,7 @@ export function HomeBusca({ onBuscar, pessoasNoLocal, onSaida }: Props) {
       {/* ================= SEÇÃO SUPERIOR: BUSCA DE CPF ================= */}
       <div className="flex-shrink-0 bg-white p-6 shadow-sm z-10">
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 bg-gray-900 rounded-xl flex items-center justify-center">
+          <div className="w-10 h-10 bg-[#0F2744] rounded-xl flex items-center justify-center">
             <Shield size={20} className="text-white" />
           </div>
           <div>
@@ -84,12 +89,12 @@ export function HomeBusca({ onBuscar, pessoasNoLocal, onSaida }: Props) {
               onChange={handleCpfChange}
               placeholder="Digite o CPF..."
               autoFocus
-              className="flex-1 bg-gray-50 border border-gray-300 rounded-xl px-5 py-4 text-[18px] font-bold focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-900 transition-all placeholder:font-medium tracking-wide text-gray-800"
+              className="flex-1 bg-gray-50 border border-gray-300 rounded-xl px-5 py-4 text-[18px] font-bold focus:outline-none focus:ring-2 focus:ring-[#0F2744]/10 focus:border-[#0F2744] transition-all placeholder:font-medium tracking-wide text-gray-800"
             />
             <button
               type="submit"
               disabled={cpfPrincipal.length < 14}
-              className="h-[60px] px-6 rounded-xl font-bold text-[15px] text-white transition-opacity active:opacity-80 disabled:opacity-40 bg-gray-900 hover:bg-gray-800 flex justify-center items-center gap-2"
+              className="h-[60px] px-6 rounded-xl font-bold text-[15px] text-white transition-opacity active:opacity-80 disabled:opacity-40 bg-[#0F2744] hover:bg-[#0B1D33] flex justify-center items-center gap-2"
             >
               <Search size={20} /> <span className="hidden sm:inline">Buscar</span>
             </button>

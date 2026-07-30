@@ -39,8 +39,8 @@ export function PerguntaWhatsapp({ onConfirmar, onVoltar }: Props) {
       </div>
 
       <div className="flex-1 p-6 bg-gray-50">
-        <p className="text-[22px] font-bold text-gray-900 mb-6 leading-tight">
-          Qual o WhatsApp?
+        <p className="text-[22px] text-gray-900 mb-6 leading-tight">
+          Qual o <strong className="font-bold">WHATSAPP</strong>?
         </p>
 
         <input
@@ -66,7 +66,7 @@ export function PerguntaWhatsapp({ onConfirmar, onVoltar }: Props) {
         <button
           onClick={() => onConfirmar(phone)}
           disabled={digits.length < 10}
-          className="w-full mt-6 py-4 rounded-xl font-bold text-[16px] text-white transition-opacity disabled:opacity-40 bg-gray-900 flex justify-center items-center gap-2"
+          className="w-full mt-6 py-4 rounded-xl font-bold text-[16px] text-white transition-opacity disabled:opacity-40 bg-[#0F2744] flex justify-center items-center gap-2"
         >
           <MessageCircleMore size={20} /> Confirmar
         </button>

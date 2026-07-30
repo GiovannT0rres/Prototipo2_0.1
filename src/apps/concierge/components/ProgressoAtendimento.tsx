@@ -25,7 +25,7 @@ export function ProgressoAtendimento({ etapas, atual }: Props) {
                     concluido
                       ? "bg-emerald-500 text-white"
                       : ativo
-                        ? "bg-white border-2 border-gray-300 text-gray-700"
+                        ? "bg-white border-2 border-[#0F2744] text-[#0F2744]"
                         : "bg-gray-100 text-gray-400"
                   }`}
                 >
