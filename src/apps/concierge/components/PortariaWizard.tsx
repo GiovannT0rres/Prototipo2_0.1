@@ -7,7 +7,14 @@ import { PerguntaPlaca } from "./PerguntaPlaca";
 import { ConfirmacaoSelfie } from "./ConfirmacaoSelfie";
 import { PerfilPessoa } from "./PerfilPessoa";
 import { NovaAutorizacao } from "./NovaAutorizacao";
+import { ProgressoAtendimento } from "./ProgressoAtendimento";
 import { MOCK_AUTHORIZATIONS, REGISTERED_PEOPLE } from "../mocks/mockConcierge";
+
+// Mesmas 3 etapas nos dois fluxos (cadastro novo e usuário existente) — só a
+// última muda de nome porque o destino final é diferente (gerar autorização
+// vs. cair no perfil, que pode ou não gerar uma nova autorização a partir daí).
+const ETAPAS_NOVO = ["Pessoa", "Veículo", "Autorização"];
+const ETAPAS_EXISTENTE = ["Pessoa", "Veículo", "Perfil"];
 
 type Step =
   | "home"
@@ -100,75 +107,98 @@ export function PortariaWizard() {
 
         {/* CAMINHO A: USUÁRIO NOVO — validação de segurança (BigDataCorp) */}
         {step === "validacao-novo" && (
-          <ValidacaoNovoUser
-            dadosBigData={dadosPessoa}
-            onSucesso={() => setStep("pergunta-whatsapp")}
-            onFalha={resetarFluxo}
-            onVoltar={resetarFluxo}
-          />
+          <>
+            <ProgressoAtendimento etapas={ETAPAS_NOVO} atual={1} />
+            <ValidacaoNovoUser
+              dadosBigData={dadosPessoa}
+              onSucesso={() => setStep("pergunta-whatsapp")}
+              onFalha={resetarFluxo}
+              onVoltar={resetarFluxo}
+            />
+          </>
         )}
 
         {/* CAMINHO A: uma pergunta por tela — WhatsApp e Placa coletados aqui
             para não pedir de novo na Autorização/Empresa */}
         {step === "pergunta-whatsapp" && (
-          <PerguntaWhatsapp
-            onConfirmar={(phone) => {
-              setDadosPessoa({ ...dadosPessoa, phone });
-              setStep("pergunta-placa");
-            }}
-            onVoltar={resetarFluxo}
-          />
+          <>
+            <ProgressoAtendimento etapas={ETAPAS_NOVO} atual={1} />
+            <PerguntaWhatsapp
+              onConfirmar={(phone) => {
+                setDadosPessoa({ ...dadosPessoa, phone });
+                setStep("pergunta-placa");
+              }}
+              onVoltar={resetarFluxo}
+            />
+          </>
         )}
 
         {step === "pergunta-placa" && (
-          <PerguntaPlaca
-            onConfirmar={(placa) => {
-              setDadosPessoa({ ...dadosPessoa, placa });
-              setStep("nova-autorizacao");
-            }}
-            onVoltar={() => setStep("pergunta-whatsapp")}
-          />
+          <>
+            <ProgressoAtendimento etapas={ETAPAS_NOVO} atual={2} />
+            <PerguntaPlaca
+              onConfirmar={(placa) => {
+                setDadosPessoa({ ...dadosPessoa, placa });
+                setStep("nova-autorizacao");
+              }}
+              onVoltar={() => setStep("pergunta-whatsapp")}
+            />
+          </>
         )}
 
         {/* CAMINHO B: USUÁRIO EXISTENTE — confirma identidade por selfie, pergunta
             a placa usada hoje (pode ter trocado de carro) e vai pro perfil */}
         {step === "confirmacao-selfie" && (
-          <ConfirmacaoSelfie
-            dados={dadosPessoa}
-            onConfirmado={() => setStep("pergunta-placa-existente")}
-            onRejeitado={resetarFluxo}
-          />
+          <>
+            <ProgressoAtendimento etapas={ETAPAS_EXISTENTE} atual={1} />
+            <ConfirmacaoSelfie
+              dados={dadosPessoa}
+              onConfirmado={() => setStep("pergunta-placa-existente")}
+              onRejeitado={resetarFluxo}
+            />
+          </>
         )}
 
         {step === "pergunta-placa-existente" && (
-          <PerguntaPlaca
-            onConfirmar={(placa) => {
-              setDadosPessoa({ ...dadosPessoa, placa });
-              setStep("perfil");
-            }}
-            onVoltar={resetarFluxo}
-          />
+          <>
+            <ProgressoAtendimento etapas={ETAPAS_EXISTENTE} atual={2} />
+            <PerguntaPlaca
+              onConfirmar={(placa) => {
+                setDadosPessoa({ ...dadosPessoa, placa });
+                setStep("perfil");
+              }}
+              onVoltar={resetarFluxo}
+            />
+          </>
         )}
 
         {step === "perfil" && (
-          <PerfilPessoa
-            dados={dadosPessoa}
-            onNovaAutorizacao={() => setStep("nova-autorizacao")}
-            onLiberarAcesso={handleLiberarAcesso}
-            onVoltar={resetarFluxo}
-          />
+          <>
+            <ProgressoAtendimento etapas={ETAPAS_EXISTENTE} atual={3} />
+            <PerfilPessoa
+              dados={dadosPessoa}
+              onNovaAutorizacao={() => setStep("nova-autorizacao")}
+              onLiberarAcesso={handleLiberarAcesso}
+              onVoltar={resetarFluxo}
+            />
+          </>
         )}
 
         {/* TELA COMPARTILHADA DE AUTORIZAÇÃO — mesma lógica pra usuário novo
             (logo após o cadastro) e usuário existente (botão "Nova
             Autorização" no Perfil): a portaria é quem gera e assume a
-            responsabilidade por esse acesso. */}
+            responsabilidade por esse acesso. Só mostra o progresso quando faz
+            parte do atendimento inicial (cadastro novo) — pedido extra a
+            partir do Perfil de alguém já atendido não é mais "um fluxo". */}
         {step === "nova-autorizacao" && (
-          <NovaAutorizacao
-            dados={dadosPessoa}
-            onConcluir={handleConcluirAutorizacao}
-            onVoltar={() => dadosPessoa?.id ? setStep("perfil") : setStep("pergunta-placa")}
-          />
+          <>
+            {!dadosPessoa?.id && <ProgressoAtendimento etapas={ETAPAS_NOVO} atual={3} />}
+            <NovaAutorizacao
+              dados={dadosPessoa}
+              onConcluir={handleConcluirAutorizacao}
+              onVoltar={() => dadosPessoa?.id ? setStep("perfil") : setStep("pergunta-placa")}
+            />
+          </>
         )}
 
       </div>

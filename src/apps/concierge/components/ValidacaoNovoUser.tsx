@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { ArrowLeft, Database, ShieldAlert, Lightbulb } from "lucide-react";
+import { ArrowLeft, Database, ShieldAlert, Lightbulb, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { toast } from "sonner";
 
@@ -80,12 +80,15 @@ export function ValidacaoNovoUser({ dadosBigData, onSucesso, onFalha, onVoltar }
                   >
                     <span>{opcao}</span>
 
-                    {/* DICA DE PROTÓTIPO: Marca a correta visualmente */}
-                    {isCorreta && (
-                      <span className="text-[10px] bg-amber-100 text-amber-700 px-2 py-1 rounded-md flex items-center gap-1 font-bold uppercase tracking-wider">
-                        <Lightbulb size={12} /> Correta
-                      </span>
-                    )}
+                    <span className="flex items-center gap-2">
+                      {/* DICA DE PROTÓTIPO: Marca a correta visualmente */}
+                      {isCorreta && (
+                        <span className="text-[10px] bg-amber-100 text-amber-700 px-2 py-1 rounded-md flex items-center gap-1 font-bold uppercase tracking-wider">
+                          <Lightbulb size={12} /> Correta
+                        </span>
+                      )}
+                      <ChevronRight size={18} className="text-gray-300" />
+                    </span>
                   </button>
                 )
               })}

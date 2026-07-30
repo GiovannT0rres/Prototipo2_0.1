@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, CheckCircle2, Check, ChevronDown, Calendar, Search } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Check, ChevronDown, ChevronRight, Calendar, Search } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { ESPACOS } from "@/shared/data/spaces";
 
@@ -97,7 +97,11 @@ function CampoLista({
                 }`}
               >
                 {opcao}
-                {opcao === valorSelecionado && <Check size={16} />}
+                {opcao === valorSelecionado ? (
+                  <Check size={16} />
+                ) : (
+                  <ChevronRight size={16} className="text-gray-300" />
+                )}
               </button>
             ))}
           </motion.div>

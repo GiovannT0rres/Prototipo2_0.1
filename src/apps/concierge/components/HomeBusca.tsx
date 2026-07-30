@@ -98,11 +98,10 @@ export function HomeBusca({ onBuscar, pessoasNoLocal, onSaida }: Props) {
 
         {/* Dica de teste: quais CPFs simulam cada cenário de usuário existente vs novo */}
         <p className="text-[11px] text-gray-400 mt-2 leading-relaxed">
-          💡 Para testar usuário já cadastrado → Confirmação de Selfie:{" "}
-          <span className="font-mono font-semibold text-gray-500">111.222.333-44</span> (João Silva, Sócio
-          Titular — acesso livre) ou <span className="font-mono font-semibold text-gray-500">555.666.777-88</span>{" "}
-          (Maria Souza, Visitante — já tem 2 autorizações vigentes). Qualquer outro CPF simula usuário novo →
-          Validação + Cadastro.
+          💡 <span className="font-mono font-semibold text-gray-500">111.222.333-44</span> - Sócio Titular
+          {" · "}
+          <span className="font-mono font-semibold text-gray-500">555.666.777-88</span> - Visitante
+          {" · "}Qualquer outro CPF - Usuário Novo
         </p>
       </div>
 
