@@ -37,7 +37,14 @@ export function ManagerLayout() {
   );
 
   const SairButton = () => (
-    <div className="p-4 border-t border-gray-200">
+    <div className="p-4 border-t border-gray-200 space-y-1">
+      <button
+        onClick={() => navigate("/")}
+        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
+      >
+        <Home size={18} />
+        <span className="text-[14px] font-semibold">Voltar ao Hub</span>
+      </button>
       <button
         onClick={() => {
           localStorage.removeItem("isAuthenticated");
@@ -91,17 +98,9 @@ export function ManagerLayout() {
         </button>
       </div>
 
-      {/* Botão "Voltar ao Hub" flutuante — só em telas largas, já que no mobile
-          o mesmo atalho já está na barra superior acima */}
-      <button
-        onClick={() => navigate("/")}
-        className="hidden md:flex fixed top-4 right-4 z-50 items-center gap-2 bg-white border border-gray-200 text-gray-700 px-3.5 py-2 rounded-full shadow-sm hover:bg-gray-50 transition-colors text-[13px] font-semibold"
-      >
-        <Home size={16} />
-        <span>Voltar ao Hub</span>
-      </button>
-
-      {/* Sidebar persistente — desktop/tablet largo */}
+      {/* Sidebar persistente — desktop/tablet largo. "Voltar ao Hub" mora aqui
+          embaixo, junto do Sair (era um botão flutuante no canto superior
+          direito, mas sobrepunha o conteúdo das telas — ver SairButton). */}
       <aside className="w-64 bg-white border-r border-gray-200 hidden md:flex flex-col">
         <Logo />
         <NavLinks />

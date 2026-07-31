@@ -142,14 +142,14 @@ export function DashboardAprovacoes() {
             onClick={() => setModalUsuario(true)}
             className="text-gray-400 hover:text-gray-600 underline decoration-dotted underline-offset-4 transition-colors"
           >
-            + Criar Usuário (teste)
+            + Criar Usuário
           </button>
           <div className="relative">
             <button
               onClick={() => setMenuConviteAberto((v) => !v)}
               className="flex items-center gap-1 text-gray-400 hover:text-gray-600 underline decoration-dotted underline-offset-4 transition-colors"
             >
-              + Gerar Convite (teste) <ChevronDown size={12} />
+              + Gerar Convite <ChevronDown size={12} />
             </button>
             {menuConviteAberto && (
               <>
