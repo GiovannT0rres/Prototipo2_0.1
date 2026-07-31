@@ -2,7 +2,6 @@ import { Dashboard } from "./components/Dashboard";
 import { DashboardAprovacoes } from "./components/DashboardAprovacoes";
 import { GestaoSociosHub } from "./components/GestaoSociosHub";
 import { VisaoSocio } from "./components/VisaoSocio";
-import { MapaOperacional } from "./components/MapaOperacional";
 import { AlertasSeguranca } from "./components/AlertasSeguranca";
 
 export const managerRoutes = [
@@ -10,6 +9,5 @@ export const managerRoutes = [
   { path: "aprovacoes", Component: DashboardAprovacoes },
   { path: "socios", Component: GestaoSociosHub },
   { path: "socio/:id", Component: VisaoSocio },
-  { path: "mapa", Component: MapaOperacional },
   { path: "alertas", Component: AlertasSeguranca },
 ];

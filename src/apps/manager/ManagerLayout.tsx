@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router";
-import { BarChart3, Home, Settings, LogOut, ListChecks, Map, Menu, X } from "lucide-react";
+import { BarChart3, Home, Settings, LogOut, ListChecks, Menu, X } from "lucide-react";
 
 export function ManagerLayout() {
   const navigate = useNavigate();
@@ -13,8 +13,7 @@ export function ManagerLayout() {
 
   const navItems = [
     { name: "Dashboard", icon: BarChart3, path: "/manager" },
-    { name: "Mapa Operacional", icon: Map, path: "/manager/mapa" },
-    { name: "Fila de Trabalho", icon: ListChecks, path: "/manager/aprovacoes" },
+    { name: "Ativar", icon: ListChecks, path: "/manager/aprovacoes" },
     { name: "Sócios", icon: Settings, path: "/manager/socios" },
   ];
 

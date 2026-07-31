@@ -1,12 +1,11 @@
 import { useState } from "react";
-import { ArrowLeft, CheckCircle2, Calendar } from "lucide-react";
+import { ArrowLeft, Calendar, ChevronRight } from "lucide-react";
 import { motion } from "motion/react";
 
 const TERMINO_PRESETS = ["1 Semana", "2 Semanas", "1 Mês", "2 Meses", "6 Meses"];
 
 interface Props {
-  dados: any;
-  onConcluir: (novaAutorizacao?: any) => void;
+  onConfirmar: (periodo: string) => void;
   onVoltar: () => void;
 }
 
@@ -37,72 +36,17 @@ function Chip({
   );
 }
 
-export function PerguntaPeriodo({ dados, onConcluir, onVoltar }: Props) {
-  const jaCadastrado = !!dados?.id;
-
+export function PerguntaPeriodo({ onConfirmar, onVoltar }: Props) {
   const [inicio, setInicio] = useState<"hoje" | "data">("hoje");
   const [inicioData, setInicioData] = useState("");
   const [termino, setTermino] = useState<string>(TERMINO_PRESETS[0]);
   const [terminoData, setTerminoData] = useState("");
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [success, setSuccess] = useState(false);
 
   const periodoLabel = () => {
     const de = inicio === "hoje" ? "Hoje" : inicioData || "data a definir";
     const ate = termino === "Escolher data" ? (terminoData || "data a definir") : termino;
     return `${de} até ${ate}`;
   };
-
-  const handleConfirmar = () => {
-    setIsSubmitting(true);
-
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setSuccess(true);
-
-      const novaAutorizacao = {
-        id: `auth-${Date.now()}`,
-        name: dados?.name,
-        avatar: dados?.avatar,
-        cpf: dados?.cpf,
-        type: dados?.type,
-        destino: dados?.destino,
-        autorizador: dados?.autorizador,
-        periodo: periodoLabel(),
-        status: "Fora do clube",
-        entrada: null,
-      };
-
-      setTimeout(() => onConcluir(novaAutorizacao), 2000);
-    }, 1000);
-  };
-
-  if (success) {
-    return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="flex-1 flex flex-col items-center justify-center h-full bg-white p-8 text-center"
-      >
-        <motion.div
-          initial={{ scale: 0.6, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ type: "spring", duration: 0.5 }}
-          className="w-20 h-20 rounded-full bg-[#E9FBF0] text-[#30B855] flex items-center justify-center mb-5"
-        >
-          <CheckCircle2 size={44} strokeWidth={1.75} />
-        </motion.div>
-        <h2 className="text-[20px] font-semibold text-gray-900">Autorização criada</h2>
-        <p className="text-[14px] text-gray-500 mt-1.5 max-w-xs leading-relaxed">
-          {dados?.name || "Usuário"} está autorizado.
-        </p>
-        <p className="text-[12px] text-gray-400 mt-6">
-          {jaCadastrado ? "Voltando ao perfil…" : "Voltando ao início…"}
-        </p>
-      </motion.div>
-    );
-  }
 
   return (
     <motion.div initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="flex-1 flex flex-col h-full bg-white">
@@ -167,11 +111,10 @@ export function PerguntaPeriodo({ dados, onConcluir, onVoltar }: Props) {
         </div>
 
         <button
-          onClick={handleConfirmar}
-          disabled={isSubmitting}
-          className="w-full mt-6 py-4 rounded-xl font-bold text-[16px] text-white transition-opacity disabled:opacity-60 bg-[#0F2744] flex justify-center items-center gap-2"
+          onClick={() => onConfirmar(periodoLabel())}
+          className="w-full mt-6 py-4 rounded-xl font-bold text-[16px] text-white bg-[#0F2744] flex justify-center items-center gap-2"
         >
-          {isSubmitting ? "Processando..." : <><CheckCircle2 size={20} /> Salvar e Liberar</>}
+          Continuar <ChevronRight size={18} />
         </button>
       </div>
     </motion.div>

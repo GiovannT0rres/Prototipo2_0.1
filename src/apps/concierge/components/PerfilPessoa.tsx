@@ -15,10 +15,10 @@ export function PerfilPessoa({ dados, onNovaAutorizacao, onLiberarAcesso, onVolt
   const [autorizacoes, setAutorizacoes] = useState(dados.autorizacoes || []);
   const historico = MOCK_ACCESS_HISTORY[dados.id] || [];
 
-  // Sócio Titular e Familiar têm acesso liberado por natureza — não dependem
+  // Sócio Titular e Dependente têm acesso liberado por natureza — não dependem
   // de uma autorização vinda de um sponsor, então não faz sentido mostrar
   // "Nenhuma autorização encontrada" pra eles.
-  const temLivreAcesso = dados.type === "Sócio Titular" || dados.type === "Familiar";
+  const temLivreAcesso = dados.type === "Sócio Titular" || dados.type === "Dependente";
 
   // Acesso livre não vem de uma lista de autorizações, mas se comporta igual
   // pra fins de toggle Entrada/Saída — por isso vira um pseudo-registro local.

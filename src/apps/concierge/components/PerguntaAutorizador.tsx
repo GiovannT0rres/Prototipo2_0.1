@@ -7,24 +7,24 @@ import { SugestaoChip } from "./SugestaoChip";
 import { CampoBuscaComOk } from "./CampoBuscaComOk";
 
 // Quem pode aparecer como responsável por patrocinar um acesso — sócio
-// titular, familiar com autorização delegada, ou o próprio clube (caso de
+// titular, dependente com autorização delegada, ou o próprio clube (caso de
 // prestadores recorrentes sem um sócio específico por trás). Numa base real
 // (ERP Forza) isso são centenas de nomes — por isso o campo é busca, não lista.
 const AUTORIZADORES = [
   "João Silva (Titular)",
-  "Ana Costa (Familiar)",
+  "Ana Costa (Dependente)",
   "Roberto Almeida (Titular)",
   "Fernando Silva (Titular)",
   "Marcelo Costa (Titular)",
   "Patrícia Nogueira (Titular)",
   "Juliana Ferraz (Titular)",
   "Ricardo Mendes (Titular)",
-  "Camila Duarte (Familiar)",
+  "Camila Duarte (Dependente)",
   "Eduardo Klein (Titular)",
-  "Beatriz Costa (Familiar)",
-  "Lucas Almeida (Familiar)",
-  "Maria Silva (Familiar)",
-  "João Pedro Silva (Familiar)",
+  "Beatriz Costa (Dependente)",
+  "Lucas Almeida (Dependente)",
+  "Maria Silva (Dependente)",
+  "João Pedro Silva (Dependente)",
   "Carlos Mendes (Titular)",
   "Pedro Almeida (Titular)",
   "Larissa Rocha (Titular)",

@@ -11,6 +11,7 @@ import { PerguntaEmpresa } from "./PerguntaEmpresa";
 import { PerguntaDestino } from "./PerguntaDestino";
 import { PerguntaAutorizador } from "./PerguntaAutorizador";
 import { PerguntaPeriodo } from "./PerguntaPeriodo";
+import { PerguntaObservacoes } from "./PerguntaObservacoes";
 import { ProgressoAtendimento } from "./ProgressoAtendimento";
 import { MOCK_AUTHORIZATIONS } from "../mocks/mockConcierge";
 import {
@@ -36,6 +37,7 @@ type Step =
   | "pergunta-destino"
   | "pergunta-autorizador"
   | "pergunta-periodo"
+  | "pergunta-observacoes"
   | "confirmacao-selfie"
   | "pergunta-placa-existente"
   | "perfil";
@@ -296,9 +298,22 @@ export function PortariaWizard() {
           <>
             {!dadosPessoa?.id && <ProgressoAtendimento etapas={ETAPAS_NOVO} atual={3} />}
             <PerguntaPeriodo
+              onConfirmar={(periodo) => {
+                setDadosPessoa({ ...dadosPessoa, periodo });
+                setStep("pergunta-observacoes");
+              }}
+              onVoltar={() => setStep("pergunta-autorizador")}
+            />
+          </>
+        )}
+
+        {step === "pergunta-observacoes" && (
+          <>
+            {!dadosPessoa?.id && <ProgressoAtendimento etapas={ETAPAS_NOVO} atual={3} />}
+            <PerguntaObservacoes
               dados={dadosPessoa}
               onConcluir={handleConcluirAutorizacao}
-              onVoltar={() => setStep("pergunta-autorizador")}
+              onVoltar={() => setStep("pergunta-periodo")}
             />
           </>
         )}

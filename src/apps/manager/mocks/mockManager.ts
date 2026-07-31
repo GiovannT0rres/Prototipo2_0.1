@@ -1,15 +1,3 @@
-// Fila de trabalho do Manager — SÓ dependentes precisam de aprovação da
-// administração (ver PERGUNTAS-PARA-O-CLUBE §A: "o sócio autoriza e a
-// administração aprova"). Convidado é livre — o sócio patrocina direto, sem
-// fila; o Manager só acompanha isso depois pelo Histórico (ver LOGS).
-// titular/titularId aqui porque todo dependente é vinculado a um sócio —
-// a fila precisa deixar isso visível, não só o nome do dependente.
-export const MOCK_FILA_DEPENDENTES = [
-  { id: "fd1", name: "Enzo Rossi", cpf: "123.456.789-00", avatar: "https://i.pravatar.cc/150?u=enzo", type: "Familiar", titular: "Roberto Almeida", titularId: "8493" },
-  { id: "fd2", name: "Beatriz Oliveira", cpf: "987.654.321-11", avatar: "https://i.pravatar.cc/150?u=bia", type: "Familiar", titular: "Fernando Silva", titularId: "5521" },
-  { id: "fd3", name: "Lucas Nogueira", cpf: "222.111.333-44", avatar: "https://i.pravatar.cc/150?u=lucasn", type: "Familiar", titular: "Patrícia Nogueira", titularId: "6702" },
-];
-
 // PACC é um clube único — o dashboard reflete operação e eventos, não uma
 // contagem de "clubes ativos" (esse conceito era do modelo multi-condomínio do ES).
 export const MOCK_DASHBOARD = {
@@ -22,24 +10,33 @@ export const MOCK_DASHBOARD = {
 // Mapa Operacional — quem está dentro de cada espaço do clube agora.
 // Responde diretamente ao pedido da administração: "o sócio vê duas pessoas
 // que não conhece no bar, quem são, quem autorizou?" (ver CLAUDE.md §5).
+//
+// IMPORTANTE (decisão do usuário, 31/07/2026): só Visitante e Prestador de
+// Serviço aparecem aqui. Sócio Titular e Dependente têm acesso livre a todo o
+// clube — não são "desconhecidos" pra administração identificar, então não
+// fazem parte desse mapa. O objetivo do mapa é literalmente "quem é esse
+// estranho no bar" — não presença de sócio.
+//
+// `autorizadoPor` é sempre "quem é responsável por esse acesso" (outro
+// sócio, a Administração, um convênio de reciprocidade), nunca o mecanismo
+// de entrada (placa/LPR/QR/CPF) — isso é só como o leitor identificou quem
+// chegou, não quem autorizou.
 export interface PessoaPresente {
   id: string;
   name: string;
   avatar: string;
-  tipo: string;
+  tipo: "Visitante" | "Prestador de Serviço";
   autorizadoPor: string;
   entrada: string;
 }
 
 export const MOCK_PRESENCA: Record<string, PessoaPresente[]> = {
   "1": [
-    { id: "pr1", name: "Fernanda Lopes", avatar: "https://i.pravatar.cc/150?u=fernanda", tipo: "Sócia", autorizadoPor: "Entrada por placa (LPR)", entrada: "Hoje, 18:40" },
     { id: "pr2", name: "Marcos Bittencourt", avatar: "https://i.pravatar.cc/150?u=marcosb", tipo: "Visitante", autorizadoPor: "Autorizado por Fernanda Lopes", entrada: "Hoje, 19:05" },
   ],
   "2": [],
   "3": [
     { id: "pr3", name: "Rafael Nunes", avatar: "https://i.pravatar.cc/150?u=rafael", tipo: "Prestador de Serviço", autorizadoPor: "Admin — escala fixa", entrada: "Hoje, 10:00" },
-    { id: "pr4", name: "Camila Reis", avatar: "https://i.pravatar.cc/150?u=camila", tipo: "Familiar", autorizadoPor: "Herdado de Roberto Almeida", entrada: "Hoje, 17:20" },
   ],
   "4": [],
   "5": [
@@ -57,15 +54,15 @@ export const MOCK_SOCIOS = [
 ];
 
 // Gerenciar Dependentes — visão administrativa (todos os titulares), diferente
-// da autogestão do sócio no app Check-in. Status genérico "Familiar" — não
+// da autogestão do sócio no app Check-in. Status genérico "Dependente" — não
 // importa se é cônjuge, filho(a) etc., o Manager só precisa saber que é
 // família do titular (ver CLAUDE.md §5: motivos de acesso são só 3 categorias).
 export const MOCK_DEPENDENTES_ADMIN = [
-  { id: "dep1", name: "Ana Almeida", tipo: "Familiar", titular: "Roberto Almeida", titularId: "8493", idade: 45, status: "Ativo" },
-  { id: "dep2", name: "Lucas Almeida", tipo: "Familiar", titular: "Roberto Almeida", titularId: "8493", idade: 16, status: "Ativo" },
-  { id: "dep3", name: "Maria Silva", tipo: "Familiar", titular: "Fernando Silva", titularId: "5521", idade: 39, status: "Ativo" },
-  { id: "dep4", name: "João Pedro Silva", tipo: "Familiar", titular: "Fernando Silva", titularId: "5521", idade: 20, status: "Pendente" },
-  { id: "dep5", name: "Beatriz Costa", tipo: "Familiar", titular: "Marcelo Costa", titularId: "3390", idade: 17, status: "Bloqueado" },
+  { id: "dep1", name: "Ana Almeida", tipo: "Dependente", titular: "Roberto Almeida", titularId: "8493", idade: 45, status: "Ativo" },
+  { id: "dep2", name: "Lucas Almeida", tipo: "Dependente", titular: "Roberto Almeida", titularId: "8493", idade: 16, status: "Ativo" },
+  { id: "dep3", name: "Maria Silva", tipo: "Dependente", titular: "Fernando Silva", titularId: "5521", idade: 39, status: "Ativo" },
+  { id: "dep4", name: "João Pedro Silva", tipo: "Dependente", titular: "Fernando Silva", titularId: "5521", idade: 20, status: "Pendente" },
+  { id: "dep5", name: "Beatriz Costa", tipo: "Dependente", titular: "Marcelo Costa", titularId: "3390", idade: 17, status: "Bloqueado" },
 ];
 
 // Convidados patrocinados por sócios (visão admin, cruzando com titularId de MOCK_SOCIOS)

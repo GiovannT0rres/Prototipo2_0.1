@@ -52,7 +52,7 @@ export const SCENARIOS: Record<ScenarioId, ChatMessage[]> = {
     { id: "d4", type: "sent", text: "1", time: "10:02" },
     { id: "d5", type: "received", text: "Para confirmar a identidade do dependente, envie uma *selfie* dele com documento com foto.", time: "10:03", isSelfieRequest: true },
     { id: "d6", type: "sent", text: "", time: "10:03", isSelfieReply: true },
-    { id: "d7", type: "received", text: "Identidade confirmada ✅\n\n*Resumo:*\nNome: Lucas Almeida\nCategoria: Familiar\n\nSeu cadastro foi enviado para aprovação do clube. Você será avisado por aqui assim que for aprovado.", time: "10:04" },
+    { id: "d7", type: "received", text: "Identidade confirmada ✅\n\n*Resumo:*\nNome: Lucas Almeida\nCategoria: Dependente\n\nSeu cadastro foi enviado para aprovação do clube. Você será avisado por aqui assim que for aprovado.", time: "10:04" },
   ],
 
   // Caso de uso: Cadastrar prestadores de serviço + Concluir cadastro iniciado pelo App Concierge

@@ -159,7 +159,7 @@ export function Autorizacoes() {
   const handleAccept = (req: (typeof INITIAL_PENDING)[0]) => {
     const label = MOTIVOS_ACESSO.find((m) => m.id === req.type)?.label || "Visitante";
     // Dependente tem acesso livre por natureza — não depende do que ficou selecionado no campo (que nem aparece pra esse motivo).
-    const espacoFinal = req.type === "familiar" ? CLUBE_INTEIRO_ID : req.espacoId;
+    const espacoFinal = req.type === "dependente" ? CLUBE_INTEIRO_ID : req.espacoId;
     const espacoSelected = ESPACOS.find((c) => c.id === espacoFinal);
     const destinoLabel = espacoFinal === CLUBE_INTEIRO_ID ? "Clube Inteiro" : espacoSelected?.name;
 
@@ -395,7 +395,7 @@ export function Autorizacoes() {
                       </div>
                     </div>
 
-                    {req.type === "familiar" ? (
+                    {req.type === "dependente" ? (
                       <div className="bg-[#f2f2f7] p-3.5 rounded-xl text-[13px] text-gray-500 font-medium">
                         Dependente tem livre acesso a todos os espaços do clube — sem espaço de destino a definir.
                       </div>

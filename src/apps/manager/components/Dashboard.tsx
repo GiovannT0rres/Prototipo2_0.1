@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router";
-import { MOCK_DASHBOARD, MOCK_FILA_DEPENDENTES } from "../mocks/mockManager";
-import { Users, Activity, CheckCircle, Clock, ArrowRight, ShieldAlert } from "lucide-react";
+import { MOCK_DASHBOARD, MOCK_PRESENCA } from "../mocks/mockManager";
+import { ESPACOS } from "@/shared/data/spaces";
+import { Users, Activity, CheckCircle, Clock, ArrowRight, ShieldAlert, MapPin, ShieldCheck } from "lucide-react";
 
 export function Dashboard() {
   const navigate = useNavigate();
@@ -11,6 +12,9 @@ export function Dashboard() {
     { label: "Eventos Ativos", value: MOCK_DASHBOARD.eventosAtivos, icon: CheckCircle, color: "text-emerald-600", bg: "bg-emerald-50" },
     { label: "Visitantes (Semana)", value: MOCK_DASHBOARD.visitantesSemana, icon: Users, color: "text-purple-600", bg: "bg-purple-50" },
   ];
+
+  const totalPessoasNoClube = Object.values(MOCK_PRESENCA).reduce((acc, lista) => acc + lista.length, 0);
+  const espacosOcupados = Object.values(MOCK_PRESENCA).filter((lista) => lista.length > 0).length;
 
   return (
     <div className="space-y-6">
@@ -36,41 +40,73 @@ export function Dashboard() {
         })}
       </div>
 
-      {/* Cockpit de Autorizações */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100">
+      {/* Mapa Operacional — absorvido pra dentro do Dashboard (era uma tela
+          própria em /manager/mapa; agora é uma seção aqui mesmo) */}
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <div className="flex items-center justify-between mb-4">
           <div>
-            <h2 className="text-[17px] font-bold text-gray-900">Cockpit de Autorizações</h2>
+            <h2 className="text-[17px] font-bold text-gray-900">Mapa Operacional</h2>
             <p className="text-[13px] text-gray-500 mt-0.5">
-              {MOCK_FILA_DEPENDENTES.length} dependente(s) aguardando aprovação agora.
+              Visitantes e prestadores de serviço no clube agora, em qual espaço, e quem
+              autorizou — sócios têm acesso livre e não aparecem aqui.
             </p>
           </div>
-          <button
-            onClick={() => navigate("/manager/aprovacoes")}
-            className="flex items-center gap-1.5 text-emerald-600 font-semibold text-[14px] hover:text-emerald-700"
-          >
-            Ver fila completa <ArrowRight size={16} />
-          </button>
+          <span className="text-[13px] font-semibold text-gray-500 shrink-0">
+            {totalPessoasNoClube} no clube · {espacosOcupados}/{ESPACOS.length} espaços ocupados
+          </span>
         </div>
 
-        <div className="divide-y divide-gray-50">
-          {MOCK_FILA_DEPENDENTES.slice(0, 3).map((item) => (
-            <div key={item.id} className="flex items-center gap-4 px-6 py-3.5">
-              <img src={item.avatar} alt={item.name} className="w-10 h-10 rounded-full object-cover border border-gray-100" />
-              <div className="flex-1 min-w-0">
-                <p className="text-[14px] font-semibold text-gray-900 truncate">{item.name}</p>
-                <p className="text-[12px] text-gray-500">{item.type} • Titular: {item.titular}</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+          {ESPACOS.map((espaco) => {
+            const pessoas = MOCK_PRESENCA[espaco.id] ?? [];
+            return (
+              <div key={espaco.id} className="rounded-xl border border-gray-100 overflow-hidden">
+                <div className="w-full flex items-center justify-between px-4 py-3.5">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-white ${espaco.color}`}>
+                      <MapPin size={18} />
+                    </div>
+                    <div className="text-left">
+                      <p className="text-[14px] font-bold text-gray-900">{espaco.name}</p>
+                      <p className="text-[12px] text-gray-500">
+                        {espaco.tipo}{espaco.ageRestriction ? ` • ${espaco.ageRestriction}` : ""}
+                      </p>
+                    </div>
+                  </div>
+                  <span
+                    className={`text-[13px] font-extrabold px-2.5 py-1 rounded-full shrink-0 ${
+                      pessoas.length > 0 ? "bg-emerald-50 text-emerald-700" : "bg-gray-100 text-gray-400"
+                    }`}
+                  >
+                    {pessoas.length}
+                  </span>
+                </div>
+
+                {pessoas.length > 0 && (
+                  <div className="divide-y divide-gray-50 border-t border-gray-100">
+                    {pessoas.map((pessoa) => (
+                      <div key={pessoa.id} className="flex items-center gap-3 px-4 py-2.5">
+                        <img src={pessoa.avatar} alt={pessoa.name} className="w-8 h-8 rounded-full object-cover border border-gray-100 shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-[13px] font-semibold text-gray-900 truncate">{pessoa.name}</p>
+                          <p className="text-[11px] text-gray-500 truncate">{pessoa.tipo} • entrou {pessoa.entrada}</p>
+                          <p className="text-[11px] text-emerald-700 font-medium mt-0.5 flex items-center gap-1 truncate">
+                            <ShieldCheck size={12} className="shrink-0" /> {pessoa.autorizadoPor}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {pessoas.length === 0 && (
+                  <div className="px-4 py-3 border-t border-gray-100 text-[12px] text-gray-400 font-medium">
+                    Nenhuma pessoa neste espaço no momento.
+                  </div>
+                )}
               </div>
-              <span className="text-[11px] font-bold uppercase tracking-wide bg-amber-50 text-amber-600 px-2 py-1 rounded-md shrink-0">
-                Pendente
-              </span>
-            </div>
-          ))}
-          {MOCK_FILA_DEPENDENTES.length === 0 && (
-            <div className="px-6 py-8 text-center text-[14px] text-gray-400 font-medium">
-              Nenhuma solicitação pendente no momento.
-            </div>
-          )}
+            );
+          })}
         </div>
       </div>
 

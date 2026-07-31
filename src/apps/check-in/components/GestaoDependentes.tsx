@@ -23,7 +23,7 @@ export function GestaoDependentes() {
       const newDep = {
         id: `d_${Date.now()}`,
         name: formData.name,
-        type: "Familiar", 
+        type: "Dependente",
         birthDate: formData.birthDate,
         avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.name)}&background=random`,
         pending: true,
@@ -161,7 +161,7 @@ export function GestaoDependentes() {
                  </div>
                  <div>
                     <h2 className="text-[19px] font-bold text-gray-900">Novo Dependente</h2>
-                    <p className="text-[13px] text-gray-500">Preencha os dados do familiar.</p>
+                    <p className="text-[13px] text-gray-500">Preencha os dados do dependente.</p>
                  </div>
               </div>
 

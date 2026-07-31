@@ -123,3 +123,4 @@ lerna-debug.log*
 # Notas internas do projeto (contexto de negócio/cliente — não deve ir para o
 # histórico do git nem ser exposto caso o repo seja compartilhado/publicado)
 CLAUDE.md
+GEMINI.md
