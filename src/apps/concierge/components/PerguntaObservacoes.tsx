@@ -55,15 +55,15 @@ export function PerguntaObservacoes({ dados, onConcluir, onVoltar }: Props) {
           initial={{ scale: 0.6, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ type: "spring", duration: 0.5 }}
-          className="w-20 h-20 rounded-full bg-[#E9FBF0] text-[#30B855] flex items-center justify-center mb-5"
+          className="w-20 h-20 rounded-full bg-[#E9FBF0] text-[#0B7A3B] flex items-center justify-center mb-5"
         >
           <CheckCircle2 size={44} strokeWidth={1.75} />
         </motion.div>
-        <h2 className="text-[20px] font-semibold text-gray-900">Autorização criada</h2>
-        <p className="text-[14px] text-gray-500 mt-1.5 max-w-xs leading-relaxed">
+        <h2 className="text-[23px] font-semibold text-gray-900">Autorização criada</h2>
+        <p className="text-[19px] text-gray-600 mt-1.5 max-w-xs leading-relaxed">
           {dados?.name || "Usuário"} está autorizado.
         </p>
-        <p className="text-[12px] text-gray-400 mt-6">
+        <p className="text-[17px] text-gray-500 mt-6">
           {jaCadastrado ? "Voltando ao perfil…" : "Voltando ao início…"}
         </p>
       </motion.div>
@@ -73,35 +73,41 @@ export function PerguntaObservacoes({ dados, onConcluir, onVoltar }: Props) {
   return (
     <motion.div initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="flex-1 flex flex-col h-full bg-white">
       <div className="flex-shrink-0 p-4 border-b border-gray-100 flex items-center gap-3 bg-gray-50">
-        <button onClick={onVoltar} className="p-2 rounded-xl bg-white text-gray-600 shadow-sm">
-          <ArrowLeft size={20} />
+        <button
+          onClick={onVoltar}
+          aria-label="Voltar"
+          className="w-14 h-14 flex items-center justify-center rounded-xl bg-white text-gray-600 shadow-sm shrink-0"
+        >
+          <ArrowLeft size={24} strokeWidth={2.25} />
         </button>
         <div>
-          <p className="font-bold text-gray-900 text-[15px]">Autorização</p>
+          <p className="font-bold text-gray-900 text-[17px]">Autorização</p>
         </div>
       </div>
 
-      <div className="flex-1 p-6 bg-gray-50">
-        <p className="text-[22px] text-gray-900 mb-2 leading-tight">
+      <div className="flex-1 p-6 bg-gray-50 overflow-y-auto">
+        <p className="text-[28px] text-gray-900 mb-2 leading-tight">
           Alguma <strong className="font-bold">OBSERVAÇÃO</strong>?
         </p>
-        <p className="text-[13px] text-gray-500 mb-6">Opcional — fica registrado junto com a autorização.</p>
+        <p className="text-[17px] text-gray-600 mb-6">Opcional — fica registrado junto com a autorização.</p>
 
         <textarea
-          autoFocus
           value={observacoes}
           onChange={(e) => setObservacoes(e.target.value)}
           placeholder="Ex: chega de carro, vai direto pro salão principal..."
           rows={4}
-          className="w-full bg-white border-2 border-gray-200 px-4 py-3.5 rounded-xl text-[15px] font-medium focus:outline-none focus:border-[#0F2744] text-gray-900 resize-none"
+          enterKeyHint="done"
+          className="w-full bg-white border-2 border-gray-300 px-4 py-4 rounded-xl text-[19px] font-medium focus:outline-none focus:ring-4 focus:ring-[#0F2744]/12 focus:border-[#0F2744] text-gray-900 resize-none"
         />
+      </div>
 
+      <div className="flex-shrink-0 p-6 pt-4 border-t border-gray-100 bg-white">
         <button
           onClick={handleConfirmar}
           disabled={isSubmitting}
-          className="w-full mt-6 py-4 rounded-xl font-bold text-[16px] text-white transition-opacity disabled:opacity-60 bg-[#0F2744] flex justify-center items-center gap-2"
+          className="w-full py-4 rounded-xl font-bold text-[21px] text-white transition-opacity disabled:opacity-60 bg-[#0F2744] flex justify-center items-center gap-2 min-h-[64px]"
         >
-          {isSubmitting ? "Processando..." : <><CheckCircle2 size={20} /> Salvar e Liberar</>}
+          {isSubmitting ? "Processando..." : <><CheckCircle2 size={22} strokeWidth={2.25} /> Salvar e Liberar</>}
         </button>
       </div>
     </motion.div>

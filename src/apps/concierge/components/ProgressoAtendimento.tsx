@@ -19,21 +19,21 @@ export function ProgressoAtendimento({ etapas, atual }: Props) {
 
           return (
             <div key={etapa} className="flex items-start flex-1 last:flex-none">
-              <div className="flex flex-col items-center gap-1.5 w-[64px] shrink-0">
+              <div className="flex flex-col items-center gap-1.5 w-[84px] shrink-0">
                 <div
-                  className={`w-9 h-9 rounded-full flex items-center justify-center text-[13px] font-bold shrink-0 ${
+                  className={`w-10 h-10 rounded-full flex items-center justify-center text-[19px] font-bold shrink-0 ${
                     concluido
-                      ? "bg-emerald-500 text-white"
+                      ? "bg-emerald-600 text-white"
                       : ativo
-                        ? "bg-white border-2 border-[#0F2744] text-[#0F2744]"
-                        : "bg-gray-100 text-gray-400"
+                        ? "bg-white border-[3px] border-[#0F2744] text-[#0F2744]"
+                        : "bg-gray-100 text-gray-500"
                   }`}
                 >
-                  {concluido ? <Check size={16} strokeWidth={3} /> : passo}
+                  {concluido ? <Check size={20} strokeWidth={3} /> : passo}
                 </div>
                 <span
-                  className={`text-[11px] font-semibold text-center leading-tight ${
-                    concluido ? "text-emerald-600" : ativo ? "text-gray-900" : "text-gray-400"
+                  className={`text-[17px] font-semibold text-center leading-tight ${
+                    concluido ? "text-emerald-700" : ativo ? "text-gray-900" : "text-gray-500"
                   }`}
                 >
                   {etapa}
@@ -41,7 +41,7 @@ export function ProgressoAtendimento({ etapas, atual }: Props) {
               </div>
 
               {passo < etapas.length && (
-                <div className={`flex-1 h-0.5 mt-[17px] ${concluido ? "bg-emerald-400" : "bg-gray-200"}`} />
+                <div className={`flex-1 h-[3px] mt-[19px] ${concluido ? "bg-emerald-500" : "bg-gray-200"}`} />
               )}
             </div>
           );

@@ -141,7 +141,7 @@ export function PortariaWizard() {
 
   return (
     <div className="min-h-screen bg-[#f0f2f5] flex justify-center items-center p-4">
-      <div className="w-full max-w-[480px] bg-white rounded-3xl shadow-xl overflow-hidden min-h-[650px] flex flex-col relative border border-gray-100">
+      <div className="w-full max-w-[520px] bg-white rounded-3xl shadow-xl overflow-hidden min-h-[650px] max-h-[900px] flex flex-col relative border border-gray-100">
 
         {step === "home" && (
           <HomeBusca onBuscar={processarCpf} pessoasNoLocal={pessoasNoLocal} onSaida={handleSaidaDaLista} />

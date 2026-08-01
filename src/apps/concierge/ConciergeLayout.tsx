@@ -6,40 +6,39 @@ export function ConciergeLayout() {
 
   return (
     <div className="min-h-screen bg-[#f0f2f5] font-sans flex flex-col">
-      {/* Top Header Minimalista */}
-      <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between shadow-sm">
+      {/* Header — só a identidade da marca; ações administrativas (Sair, Hub)
+          ficam discretas pois nunca são usadas em meio a um atendimento. */}
+      <header className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-[#0F2744] rounded-xl flex items-center justify-center">
-            <Shield size={20} className="text-white" />
+          <div className="w-10 h-10 bg-[#0F2744] rounded-xl flex items-center justify-center shrink-0">
+            <Shield size={20} className="text-white" strokeWidth={2.25} />
           </div>
           <div>
-            <p className="text-[15px] font-extrabold text-gray-900 leading-tight">PORTARIA</p>
-            <p className="text-[10px] text-gray-400 font-medium uppercase tracking-widest leading-none mt-0.5">
+            <p className="text-[17px] font-extrabold text-gray-900 leading-tight">PORTARIA</p>
+            <p className="text-[13px] text-gray-500 font-medium uppercase tracking-widest leading-none mt-0.5">
               PACC Clube
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           <button
             onClick={() => navigate("/")}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors text-[14px] font-semibold"
+            aria-label="Voltar ao Hub"
+            title="Voltar ao Hub"
+            className="w-12 h-12 flex items-center justify-center rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
           >
-            <Home size={16} />
-            <span className="hidden sm:inline">Voltar ao Hub</span>
+            <Home size={20} strokeWidth={2.25} />
           </button>
-          
-          <div className="w-px h-6 bg-gray-200 mx-2" />
-          
+
           <button
             onClick={() => {
               localStorage.removeItem("isAuthenticated");
               navigate("/login");
             }}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg text-red-600 hover:bg-red-50 transition-colors text-[14px] font-semibold"
+            className="h-12 px-3 flex items-center justify-center gap-1.5 rounded-lg text-red-700 hover:bg-red-50 transition-colors text-[15px] font-semibold"
           >
-            <LogOut size={16} />
-            <span className="hidden sm:inline">Sair</span>
+            <LogOut size={18} strokeWidth={2.25} /> Sair
           </button>
         </div>
       </header>

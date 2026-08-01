@@ -18,6 +18,7 @@ out/
 .svelte-kit/
 .serverless/
 .output/
+docs/
 
 # Secrets, Credentials, and Environment Variables (CRÍTICO: Segurança contra vazamentos)
 # Catch-all para qualquer variante de .env, com exceção explícita para templates

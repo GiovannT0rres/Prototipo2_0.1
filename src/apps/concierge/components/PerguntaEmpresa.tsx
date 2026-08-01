@@ -43,16 +43,20 @@ export function PerguntaEmpresa({ onConfirmar, onVoltar }: Props) {
   return (
     <motion.div initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="flex-1 flex flex-col h-full bg-white">
       <div className="flex-shrink-0 p-4 border-b border-gray-100 flex items-center gap-3 bg-gray-50">
-        <button onClick={onVoltar} className="p-2 rounded-xl bg-white text-gray-600 shadow-sm">
-          <ArrowLeft size={20} />
+        <button
+          onClick={onVoltar}
+          aria-label="Voltar"
+          className="w-14 h-14 flex items-center justify-center rounded-xl bg-white text-gray-600 shadow-sm shrink-0"
+        >
+          <ArrowLeft size={24} strokeWidth={2.25} />
         </button>
         <div>
-          <p className="font-bold text-gray-900 text-[15px]">Autorização</p>
+          <p className="font-bold text-gray-900 text-[17px]">Autorização</p>
         </div>
       </div>
 
-      <div className="flex-1 p-6 bg-gray-50">
-        <p className="text-[22px] text-gray-900 mb-6 leading-tight">
+      <div className="flex-1 flex flex-col p-6 bg-gray-50 overflow-y-auto">
+        <p className="text-[28px] text-gray-900 mb-6 leading-tight">
           Para qual <strong className="font-bold">EMPRESA</strong> está prestando serviço?
         </p>
 
@@ -66,19 +70,29 @@ export function PerguntaEmpresa({ onConfirmar, onVoltar }: Props) {
         />
 
         {sugestoesFiltradas.length > 0 && !empresa && (
-          <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mt-5 mb-2.5">
+          <p className="text-[15px] font-semibold text-gray-500 uppercase tracking-wider mt-5 mb-2.5">
             Empresas recentes
           </p>
         )}
 
-        <div className="flex flex-wrap gap-2 mt-3">
+        <div className="flex flex-wrap gap-2.5 mt-3">
           {sugestoesFiltradas.map((nome) => (
-            <SugestaoChip key={nome} label={nome} icon={<Building2 size={14} />} onClick={() => preencher(nome)} />
+            <SugestaoChip key={nome} label={nome} icon={<Building2 size={16} strokeWidth={2.25} />} onClick={() => preencher(nome)} />
           ))}
           {!empresa && (
-            <SugestaoChip label="Autônomo" icon={<UserX size={14} />} tone="neutro" onClick={() => onConfirmar("")} />
+            <SugestaoChip label="Autônomo" icon={<UserX size={16} strokeWidth={2.25} />} tone="neutro" onClick={() => onConfirmar("")} />
           )}
         </div>
+      </div>
+
+      <div className="flex-shrink-0 p-6 pt-4 border-t border-gray-100 bg-white">
+        <button
+          onClick={confirmar}
+          disabled={!empresa}
+          className="w-full py-4 rounded-xl font-bold text-[21px] text-white transition-opacity disabled:opacity-45 bg-[#0F2744] flex justify-center items-center gap-2 min-h-[64px]"
+        >
+          Confirmar empresa
+        </button>
       </div>
     </motion.div>
   );

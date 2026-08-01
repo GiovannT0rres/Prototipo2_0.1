@@ -59,16 +59,20 @@ export function PerguntaDestino({ motivo, onConfirmar, onVoltar }: Props) {
   return (
     <motion.div initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="flex-1 flex flex-col h-full bg-white">
       <div className="flex-shrink-0 p-4 border-b border-gray-100 flex items-center gap-3 bg-gray-50">
-        <button onClick={onVoltar} className="p-2 rounded-xl bg-white text-gray-600 shadow-sm">
-          <ArrowLeft size={20} />
+        <button
+          onClick={onVoltar}
+          aria-label="Voltar"
+          className="w-14 h-14 flex items-center justify-center rounded-xl bg-white text-gray-600 shadow-sm shrink-0"
+        >
+          <ArrowLeft size={24} strokeWidth={2.25} />
         </button>
         <div>
-          <p className="font-bold text-gray-900 text-[15px]">Autorização</p>
+          <p className="font-bold text-gray-900 text-[17px]">Autorização</p>
         </div>
       </div>
 
-      <div className="flex-1 p-6 bg-gray-50">
-        <p className="text-[22px] text-gray-900 mb-6 leading-tight">
+      <div className="flex-1 flex flex-col p-6 bg-gray-50 overflow-y-auto">
+        <p className="text-[28px] text-gray-900 mb-6 leading-tight">
           Qual o <strong className="font-bold">DESTINO</strong>?
         </p>
 
@@ -82,19 +86,29 @@ export function PerguntaDestino({ motivo, onConfirmar, onVoltar }: Props) {
         />
 
         {recentesValidos.length > 0 && !destino && (
-          <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mt-5 mb-2.5">
+          <p className="text-[15px] font-semibold text-gray-500 uppercase tracking-wider mt-5 mb-2.5">
             Usados recentemente
           </p>
         )}
 
-        <div className="flex flex-wrap gap-2 mt-3">
+        <div className="flex flex-wrap gap-2.5 mt-3">
           {sugestoesFiltradas.map((s) => (
-            <SugestaoChip key={s} label={s} icon={<MapPin size={14} />} onClick={() => preencher(s)} />
+            <SugestaoChip key={s} label={s} icon={<MapPin size={16} strokeWidth={2.25} />} onClick={() => preencher(s)} />
           ))}
           {sugestoesFiltradas.length === 0 && (
-            <p className="text-[13px] text-gray-400">Nenhuma sugestão encontrada — digite e toque em OK.</p>
+            <p className="text-[17px] text-gray-500">Nenhuma sugestão encontrada — digite e confirme.</p>
           )}
         </div>
+      </div>
+
+      <div className="flex-shrink-0 p-6 pt-4 border-t border-gray-100 bg-white">
+        <button
+          onClick={confirmar}
+          disabled={!destinoValido}
+          className="w-full py-4 rounded-xl font-bold text-[21px] text-white transition-opacity disabled:opacity-45 bg-[#0F2744] flex justify-center items-center gap-2 min-h-[64px]"
+        >
+          Confirmar destino
+        </button>
       </div>
     </motion.div>
   );
