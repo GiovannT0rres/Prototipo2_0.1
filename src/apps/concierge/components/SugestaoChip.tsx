@@ -15,7 +15,7 @@ export function SugestaoChip({ label, icon, onClick, tone = "marca" }: Props) {
     <button
       type="button"
       onClick={onClick}
-      className="flex items-center gap-2.5 px-4 min-h-[56px] max-w-full rounded-[14px] border-2 border-[var(--es-border)] bg-[var(--es-surface)] hover:border-[var(--es-border-strong)] active:scale-[0.98] transition-all text-left"
+      className="flex items-center gap-2.5 px-4 min-h-[50px] max-w-full rounded-[14px] border-2 border-[var(--es-border)] bg-[var(--es-surface)] hover:border-[var(--es-border-strong)] active:scale-[0.98] transition-all text-left"
     >
       <span
         className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
@@ -24,7 +24,7 @@ export function SugestaoChip({ label, icon, onClick, tone = "marca" }: Props) {
       >
         {icon}
       </span>
-      <span className="text-[17px] font-semibold text-[var(--es-ink)] truncate min-w-0 flex-1">{label}</span>
+      <span className="text-[16px] font-semibold text-[var(--es-ink)] truncate min-w-0 flex-1">{label}</span>
     </button>
   );
 }

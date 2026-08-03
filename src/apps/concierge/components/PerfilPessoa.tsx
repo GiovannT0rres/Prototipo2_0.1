@@ -86,8 +86,8 @@ export function PerfilPessoa({ dados, onNovaAutorizacao, onLiberarAcesso, onVolt
     const mostrarLiberado = noLocal && liberadoRecente[auth.id];
     const classeBase =
       tamanho === "grande"
-        ? "flex-1 py-4 rounded-[14px] text-[21px] min-h-[64px]"
-        : "flex-1 py-3 rounded-[14px] text-[19px] min-h-[56px]";
+        ? "flex-1 py-4 rounded-[14px] text-[19px] min-h-[58px]"
+        : "flex-1 py-3 rounded-[14px] text-[17px] min-h-[50px]";
 
     // Autorização pra data futura (ex. evento agendado) não libera antes de
     // começar — impedir por design em vez de deixar liberar e avisar depois
@@ -141,34 +141,34 @@ export function PerfilPessoa({ dados, onNovaAutorizacao, onLiberarAcesso, onVolt
         <button
           onClick={onVoltar}
           aria-label="Voltar"
-          className="w-14 h-14 flex items-center justify-center -ml-2 rounded-[14px] text-[var(--es-ink-2)] hover:bg-[var(--es-bg)] transition-colors shrink-0"
+          className="w-[50px] h-[50px] flex items-center justify-center -ml-2 rounded-[14px] text-[var(--es-ink-2)] hover:bg-[var(--es-bg)] transition-colors shrink-0"
         >
-          <ArrowLeft size={24} strokeWidth={2.25} />
+          <ArrowLeft size={22} strokeWidth={2.25} />
         </button>
-        <p className="font-semibold text-[var(--es-ink)] text-[17px]">Perfil do Usuário</p>
+        <p className="font-semibold text-[var(--es-ink)] text-[16px]">Perfil do Usuário</p>
         <div className="w-14" />
       </div>
 
       <div className="flex-shrink-0 bg-[var(--es-surface)] px-6 py-5 border-b border-[var(--es-border)] flex items-center gap-4">
-        <img src={dados.avatar} alt="Avatar" className="w-16 h-16 rounded-full object-cover shrink-0" />
+        <img src={dados.avatar} alt="Avatar" className="w-14 h-14 rounded-full object-cover shrink-0" />
         <div>
-          <h2 className="text-[21px] font-semibold text-[var(--es-ink)]">{dados.name}</h2>
-          <p className="text-[17px] text-[var(--es-ink-2)] tabular-nums mt-0.5">{dados.cpf}</p>
-          <p className="text-[17px] text-[var(--es-ink-3)] mt-1">{dados.type}</p>
+          <h2 className="text-[19px] font-semibold text-[var(--es-ink)]">{dados.name}</h2>
+          <p className="text-[16px] text-[var(--es-ink-2)] tabular-nums mt-0.5">{dados.cpf}</p>
+          <p className="text-[16px] text-[var(--es-ink-3)] mt-1">{dados.type}</p>
         </div>
       </div>
 
       <div className="flex-1 min-h-0 px-6 pt-5 pb-6 overflow-y-auto">
-        <h3 className="text-[17px] font-semibold text-[var(--es-ink-3)] uppercase tracking-wider mb-3">
+        <h3 className="text-[16px] font-semibold text-[var(--es-ink-3)] uppercase tracking-wider mb-3">
           {temLivreAcesso ? "Acesso" : "Autorizações"}
         </h3>
 
         {temLivreAcesso ? (
           <div className="bg-[var(--es-surface)] p-4 rounded-[14px] border border-[var(--es-border)]">
             {acessoLivre.status === "No local" && (
-              <p className="text-[17px] font-medium text-[var(--es-success)] mb-2">No local desde {acessoLivre.entrada}</p>
+              <p className="text-[16px] font-medium text-[var(--es-success)] mb-2">No local desde {acessoLivre.entrada}</p>
             )}
-            <p className="text-[19px] text-[var(--es-ink-2)] mb-4 leading-relaxed">
+            <p className="text-[17px] text-[var(--es-ink-2)] mb-4 leading-relaxed">
               {dados.type === "Sócio Titular" ? "Sócio" : "Dependente"} tem livre acesso a todo o clube.
             </p>
             <div className="flex">
@@ -178,7 +178,7 @@ export function PerfilPessoa({ dados, onNovaAutorizacao, onLiberarAcesso, onVolt
         ) : (
           <div className="space-y-2.5">
             {autorizacoes.length === 0 ? (
-              <div className="bg-[var(--es-surface)] p-6 rounded-[14px] border border-[var(--es-border)] text-center text-[var(--es-ink-3)] text-[19px]">
+              <div className="bg-[var(--es-surface)] p-6 rounded-[14px] border border-[var(--es-border)] text-center text-[var(--es-ink-3)] text-[17px]">
                 Nenhuma autorização ativa encontrada.
               </div>
             ) : (
@@ -192,16 +192,16 @@ export function PerfilPessoa({ dados, onNovaAutorizacao, onLiberarAcesso, onVolt
                 return (
                   <div key={auth.id} className="bg-[var(--es-surface)] p-4 rounded-[14px] border border-[var(--es-border)]">
                     <div className="flex items-start justify-between gap-2 mb-1">
-                      <p className="text-[19px] font-semibold text-[var(--es-ink)]">{auth.destino}</p>
-                      <span className="text-[17px] font-semibold text-[var(--es-ink-3)] uppercase tracking-wide pt-0.5 shrink-0">
+                      <p className="text-[17px] font-semibold text-[var(--es-ink)]">{auth.destino}</p>
+                      <span className="text-[16px] font-semibold text-[var(--es-ink-3)] uppercase tracking-wide pt-0.5 shrink-0">
                         {auth.type}
                       </span>
                     </div>
-                    <p className="text-[17px] text-[var(--es-ink-3)]">
+                    <p className="text-[16px] text-[var(--es-ink-3)]">
                       {auth.autorizador || "Portaria"} {auth.periodo && `• ${auth.periodo}`}
                     </p>
                     {noLocal && (
-                      <p className="text-[17px] font-medium text-[var(--es-success)] mt-1">No local desde {auth.entrada}</p>
+                      <p className="text-[16px] font-medium text-[var(--es-success)] mt-1">No local desde {auth.entrada}</p>
                     )}
 
                     {/* Recusar nunca fica adjacente ao botão de entrada — é a
@@ -213,9 +213,9 @@ export function PerfilPessoa({ dados, onNovaAutorizacao, onLiberarAcesso, onVolt
                         {!noLocal && (
                           <button
                             onClick={() => setRecusarModal(auth)}
-                            className="mt-2 min-h-[44px] px-3 -ml-3 rounded-[14px] text-[var(--es-ink-2)] hover:text-[var(--es-danger)] hover:bg-[var(--es-danger-soft)] transition-colors flex items-center gap-1.5 text-[17px] font-semibold"
+                            className="mt-2 min-h-[40px] px-3 -ml-3 rounded-[14px] text-[var(--es-ink-2)] hover:text-[var(--es-danger)] hover:bg-[var(--es-danger-soft)] transition-colors flex items-center gap-1.5 text-[16px] font-semibold"
                           >
-                            <Ban size={20} strokeWidth={2.25} /> Recusar esta autorização
+                            <Ban size={18} strokeWidth={2.25} /> Recusar esta autorização
                           </button>
                         )}
                       </div>
@@ -223,9 +223,9 @@ export function PerfilPessoa({ dados, onNovaAutorizacao, onLiberarAcesso, onVolt
                     {ehAUnicaPendente && (
                       <button
                         onClick={() => setRecusarModal(auth)}
-                        className="mt-3.5 min-h-[44px] px-3 -ml-3 rounded-[14px] text-[var(--es-ink-2)] hover:text-[var(--es-danger)] hover:bg-[var(--es-danger-soft)] transition-colors flex items-center gap-1.5 text-[17px] font-semibold"
+                        className="mt-3.5 min-h-[40px] px-3 -ml-3 rounded-[14px] text-[var(--es-ink-2)] hover:text-[var(--es-danger)] hover:bg-[var(--es-danger-soft)] transition-colors flex items-center gap-1.5 text-[16px] font-semibold"
                       >
-                        <Ban size={20} strokeWidth={2.25} /> Recusar esta autorização
+                        <Ban size={18} strokeWidth={2.25} /> Recusar esta autorização
                       </button>
                     )}
                   </div>
@@ -239,15 +239,15 @@ export function PerfilPessoa({ dados, onNovaAutorizacao, onLiberarAcesso, onVolt
           <div className="mt-7">
             <button
               onClick={() => setHistoricoAberto((v) => !v)}
-              className="w-full flex items-center justify-between gap-1.5 text-[17px] font-semibold text-[var(--es-ink-3)] uppercase tracking-wider mb-3 min-h-[44px]"
+              className="w-full flex items-center justify-between gap-1.5 text-[16px] font-semibold text-[var(--es-ink-3)] uppercase tracking-wider mb-3 min-h-[40px]"
             >
               <span className="flex items-center gap-1.5">
-                <History size={20} strokeWidth={2.25} /> Ver histórico de acessos
+                <History size={18} strokeWidth={2.25} /> Ver histórico de acessos
               </span>
               {historicoAberto ? (
-                <ChevronUp size={22} strokeWidth={2.25} />
+                <ChevronUp size={20} strokeWidth={2.25} />
               ) : (
-                <ChevronDown size={22} strokeWidth={2.25} />
+                <ChevronDown size={20} strokeWidth={2.25} />
               )}
             </button>
 
@@ -255,8 +255,8 @@ export function PerfilPessoa({ dados, onNovaAutorizacao, onLiberarAcesso, onVolt
               <div className="space-y-2">
                 {historico.map((h) => (
                   <div key={h.id} className="bg-[var(--es-surface)] px-4 py-3.5 rounded-[14px] border border-[var(--es-border)] flex items-center justify-between gap-3">
-                    <p className="text-[17px] font-medium text-[var(--es-ink-2)]">{h.status} · {h.gate}</p>
-                    <p className="text-[17px] text-[var(--es-ink-3)] shrink-0">{h.data}</p>
+                    <p className="text-[16px] font-medium text-[var(--es-ink-2)]">{h.status} · {h.gate}</p>
+                    <p className="text-[16px] text-[var(--es-ink-3)] shrink-0">{h.data}</p>
                   </div>
                 ))}
               </div>
@@ -273,8 +273,8 @@ export function PerfilPessoa({ dados, onNovaAutorizacao, onLiberarAcesso, onVolt
             onClick={onNovaAutorizacao}
             className={`w-full rounded-[14px] font-semibold flex justify-center items-center gap-2 transition-all active:scale-[0.98] ${
               autorizacaoUnica
-                ? "py-3 text-[19px] min-h-[56px] text-[var(--es-ink-2)] bg-[var(--es-bg)] hover:bg-[var(--es-border-strong)]/20"
-                : "py-4 text-[21px] min-h-[64px] text-white bg-[var(--es-navy)] hover:bg-[var(--es-navy-press)]"
+                ? "py-3 text-[17px] min-h-[50px] text-[var(--es-ink-2)] bg-[var(--es-bg)] hover:bg-[var(--es-border-strong)]/20"
+                : "py-4 text-[19px] min-h-[58px] text-white bg-[var(--es-navy)] hover:bg-[var(--es-navy-press)]"
             }`}
           >
             <Plus size={autorizacaoUnica ? 22 : 26} strokeWidth={2.25} /> Nova Autorização
@@ -294,24 +294,24 @@ export function PerfilPessoa({ dados, onNovaAutorizacao, onLiberarAcesso, onVolt
           >
             <div className="w-10 h-1 bg-[var(--es-border-strong)] rounded-full mx-auto mt-3 mb-5" />
             <div className="px-6 pb-4 flex flex-col items-center text-center">
-              <div className="w-16 h-16 bg-[var(--es-danger-soft)] rounded-full flex items-center justify-center text-[var(--es-danger)] mb-4">
-                <AlertTriangle size={32} strokeWidth={2.25} />
+              <div className="w-14 h-14 bg-[var(--es-danger-soft)] rounded-full flex items-center justify-center text-[var(--es-danger)] mb-4">
+                <AlertTriangle size={29} strokeWidth={2.25} />
               </div>
-              <h3 className="text-[28px] font-bold text-[var(--es-ink)] mb-2">Recusar autorização?</h3>
-              <p className="text-[19px] text-[var(--es-ink-2)] leading-relaxed mb-6">
+              <h3 className="text-[25px] font-bold text-[var(--es-ink)] mb-2">Recusar autorização?</h3>
+              <p className="text-[17px] text-[var(--es-ink-2)] leading-relaxed mb-6">
                 Tem certeza que deseja recusar a autorização de <strong className="text-[var(--es-ink)]">{recusarModal.name}</strong> para{" "}
                 <strong className="text-[var(--es-ink)]">{recusarModal.destino}</strong>?
               </p>
               <div className="w-full space-y-2.5">
                 <button
                   onClick={confirmarRecusa}
-                  className="w-full bg-[var(--es-danger)] text-white font-semibold text-[21px] py-4 rounded-[14px] active:scale-[0.98] transition-all shadow-sm min-h-[64px]"
+                  className="w-full px-6 bg-[var(--es-danger)] text-white font-semibold text-[19px] py-4 rounded-[14px] active:scale-[0.98] transition-all shadow-sm min-h-[58px]"
                 >
                   Sim, recusar
                 </button>
                 <button
                   onClick={() => setRecusarModal(null)}
-                  className="w-full bg-[var(--es-bg)] text-[var(--es-ink-2)] font-semibold text-[21px] py-4 rounded-[14px] active:scale-[0.98] transition-all min-h-[64px]"
+                  className="w-full px-6 bg-[var(--es-bg)] text-[var(--es-ink-2)] font-semibold text-[19px] py-4 rounded-[14px] active:scale-[0.98] transition-all min-h-[58px]"
                 >
                   Cancelar
                 </button>

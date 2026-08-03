@@ -335,8 +335,8 @@ export function PortariaWizard() {
         duration={3000}
         toastOptions={{
           classNames: {
-            toast: "!min-h-[72px] !rounded-[14px] !items-center",
-            title: "!text-[19px] !font-semibold !leading-snug",
+            toast: "!min-h-[64px] !rounded-[14px] !items-center",
+            title: "!text-[17px] !font-semibold !leading-snug",
           },
         }}
       />

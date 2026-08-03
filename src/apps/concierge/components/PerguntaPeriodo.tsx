@@ -64,19 +64,19 @@ export function PerguntaPeriodo({ onConfirmar, onVoltar }: Props) {
         <button
           onClick={handleVoltar}
           aria-label="Voltar"
-          className="w-14 h-14 flex items-center justify-center rounded-[14px] text-[var(--es-ink-2)] hover:bg-[var(--es-bg)] transition-colors shrink-0"
+          className="w-[50px] h-[50px] flex items-center justify-center rounded-[14px] text-[var(--es-ink-2)] hover:bg-[var(--es-bg)] transition-colors shrink-0"
         >
-          <ArrowLeft size={24} strokeWidth={2.25} />
+          <ArrowLeft size={22} strokeWidth={2.25} />
         </button>
-        <p className="font-semibold text-[var(--es-ink)] text-[17px]">Autorização</p>
+        <p className="font-semibold text-[var(--es-ink)] text-[16px]">Autorização</p>
       </div>
 
       <div className="flex-1 min-h-0 p-6 bg-[var(--es-bg)] overflow-y-auto">
         <AnimatePresence mode="wait">
           {etapa === "inicio" ? (
             <motion.div key="inicio" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-              <p className="text-[17px] font-semibold text-[var(--es-navy)] uppercase tracking-wider mb-2">Pergunta 1 de 2</p>
-              <p className="text-[28px] font-semibold text-[var(--es-ink)] mb-6 leading-tight tracking-[-0.01em]">
+              <p className="text-[16px] font-semibold text-[var(--es-navy)] uppercase tracking-wider mb-2">Pergunta 1 de 2</p>
+              <p className="text-[25px] font-semibold text-[var(--es-ink)] mb-6 leading-tight tracking-[-0.01em]">
                 Quando <strong className="font-bold">COMEÇA</strong>?
               </p>
 
@@ -88,30 +88,30 @@ export function PerguntaPeriodo({ onConfirmar, onVoltar }: Props) {
                       key={preset.label}
                       type="button"
                       onClick={() => confirmarInicio(data)}
-                      className="w-full text-left px-5 min-h-[72px] rounded-[14px] border-2 border-[var(--es-border)] bg-[var(--es-surface)] hover:border-[var(--es-border-strong)] active:scale-[0.99] transition-all flex items-center gap-4"
+                      className="w-full text-left px-5 min-h-[64px] rounded-[14px] border-2 border-[var(--es-border)] bg-[var(--es-surface)] hover:border-[var(--es-border-strong)] active:scale-[0.99] transition-all flex items-center gap-4"
                     >
-                      <Calendar size={24} strokeWidth={2.25} className="text-[var(--es-navy)] shrink-0" />
-                      <span className="flex-1 font-semibold text-[21px] text-[var(--es-ink)]">{preset.label}</span>
+                      <Calendar size={22} strokeWidth={2.25} className="text-[var(--es-navy)] shrink-0" />
+                      <span className="flex-1 font-semibold text-[19px] text-[var(--es-ink)]">{preset.label}</span>
                     </button>
                   );
                 })}
                 <button
                   type="button"
                   onClick={() => setCalendarioAberto("inicio")}
-                  className="w-full text-left px-5 min-h-[72px] rounded-[14px] border-2 border-dashed border-[var(--es-border-strong)] hover:border-[var(--es-navy)] active:scale-[0.99] transition-all flex items-center gap-4"
+                  className="w-full text-left px-5 min-h-[64px] rounded-[14px] border-2 border-dashed border-[var(--es-border-strong)] hover:border-[var(--es-navy)] active:scale-[0.99] transition-all flex items-center gap-4"
                 >
-                  <CalendarDays size={24} strokeWidth={2.25} className="text-[var(--es-ink-2)] shrink-0" />
-                  <span className="flex-1 font-semibold text-[21px] text-[var(--es-ink-2)]">Escolher data (evento futuro)</span>
+                  <CalendarDays size={22} strokeWidth={2.25} className="text-[var(--es-ink-2)] shrink-0" />
+                  <span className="flex-1 font-semibold text-[19px] text-[var(--es-ink-2)]">Escolher data (evento futuro)</span>
                 </button>
               </div>
             </motion.div>
           ) : (
             <motion.div key="fim" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-              <p className="text-[17px] font-semibold text-[var(--es-navy)] uppercase tracking-wider mb-2">Pergunta 2 de 2</p>
-              <p className="text-[28px] font-semibold text-[var(--es-ink)] mb-2 leading-tight tracking-[-0.01em]">
+              <p className="text-[16px] font-semibold text-[var(--es-navy)] uppercase tracking-wider mb-2">Pergunta 2 de 2</p>
+              <p className="text-[25px] font-semibold text-[var(--es-ink)] mb-2 leading-tight tracking-[-0.01em]">
                 Até <strong className="font-bold">QUANDO</strong>?
               </p>
-              <p className="text-[17px] text-[var(--es-ink-3)] mb-6">Começa {labelDataCurta(inicio)}.</p>
+              <p className="text-[16px] text-[var(--es-ink-3)] mb-6">Começa {labelDataCurta(inicio)}.</p>
 
               <div className="space-y-3">
                 {TERMINO_PRESETS.map((preset) => {
@@ -121,20 +121,20 @@ export function PerguntaPeriodo({ onConfirmar, onVoltar }: Props) {
                       key={preset.label}
                       type="button"
                       onClick={() => confirmarFim(data)}
-                      className="w-full text-left px-5 min-h-[72px] rounded-[14px] border-2 border-[var(--es-border)] bg-[var(--es-surface)] hover:border-[var(--es-border-strong)] active:scale-[0.99] transition-all flex items-center gap-4"
+                      className="w-full text-left px-5 min-h-[64px] rounded-[14px] border-2 border-[var(--es-border)] bg-[var(--es-surface)] hover:border-[var(--es-border-strong)] active:scale-[0.99] transition-all flex items-center gap-4"
                     >
-                      <Calendar size={24} strokeWidth={2.25} className="text-[var(--es-navy)] shrink-0" />
-                      <span className="flex-1 font-semibold text-[21px] text-[var(--es-ink)]">{preset.label}</span>
+                      <Calendar size={22} strokeWidth={2.25} className="text-[var(--es-navy)] shrink-0" />
+                      <span className="flex-1 font-semibold text-[19px] text-[var(--es-ink)]">{preset.label}</span>
                     </button>
                   );
                 })}
                 <button
                   type="button"
                   onClick={() => setCalendarioAberto("fim")}
-                  className="w-full text-left px-5 min-h-[72px] rounded-[14px] border-2 border-dashed border-[var(--es-border-strong)] hover:border-[var(--es-navy)] active:scale-[0.99] transition-all flex items-center gap-4"
+                  className="w-full text-left px-5 min-h-[64px] rounded-[14px] border-2 border-dashed border-[var(--es-border-strong)] hover:border-[var(--es-navy)] active:scale-[0.99] transition-all flex items-center gap-4"
                 >
-                  <CalendarDays size={24} strokeWidth={2.25} className="text-[var(--es-ink-2)] shrink-0" />
-                  <span className="flex-1 font-semibold text-[21px] text-[var(--es-ink-2)]">Escolher data específica</span>
+                  <CalendarDays size={22} strokeWidth={2.25} className="text-[var(--es-ink-2)] shrink-0" />
+                  <span className="flex-1 font-semibold text-[19px] text-[var(--es-ink-2)]">Escolher data específica</span>
                 </button>
               </div>
             </motion.div>
@@ -155,7 +155,7 @@ export function PerguntaPeriodo({ onConfirmar, onVoltar }: Props) {
           >
             <div className="w-10 h-1 bg-[var(--es-border-strong)] rounded-full mx-auto mt-3 mb-4" />
             <div className="px-6 pb-6">
-              <p className="text-[21px] font-semibold text-[var(--es-ink)] mb-4">
+              <p className="text-[19px] font-semibold text-[var(--es-ink)] mb-4">
                 {calendarioAberto === "inicio" ? "Início do acesso" : "Término do acesso"}
               </p>
               <CalendarioSimples

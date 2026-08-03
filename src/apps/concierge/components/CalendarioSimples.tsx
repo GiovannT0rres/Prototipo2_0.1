@@ -45,20 +45,20 @@ export function CalendarioSimples({ value, onChange, minDate }: Props) {
           aria-label="Mês anterior"
           disabled={mesAnteriorDesabilitado}
           onClick={() => setMesVisivel((m) => new Date(m.getFullYear(), m.getMonth() - 1, 1))}
-          className="w-11 h-11 flex items-center justify-center rounded-[12px] border-2 border-[var(--es-border)] text-[var(--es-ink-2)] disabled:opacity-30 active:scale-[0.96] transition-all shrink-0"
+          className="w-10 h-10 flex items-center justify-center rounded-[12px] border-2 border-[var(--es-border)] text-[var(--es-ink-2)] disabled:opacity-30 active:scale-[0.96] transition-all shrink-0"
         >
-          <ChevronLeft size={22} strokeWidth={2.25} />
+          <ChevronLeft size={20} strokeWidth={2.25} />
         </button>
-        <p className="text-[19px] font-semibold text-[var(--es-ink)]">
+        <p className="text-[17px] font-semibold text-[var(--es-ink)]">
           {MESES[mesVisivel.getMonth()]} {mesVisivel.getFullYear()}
         </p>
         <button
           type="button"
           aria-label="Próximo mês"
           onClick={() => setMesVisivel((m) => new Date(m.getFullYear(), m.getMonth() + 1, 1))}
-          className="w-11 h-11 flex items-center justify-center rounded-[12px] border-2 border-[var(--es-border)] text-[var(--es-ink-2)] active:scale-[0.96] transition-all shrink-0"
+          className="w-10 h-10 flex items-center justify-center rounded-[12px] border-2 border-[var(--es-border)] text-[var(--es-ink-2)] active:scale-[0.96] transition-all shrink-0"
         >
-          <ChevronRight size={22} strokeWidth={2.25} />
+          <ChevronRight size={20} strokeWidth={2.25} />
         </button>
       </div>
 
@@ -82,7 +82,7 @@ export function CalendarioSimples({ value, onChange, minDate }: Props) {
               type="button"
               disabled={desabilitado}
               onClick={() => onChange(data)}
-              className={`aspect-square min-h-[44px] rounded-[12px] text-[17px] font-semibold transition-all active:scale-[0.95] flex items-center justify-center ${
+              className={`aspect-square min-h-[40px] rounded-[12px] text-[16px] font-semibold transition-all active:scale-[0.95] flex items-center justify-center ${
                 selecionado
                   ? "bg-[var(--es-navy)] text-white"
                   : desabilitado

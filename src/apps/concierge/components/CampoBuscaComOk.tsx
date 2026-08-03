@@ -15,8 +15,8 @@ interface Props {
 // pequeno embutido no campo). Este componente só filtra e devolve o texto.
 export function CampoBuscaComOk({ value, onChange, onConfirmar, placeholder, podeConfirmar, autoFocus }: Props) {
   return (
-    <div className="flex items-center bg-[var(--es-surface)] border-2 border-[var(--es-border-strong)] rounded-[14px] focus-within:border-[var(--es-navy)] focus-within:ring-4 focus-within:ring-[rgba(15,39,68,0.12)] transition-colors min-h-[64px]">
-      <Search size={24} strokeWidth={2.25} className="ml-4 text-[var(--es-ink-3)] shrink-0" />
+    <div className="flex items-center bg-[var(--es-surface)] border-2 border-[var(--es-border-strong)] rounded-[14px] focus-within:border-[var(--es-navy)] focus-within:ring-4 focus-within:ring-[rgba(15,39,68,0.12)] transition-colors min-h-[58px]">
+      <Search size={22} strokeWidth={2.25} className="ml-4 text-[var(--es-ink-3)] shrink-0" />
       <input
         autoFocus={autoFocus}
         value={value}
@@ -25,7 +25,7 @@ export function CampoBuscaComOk({ value, onChange, onConfirmar, placeholder, pod
           if (e.key === "Enter" && podeConfirmar) onConfirmar();
         }}
         placeholder={placeholder}
-        className="flex-1 min-w-0 bg-transparent px-3 py-4 text-[21px] font-medium text-[var(--es-ink)] focus:outline-none"
+        className="flex-1 min-w-0 bg-transparent px-3 py-4 text-[19px] font-medium text-[var(--es-ink)] focus:outline-none"
       />
     </div>
   );

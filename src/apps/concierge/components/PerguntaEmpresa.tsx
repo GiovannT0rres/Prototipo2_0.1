@@ -46,15 +46,15 @@ export function PerguntaEmpresa({ onConfirmar, onVoltar }: Props) {
         <button
           onClick={onVoltar}
           aria-label="Voltar"
-          className="w-14 h-14 flex items-center justify-center rounded-[14px] text-[var(--es-ink-2)] hover:bg-[var(--es-bg)] transition-colors shrink-0"
+          className="w-[50px] h-[50px] flex items-center justify-center rounded-[14px] text-[var(--es-ink-2)] hover:bg-[var(--es-bg)] transition-colors shrink-0"
         >
-          <ArrowLeft size={24} strokeWidth={2.25} />
+          <ArrowLeft size={22} strokeWidth={2.25} />
         </button>
-        <p className="font-semibold text-[var(--es-ink)] text-[17px]">Autorização</p>
+        <p className="font-semibold text-[var(--es-ink)] text-[16px]">Autorização</p>
       </div>
 
       <div className="flex-1 min-h-0 flex flex-col p-6 bg-[var(--es-bg)] overflow-y-auto">
-        <p className="text-[28px] font-semibold text-[var(--es-ink)] mb-6 leading-tight tracking-[-0.01em]">
+        <p className="text-[25px] font-semibold text-[var(--es-ink)] mb-6 leading-tight tracking-[-0.01em]">
           Para qual <strong className="font-bold">EMPRESA</strong> está prestando serviço?
         </p>
 
@@ -68,17 +68,17 @@ export function PerguntaEmpresa({ onConfirmar, onVoltar }: Props) {
         />
 
         {sugestoesFiltradas.length > 0 && !empresa && (
-          <p className="text-[17px] font-semibold text-[var(--es-ink-3)] uppercase tracking-wider mt-5 mb-2.5">
+          <p className="text-[16px] font-semibold text-[var(--es-ink-3)] uppercase tracking-wider mt-5 mb-2.5">
             Empresas recentes
           </p>
         )}
 
         <div className="flex flex-wrap gap-2.5 mt-3">
           {sugestoesFiltradas.map((nome) => (
-            <SugestaoChip key={nome} label={nome} icon={<Building2 size={16} strokeWidth={2.25} />} onClick={() => preencher(nome)} />
+            <SugestaoChip key={nome} label={nome} icon={<Building2 size={15} strokeWidth={2.25} />} onClick={() => preencher(nome)} />
           ))}
           {!empresa && (
-            <SugestaoChip label="Autônomo" icon={<UserX size={16} strokeWidth={2.25} />} tone="neutro" onClick={() => onConfirmar("")} />
+            <SugestaoChip label="Autônomo" icon={<UserX size={15} strokeWidth={2.25} />} tone="neutro" onClick={() => onConfirmar("")} />
           )}
         </div>
       </div>
@@ -87,7 +87,7 @@ export function PerguntaEmpresa({ onConfirmar, onVoltar }: Props) {
         <button
           onClick={confirmar}
           disabled={!empresa}
-          className="w-full py-4 rounded-[14px] font-semibold text-[21px] text-white transition-all active:scale-[0.98] disabled:opacity-45 bg-[var(--es-navy)] hover:bg-[var(--es-navy-press)] flex justify-center items-center gap-2 min-h-[64px]"
+          className="w-full px-6 py-4 rounded-[14px] font-semibold text-[19px] text-white transition-all active:scale-[0.98] disabled:opacity-45 bg-[var(--es-navy)] hover:bg-[var(--es-navy-press)] flex justify-center items-center gap-2 min-h-[58px]"
         >
           Confirmar empresa
         </button>

@@ -2,6 +2,18 @@
 @import './tailwind.css';
 @import './theme.css';
 
+/* Impede o gesto nativo de "puxar para atualizar" do Chrome mobile no app
+   inteiro. Sem isso, arrastar pra baixo em qualquer conteúdo já no topo
+   (ex.: a alça decorativa de um bottom sheet sem drag-to-dismiss de verdade)
+   recarrega a página e derruba o progresso de qualquer fluxo multi-etapa
+   (wizard do Concierge, cadastros do Manager/Check-in) — nenhum deles
+   persiste rascunho. overscroll-behavior só tem efeito no elemento que de
+   fato rola, por isso vai em html/body (nível de documento), não só num
+   container interno. */
+html,
+body {
+  overscroll-behavior-y: none;
+}
 
 .hide-scrollbar::-webkit-scrollbar {
   display: none;

@@ -40,6 +40,13 @@
   -webkit-font-smoothing: antialiased;
 }
 
+/* Reforço local do overscroll-behavior global (src/styles/index.css) nas
+   áreas que de fato rolam dentro do app — contain evita que o "puxar" se
+   propague além do próprio container mesmo se algo mudar no nível global. */
+.concierge-app .overflow-y-auto {
+  overscroll-behavior: contain;
+}
+
 /* prefers-reduced-motion: desativa transições de slide/entrada do
    motion/react — mantém só fades curtos. Ver DESIGN.md §10/§17 item 13. */
 @media (prefers-reduced-motion: reduce) {

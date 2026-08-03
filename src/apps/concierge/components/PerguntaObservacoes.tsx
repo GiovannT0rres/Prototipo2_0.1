@@ -62,13 +62,13 @@ export function PerguntaObservacoes({ dados, onConcluir, onVoltar }: Props) {
           transition={{ type: "spring", duration: 0.5 }}
           className="w-20 h-20 rounded-full bg-[var(--es-success-soft)] text-[var(--es-success)] flex items-center justify-center mb-5"
         >
-          <CheckCircle2 size={44} strokeWidth={1.75} />
+          <CheckCircle2 size={40} strokeWidth={1.75} />
         </motion.div>
-        <h2 className="text-[23px] font-semibold text-[var(--es-ink)]">Autorização criada</h2>
-        <p className="text-[19px] text-[var(--es-ink-2)] mt-1.5 max-w-xs leading-relaxed">
+        <h2 className="text-[21px] font-semibold text-[var(--es-ink)]">Autorização criada</h2>
+        <p className="text-[17px] text-[var(--es-ink-2)] mt-1.5 max-w-xs leading-relaxed">
           {dados?.name || "Usuário"} está autorizado.
         </p>
-        <p className="text-[17px] text-[var(--es-ink-3)] mt-6">
+        <p className="text-[16px] text-[var(--es-ink-3)] mt-6">
           {jaCadastrado ? "Voltando ao perfil…" : "Voltando ao início…"}
         </p>
 
@@ -88,9 +88,9 @@ export function PerguntaObservacoes({ dados, onConcluir, onVoltar }: Props) {
             status: "Fora do clube",
             entrada: null,
           })}
-          className="mt-6 min-h-[56px] px-6 rounded-[14px] font-semibold text-[19px] text-[var(--es-navy)] bg-[var(--es-navy-soft)] hover:brightness-95 active:scale-[0.98] transition-all flex items-center gap-2"
+          className="mt-6 min-h-[50px] px-6 rounded-[14px] font-semibold text-[17px] text-[var(--es-navy)] bg-[var(--es-navy-soft)] hover:brightness-95 active:scale-[0.98] transition-all flex items-center gap-2"
         >
-          Continuar <ChevronRight size={22} strokeWidth={2.25} />
+          Continuar <ChevronRight size={20} strokeWidth={2.25} />
         </button>
       </motion.div>
     );
@@ -118,47 +118,47 @@ export function PerguntaObservacoes({ dados, onConcluir, onVoltar }: Props) {
         <button
           onClick={onVoltar}
           aria-label="Voltar"
-          className="w-14 h-14 flex items-center justify-center rounded-[14px] text-[var(--es-ink-2)] hover:bg-[var(--es-bg)] transition-colors shrink-0"
+          className="w-[50px] h-[50px] flex items-center justify-center rounded-[14px] text-[var(--es-ink-2)] hover:bg-[var(--es-bg)] transition-colors shrink-0"
         >
-          <ArrowLeft size={24} strokeWidth={2.25} />
+          <ArrowLeft size={22} strokeWidth={2.25} />
         </button>
-        <p className="font-semibold text-[var(--es-ink)] text-[17px]">Autorização</p>
+        <p className="font-semibold text-[var(--es-ink)] text-[16px]">Autorização</p>
       </div>
 
       <div className="flex-1 min-h-0 p-6 bg-[var(--es-bg)] overflow-y-auto">
-        <p className="text-[28px] font-semibold text-[var(--es-ink)] mb-6 leading-tight tracking-[-0.01em]">
+        <p className="text-[25px] font-semibold text-[var(--es-ink)] mb-6 leading-tight tracking-[-0.01em]">
           Confirme a <strong className="font-bold">AUTORIZAÇÃO</strong>
         </p>
 
         <div className="bg-[var(--es-surface)] rounded-[14px] border-2 border-[var(--es-border)] divide-y divide-[var(--es-border)]">
           {resumo.map((item) => (
             <div key={item.label} className="flex items-center gap-3 px-5 py-4">
-              <item.icone size={24} strokeWidth={2.25} className="text-[var(--es-ink-3)] shrink-0" />
+              <item.icone size={22} strokeWidth={2.25} className="text-[var(--es-ink-3)] shrink-0" />
               <div className="min-w-0">
-                <p className="text-[17px] font-semibold text-[var(--es-ink-3)]">{item.label}</p>
-                <p className="text-[19px] font-medium text-[var(--es-ink)] truncate">{item.valor}</p>
+                <p className="text-[16px] font-semibold text-[var(--es-ink-3)]">{item.label}</p>
+                <p className="text-[17px] font-medium text-[var(--es-ink)] truncate">{item.valor}</p>
               </div>
             </div>
           ))}
 
           {periodoLinhas ? (
             <div className="flex items-start gap-3 px-5 py-4">
-              <Calendar size={24} strokeWidth={2.25} className="text-[var(--es-ink-3)] shrink-0 mt-0.5" />
+              <Calendar size={22} strokeWidth={2.25} className="text-[var(--es-ink-3)] shrink-0 mt-0.5" />
               <div className="min-w-0 flex-1">
-                <p className="text-[17px] font-semibold text-[var(--es-ink-3)]">Período</p>
-                <p className="text-[19px] font-medium text-[var(--es-ink)]">{periodoLinhas.inicio}</p>
+                <p className="text-[16px] font-semibold text-[var(--es-ink-3)]">Período</p>
+                <p className="text-[17px] font-medium text-[var(--es-ink)]">{periodoLinhas.inicio}</p>
                 {periodoLinhas.fim && (
-                  <p className="text-[19px] font-medium text-[var(--es-ink)] mt-0.5">até {periodoLinhas.fim}</p>
+                  <p className="text-[17px] font-medium text-[var(--es-ink)] mt-0.5">até {periodoLinhas.fim}</p>
                 )}
               </div>
             </div>
           ) : (
             dados?.periodo && (
               <div className="flex items-center gap-3 px-5 py-4">
-                <Calendar size={24} strokeWidth={2.25} className="text-[var(--es-ink-3)] shrink-0" />
+                <Calendar size={22} strokeWidth={2.25} className="text-[var(--es-ink-3)] shrink-0" />
                 <div className="min-w-0">
-                  <p className="text-[17px] font-semibold text-[var(--es-ink-3)]">Período</p>
-                  <p className="text-[19px] font-medium text-[var(--es-ink)] truncate">{dados.periodo}</p>
+                  <p className="text-[16px] font-semibold text-[var(--es-ink-3)]">Período</p>
+                  <p className="text-[17px] font-medium text-[var(--es-ink)] truncate">{dados.periodo}</p>
                 </div>
               </div>
             )
@@ -169,20 +169,20 @@ export function PerguntaObservacoes({ dados, onConcluir, onVoltar }: Props) {
           <button
             type="button"
             onClick={() => setMostrarObservacao(true)}
-            className="mt-5 min-h-[56px] w-full text-left px-5 rounded-[14px] border-2 border-dashed border-[var(--es-border-strong)] text-[19px] font-semibold text-[var(--es-ink-2)] hover:border-[var(--es-navy)] transition-colors"
+            className="mt-5 min-h-[50px] w-full text-left px-5 rounded-[14px] border-2 border-dashed border-[var(--es-border-strong)] text-[17px] font-semibold text-[var(--es-ink-2)] hover:border-[var(--es-navy)] transition-colors"
           >
             + Observação (opcional)
           </button>
         ) : (
           <div className="mt-5">
-            <p className="text-[17px] font-semibold text-[var(--es-ink-2)] mb-2">Observação (opcional)</p>
+            <p className="text-[16px] font-semibold text-[var(--es-ink-2)] mb-2">Observação (opcional)</p>
             <textarea
               value={observacoes}
               onChange={(e) => setObservacoes(e.target.value)}
               placeholder="Ex: chega de carro, vai direto pro salão principal..."
               rows={3}
               enterKeyHint="done"
-              className="w-full bg-[var(--es-surface)] border-2 border-[var(--es-border-strong)] px-4 py-4 rounded-[14px] text-[19px] font-medium focus:outline-none focus:ring-4 focus:ring-[rgba(15,39,68,0.12)] focus:border-[var(--es-navy)] text-[var(--es-ink)] resize-none"
+              className="w-full bg-[var(--es-surface)] border-2 border-[var(--es-border-strong)] px-4 py-4 rounded-[14px] text-[17px] font-medium focus:outline-none focus:ring-4 focus:ring-[rgba(15,39,68,0.12)] focus:border-[var(--es-navy)] text-[var(--es-ink)] resize-none"
             />
           </div>
         )}
@@ -192,9 +192,9 @@ export function PerguntaObservacoes({ dados, onConcluir, onVoltar }: Props) {
         <button
           onClick={handleConfirmar}
           disabled={isSubmitting}
-          className="w-full py-4 rounded-[14px] font-semibold text-[21px] text-white transition-all active:scale-[0.98] disabled:opacity-60 bg-[var(--es-navy)] hover:bg-[var(--es-navy-press)] flex justify-center items-center gap-2.5 min-h-[64px]"
+          className="w-full px-6 py-4 rounded-[14px] font-semibold text-[19px] text-white transition-all active:scale-[0.98] disabled:opacity-60 bg-[var(--es-navy)] hover:bg-[var(--es-navy-press)] flex justify-center items-center gap-2.5 min-h-[58px]"
         >
-          {isSubmitting ? "Processando…" : <><CheckCircle2 size={28} strokeWidth={2.25} /> Confirmar autorização</>}
+          {isSubmitting ? "Processando…" : <><CheckCircle2 size={25} strokeWidth={2.25} /> Confirmar autorização</>}
         </button>
       </div>
     </motion.div>
