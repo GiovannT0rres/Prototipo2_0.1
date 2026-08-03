@@ -1,0 +1,29 @@
+- main [ref=f5e16]:
+  - generic [ref=f5e17]:
+    - generic [ref=f5e18]:
+      - generic [ref=f5e401]:
+        - generic [ref=f5e402]: Pessoa
+        - generic [ref=f5e409]: Veículo
+        - generic [ref=f5e417]:
+          - generic [ref=f5e418]: "3"
+          - generic [ref=f5e419]: Autorização
+      - generic [ref=f5e420]:
+        - generic [ref=f5e421]:
+          - button "Voltar" [ref=f5e422]
+          - paragraph [ref=f5e425]: Autorização
+        - generic [ref=f5e426]:
+          - paragraph [ref=f5e427]:
+            - text: Qual o
+            - strong [ref=f5e428]: DESTINO
+            - text: "?"
+          - textbox "Digite o destino..." [active] [ref=f5e433]
+          - paragraph [ref=f5e434]: Usados recentemente
+          - generic [ref=f5e435]:
+            - button "Salão Social 1" [ref=f5e436]
+            - button "Salão Social 2" [ref=f5e442]
+            - button "English Bar" [ref=f5e448]
+            - button "Novo Bar" [ref=f5e454]
+            - button "Campo de Golfe" [ref=f5e460]
+            - button "Clube Inteiro (Convidado Patrocinado)" [ref=f5e466]
+        - button "Confirmar destino" [disabled] [ref=f5e473]
+    - region "Notifications alt+T"

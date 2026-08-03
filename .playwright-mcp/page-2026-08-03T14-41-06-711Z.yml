@@ -1,0 +1,25 @@
+- main [ref=f5e16]:
+  - generic [ref=f5e17]:
+    - generic [ref=f5e18]:
+      - generic [ref=f5e91]:
+        - generic [ref=f5e93]:
+          - generic [ref=f5e94]: "1"
+          - generic [ref=f5e95]: Pessoa
+        - generic [ref=f5e98]:
+          - generic [ref=f5e99]: "2"
+          - generic [ref=f5e100]: Veículo
+        - generic [ref=f5e103]:
+          - generic [ref=f5e104]: "3"
+          - generic [ref=f5e105]: Perfil
+      - generic [ref=f5e106]:
+        - generic [ref=f5e107]:
+          - button "Voltar" [ref=f5e108]
+          - paragraph [ref=f5e111]: Verificação Visual
+        - generic [ref=f5e112]:
+          - img "Carlos Eduardo Faria" [ref=f5e113]
+          - heading "Esta pessoa é Carlos Eduardo Faria?" [level=2] [ref=f5e114]: Esta pessoa éCarlos Eduardo Faria?
+          - paragraph [ref=f5e115]: "CPF: 111.222.333-96"
+        - generic [ref=f5e116]:
+          - button "Não" [ref=f5e117]
+          - button "Sim" [ref=f5e121]
+    - region "Notifications alt+T"

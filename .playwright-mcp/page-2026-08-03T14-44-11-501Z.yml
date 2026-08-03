@@ -1,0 +1,37 @@
+- main [ref=f5e16]:
+  - generic [ref=f5e17]:
+    - generic [ref=f5e18]:
+      - generic [ref=f5e722]:
+        - generic [ref=f5e723]: Pessoa
+        - generic [ref=f5e730]: Veículo
+        - generic [ref=f5e738]:
+          - generic [ref=f5e739]: "3"
+          - generic [ref=f5e740]: Autorização
+      - generic [ref=f5e741]:
+        - generic [ref=f5e742]:
+          - button "Voltar" [ref=f5e743]
+          - paragraph [ref=f5e746]: Autorização
+        - generic [ref=f5e747]:
+          - paragraph [ref=f5e748]:
+            - text: Confirme a
+            - strong [ref=f5e749]: AUTORIZAÇÃO
+          - generic [ref=f5e750]:
+            - generic [ref=f5e755]:
+              - paragraph [ref=f5e756]: Pessoa
+              - paragraph [ref=f5e757]: Carlos Eduardo Faria
+            - generic [ref=f5e761]:
+              - paragraph [ref=f5e762]: Motivo
+              - paragraph [ref=f5e763]: Visitante
+            - generic [ref=f5e768]:
+              - paragraph [ref=f5e769]: Destino
+              - paragraph [ref=f5e770]: Salão Social 1
+            - generic [ref=f5e776]:
+              - paragraph [ref=f5e777]: Autorizador
+              - paragraph [ref=f5e778]: João Silva (Titular)
+            - generic [ref=f5e782]:
+              - paragraph [ref=f5e783]: Período
+              - paragraph [ref=f5e784]: sáb, 22/08/26
+              - paragraph [ref=f5e785]: até seg, 21/09/26
+          - button "+ Observação (opcional)" [ref=f5e786]
+        - button "Confirmar autorização" [ref=f5e788]
+    - region "Notifications alt+T"

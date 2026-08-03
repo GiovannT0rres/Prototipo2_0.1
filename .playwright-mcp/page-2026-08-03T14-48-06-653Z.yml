@@ -1,0 +1,25 @@
+- main [ref=f6e16]:
+  - generic [ref=f6e17]:
+    - generic [ref=f6e18]:
+      - generic [ref=f6e95]:
+        - generic [ref=f6e97]:
+          - generic [ref=f6e98]: "1"
+          - generic [ref=f6e99]: Pessoa
+        - generic [ref=f6e102]:
+          - generic [ref=f6e103]: "2"
+          - generic [ref=f6e104]: Veículo
+        - generic [ref=f6e107]:
+          - generic [ref=f6e108]: "3"
+          - generic [ref=f6e109]: Perfil
+      - generic [ref=f6e110]:
+        - generic [ref=f6e111]:
+          - button "Voltar" [ref=f6e112]
+          - paragraph [ref=f6e115]: Verificação Visual
+        - generic [ref=f6e116]:
+          - img "Maria Souza" [ref=f6e117]
+          - heading "Esta pessoa é Maria Souza?" [level=2] [ref=f6e118]: Esta pessoa éMaria Souza?
+          - paragraph [ref=f6e119]: "CPF: 555.666.777-88"
+        - generic [ref=f6e120]:
+          - button "Não" [ref=f6e121]
+          - button "Sim" [ref=f6e125]
+    - region "Notifications alt+T"

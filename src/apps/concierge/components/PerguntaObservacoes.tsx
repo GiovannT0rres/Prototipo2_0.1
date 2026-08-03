@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ArrowLeft, CheckCircle2, User, MapPin, UserCheck, Calendar, ChevronRight } from "lucide-react";
 import { motion } from "motion/react";
+import { labelPeriodoLinhas } from "../utils/dateLabel";
 
 interface Props {
   dados: any;
@@ -100,8 +101,16 @@ export function PerguntaObservacoes({ dados, onConcluir, onVoltar }: Props) {
     { icone: Calendar, label: "Motivo", valor: dados?.type },
     { icone: MapPin, label: "Destino", valor: dados?.destino },
     { icone: UserCheck, label: "Autorizador", valor: dados?.autorizador },
-    { icone: Calendar, label: "Período", valor: dados?.periodo },
   ].filter((item) => item.valor);
+
+  // Período ganha linha própria no resumo — "sex, 22/08/26 até sáb, 5 de
+  // setembro" numa linha só estourava o card (truncava com reticências).
+  // Com data real (inicioISO/fimISO) mostra início e fim empilhados; sem
+  // isso (autorização antiga só com string), cai no valor único de sempre.
+  const periodoLinhas =
+    dados?.inicioISO && dados?.fimISO
+      ? labelPeriodoLinhas(new Date(dados.inicioISO), new Date(dados.fimISO))
+      : null;
 
   return (
     <motion.div initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="flex-1 flex flex-col h-full bg-[var(--es-surface)]">
@@ -131,6 +140,29 @@ export function PerguntaObservacoes({ dados, onConcluir, onVoltar }: Props) {
               </div>
             </div>
           ))}
+
+          {periodoLinhas ? (
+            <div className="flex items-start gap-3 px-5 py-4">
+              <Calendar size={24} strokeWidth={2.25} className="text-[var(--es-ink-3)] shrink-0 mt-0.5" />
+              <div className="min-w-0 flex-1">
+                <p className="text-[17px] font-semibold text-[var(--es-ink-3)]">Período</p>
+                <p className="text-[19px] font-medium text-[var(--es-ink)]">{periodoLinhas.inicio}</p>
+                {periodoLinhas.fim && (
+                  <p className="text-[19px] font-medium text-[var(--es-ink)] mt-0.5">até {periodoLinhas.fim}</p>
+                )}
+              </div>
+            </div>
+          ) : (
+            dados?.periodo && (
+              <div className="flex items-center gap-3 px-5 py-4">
+                <Calendar size={24} strokeWidth={2.25} className="text-[var(--es-ink-3)] shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-[17px] font-semibold text-[var(--es-ink-3)]">Período</p>
+                  <p className="text-[19px] font-medium text-[var(--es-ink)] truncate">{dados.periodo}</p>
+                </div>
+              </div>
+            )
+          )}
         </div>
 
         {!mostrarObservacao ? (

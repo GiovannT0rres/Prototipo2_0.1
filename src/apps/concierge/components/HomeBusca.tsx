@@ -1,8 +1,16 @@
 import { useState, useMemo } from "react";
-import { Search, RefreshCw, LogOut, Clock, Users } from "lucide-react";
+import { Search, RefreshCw, LogOut, Clock, Users, FlaskConical } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { toast } from "sonner";
 import { normalizeText } from "../utils/normalizeText";
+
+// CPF de teste (Maria Souza, Visitante já cadastrada com autorizações ativas
+// em MOCK_AUTHORIZATIONS) — testa o caminho "pessoa existente". Qualquer
+// outro CPF de 11 dígitos que não esteja nos mocks já cai no caminho "usuário
+// novo" naturalmente, então uma dica só cobre os dois fluxos. Dica de
+// protótipo (design.md §14.1 já sinalizou isso antes) — remover do build de
+// produção quando o app deixar de ser demo/teste.
+const CPF_TESTE_EXISTENTE = "555.666.777-88";
 
 interface Props {
   onBuscar: (cpf: string) => void;
@@ -89,6 +97,16 @@ export function HomeBusca({ onBuscar, pessoasNoLocal, onSaida }: Props) {
             </button>
           </div>
         </form>
+
+        {/* Nota de protótipo — orienta quem está testando a demo, não é
+            conteúdo de produção (ver comentário de CPF_TESTE_EXISTENTE). */}
+        <div className="mt-3 flex items-start gap-2 px-3.5 py-2.5 rounded-[12px] bg-[var(--es-warning-soft)] text-[var(--es-warning)]">
+          <FlaskConical size={18} strokeWidth={2.25} className="shrink-0 mt-0.5" />
+          <p className="text-[17px] font-medium leading-snug">
+            Teste: CPF <span className="font-bold tabular-nums">{CPF_TESTE_EXISTENTE}</span> abre um cadastro já
+            existente. Qualquer outro CPF inicia um cadastro novo.
+          </p>
+        </div>
       </div>
 
       {/* ================= SEÇÃO INFERIOR: PESSOAS NO LOCAL (secundária) ================= */}
