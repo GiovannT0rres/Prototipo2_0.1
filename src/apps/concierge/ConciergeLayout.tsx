@@ -47,7 +47,7 @@ export function ConciergeLayout() {
       )}
 
       {/* Main Content (Onde o PortariaWizard vai renderizar) */}
-      <main className="flex-1 overflow-x-hidden relative flex flex-col">
+      <main className="flex-1 min-h-0 overflow-x-hidden relative flex flex-col">
         <Outlet context={{ setIsHome }} />
       </main>
 

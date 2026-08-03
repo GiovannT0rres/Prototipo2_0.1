@@ -70,7 +70,7 @@ export function HomeBusca({ onBuscar, pessoasNoLocal, onSaida }: Props) {
   }, [filtroLista, pessoasNoLocal]);
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 flex flex-col h-full bg-[var(--es-bg)]">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 flex flex-col h-full min-h-0 bg-[var(--es-bg)]">
 
       {/* ================= SEÇÃO SUPERIOR: BUSCA DE CPF (ação principal da Home) ================= */}
       <div className="flex-shrink-0 bg-[var(--es-surface)] p-6 shadow-sm z-10">
@@ -145,7 +145,7 @@ export function HomeBusca({ onBuscar, pessoasNoLocal, onSaida }: Props) {
         </div>
 
         {/* Lista Scrollável */}
-        <div className="flex-1 overflow-y-auto px-6 pb-6">
+        <div className="flex-1 min-h-0 overflow-y-auto px-6 pb-6">
           <div className="space-y-3 mt-2">
             <AnimatePresence>
               {listaFiltrada.map((pessoa) => (

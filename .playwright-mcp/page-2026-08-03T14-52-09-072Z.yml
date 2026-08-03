@@ -1,0 +1,29 @@
+- main [ref=f7e16]:
+  - generic [ref=f7e17]:
+    - generic [ref=f7e18]:
+      - generic [ref=f7e164]:
+        - generic [ref=f7e166]:
+          - generic [ref=f7e167]: "1"
+          - generic [ref=f7e168]: Pessoa
+        - generic [ref=f7e171]:
+          - generic [ref=f7e172]: "2"
+          - generic [ref=f7e173]: Veículo
+        - generic [ref=f7e176]:
+          - generic [ref=f7e177]: "3"
+          - generic [ref=f7e178]: Autorização
+      - generic [ref=f7e179]:
+        - generic [ref=f7e180]:
+          - button "Voltar" [ref=f7e181]
+          - paragraph [ref=f7e184]: Cadastro
+        - generic [ref=f7e185]:
+          - paragraph [ref=f7e186]:
+            - text: Qual o
+            - strong [ref=f7e187]: WHATSAPP
+            - text: "?"
+          - textbox "(11) 99999-9999" [active] [ref=f7e188]
+          - button "DDD 51 (Porto Alegre)" [ref=f7e189]
+          - button "Confirmar" [disabled] [ref=f7e191]
+    - region "Notifications alt+T":
+      - list:
+        - listitem [ref=f7e194]:
+          - generic [ref=f7e198]: Identidade confirmada!

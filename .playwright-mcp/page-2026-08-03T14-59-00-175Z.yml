@@ -1,0 +1,22 @@
+- main [ref=f10e16]:
+  - generic [ref=f10e17]:
+    - generic [ref=f10e18]:
+      - generic [ref=f10e282]:
+        - generic [ref=f10e283]: Pessoa
+        - generic [ref=f10e290]: Veículo
+        - generic [ref=f10e298]:
+          - generic [ref=f10e299]: "3"
+          - generic [ref=f10e300]: Autorização
+      - generic [ref=f10e301]:
+        - generic [ref=f10e302]:
+          - button "Voltar" [ref=f10e303]
+          - paragraph [ref=f10e306]: Autorização
+        - generic [ref=f10e307]:
+          - paragraph [ref=f10e308]:
+            - text: Qual o
+            - strong [ref=f10e309]: DESTINO
+            - text: "?"
+          - textbox "Digite o destino..." [ref=f10e314]: Salão Social 1
+          - button "Salão Social 1" [active] [ref=f10e317]
+        - button "Confirmar destino" [ref=f10e354]
+    - region "Notifications alt+T"

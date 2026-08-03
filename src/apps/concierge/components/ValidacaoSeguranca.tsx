@@ -24,7 +24,7 @@ export function ValidacaoSeguranca({ dados, onSucesso, onVoltar }: Props) {
   // remoção numa próxima rodada. Mantido só com o token pass de tipografia/
   // cor deste redesign, sem reestruturar a lógica.
   return (
-    <motion.div initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="flex-1 flex flex-col h-full bg-[var(--es-surface)]">
+    <motion.div initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="flex-1 flex flex-col h-full min-h-0 bg-[var(--es-surface)]">
       <div className="flex-shrink-0 h-16 px-4 border-b border-[var(--es-border)] flex items-center gap-3">
         <button
           onClick={onVoltar}
@@ -44,7 +44,7 @@ export function ValidacaoSeguranca({ dados, onSucesso, onVoltar }: Props) {
         </div>
       </div>
 
-      <div className="flex-1 p-6 overflow-y-auto">
+      <div className="flex-1 min-h-0 p-6 overflow-y-auto">
         <p className="text-[28px] font-semibold text-[var(--es-ink)] mb-6 leading-tight">
           Qual o mês de nascimento?
         </p>

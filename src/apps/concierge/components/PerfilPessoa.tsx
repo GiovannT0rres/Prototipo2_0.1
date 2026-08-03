@@ -136,7 +136,7 @@ export function PerfilPessoa({ dados, onNovaAutorizacao, onLiberarAcesso, onVolt
   }
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 flex flex-col h-full bg-[var(--es-bg)]">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 flex flex-col h-full min-h-0 bg-[var(--es-bg)]">
       <div className="flex-shrink-0 h-16 px-4 border-b border-[var(--es-border)] bg-[var(--es-surface)] flex items-center justify-between">
         <button
           onClick={onVoltar}
@@ -158,7 +158,7 @@ export function PerfilPessoa({ dados, onNovaAutorizacao, onLiberarAcesso, onVolt
         </div>
       </div>
 
-      <div className="flex-1 px-6 pt-5 pb-6 overflow-y-auto">
+      <div className="flex-1 min-h-0 px-6 pt-5 pb-6 overflow-y-auto">
         <h3 className="text-[17px] font-semibold text-[var(--es-ink-3)] uppercase tracking-wider mb-3">
           {temLivreAcesso ? "Acesso" : "Autorizações"}
         </h3>

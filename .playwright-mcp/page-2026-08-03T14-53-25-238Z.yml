@@ -1,0 +1,24 @@
+- main [ref=f7e16]:
+  - generic [ref=f7e17]:
+    - generic [ref=f7e18]:
+      - generic [ref=f7e473]:
+        - generic [ref=f7e474]: Pessoa
+        - generic [ref=f7e481]: Veículo
+        - generic [ref=f7e489]:
+          - generic [ref=f7e490]: "3"
+          - generic [ref=f7e491]: Autorização
+      - generic [ref=f7e492]:
+        - generic [ref=f7e493]:
+          - button "Voltar" [ref=f7e494]
+          - paragraph [ref=f7e497]: Autorização
+        - generic [ref=f7e499]:
+          - paragraph [ref=f7e500]: Pergunta 1 de 2
+          - paragraph [ref=f7e501]:
+            - text: Quando
+            - strong [ref=f7e502]: COMEÇA
+            - text: "?"
+          - generic [ref=f7e503]:
+            - button "Hoje" [ref=f7e504]
+            - button "Amanhã" [ref=f7e508]
+            - button "Escolher data (evento futuro)" [ref=f7e512]
+    - region "Notifications alt+T"

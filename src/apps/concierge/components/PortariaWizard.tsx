@@ -151,7 +151,7 @@ export function PortariaWizard() {
 
   return (
     <div className="h-dvh bg-[var(--es-bg)] flex justify-center items-center p-4 overflow-hidden">
-      <div className="w-full max-w-[520px] h-full max-h-[900px] bg-[var(--es-surface)] rounded-3xl shadow-xl overflow-hidden flex flex-col relative border border-[var(--es-border)]">
+      <div className="w-full max-w-[520px] h-full max-h-[900px] min-h-0 bg-[var(--es-surface)] rounded-3xl shadow-xl overflow-hidden flex flex-col relative border border-[var(--es-border)]">
 
         {step === "home" && (
           <HomeBusca onBuscar={processarCpf} pessoasNoLocal={pessoasNoLocal} onSaida={handleSaidaDaLista} />
