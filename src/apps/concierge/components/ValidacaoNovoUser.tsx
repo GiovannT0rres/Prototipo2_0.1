@@ -102,21 +102,15 @@ export function ValidacaoNovoUser({ dadosBigData, etapaInicial = 1, onSucesso, o
                   onClick={() => handleResposta(opcao)}
                   className="w-full text-left px-5 py-5 rounded-[14px] border-2 border-[var(--es-border)] bg-[var(--es-surface)] text-[var(--es-ink)] font-semibold hover:border-[var(--es-navy)] hover:bg-[var(--es-navy-soft)] active:scale-[0.99] transition-all flex items-center gap-3 min-h-[72px]"
                 >
-                  {/* min-w-0 + flex-1: o nome precisa da largura toda pra si
-                      pra quebrar linha normalmente — antes o badge de dica
-                      ficava na mesma linha (shrink-0) e forçava o nome a
-                      quebrar ao redor dele, resultado esquisito em telas
-                      estreitas (S24 FE, 360px). Badge agora numa linha
-                      própria abaixo do nome. */}
-                  <span className="min-w-0 flex-1">
-                    <span className="text-[19px] block break-words">{opcao}</span>
-                    {/* Dica de protótipo — resposta certa não é conhecida por quem testa o fluxo sem acesso ao mock da BigDataCorp. Remover antes de produção. */}
-                    {opcao === respostaCorreta && (
-                      <span className="mt-1.5 inline-block text-[16px] font-bold uppercase tracking-wide text-[var(--es-success)] bg-[var(--es-success-soft)] px-2.5 py-1 rounded-full">
-                        dica: correta
-                      </span>
-                    )}
-                  </span>
+                  {/* min-w-0: o nome precisa da largura toda pra si pra
+                      quebrar linha normalmente. */}
+                  <span className="min-w-0 flex-1 text-[19px] block break-words">{opcao}</span>
+                  {/* Dica de protótipo — só um pontinho verde discreto pra
+                      quem está testando saber qual é a resposta certa sem
+                      acesso ao mock da BigDataCorp. Remover antes de produção. */}
+                  {opcao === respostaCorreta && (
+                    <span className="w-2.5 h-2.5 rounded-full bg-[var(--es-success)] shrink-0" aria-label="dica: resposta correta" />
+                  )}
                   <ChevronRight size={22} strokeWidth={2.25} className="text-[var(--es-ink-3)] shrink-0" />
                 </button>
               ))}
