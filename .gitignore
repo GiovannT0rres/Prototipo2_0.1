@@ -19,6 +19,7 @@ out/
 .serverless/
 .output/
 docs/
+evidencia/
 
 # Secrets, Credentials, and Environment Variables (CRÍTICO: Segurança contra vazamentos)
 # Catch-all para qualquer variante de .env, com exceção explícita para templates
