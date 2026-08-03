@@ -20,7 +20,7 @@ export function ConciergeLayout() {
   const [ajustesAberto, setAjustesAberto] = useState(false);
 
   return (
-    <div className="concierge-app min-h-screen bg-[var(--es-bg)] flex flex-col">
+    <div className="concierge-app h-dvh bg-[var(--es-bg)] flex flex-col overflow-hidden">
       {isHome && (
         <header className="bg-[var(--es-surface)] border-b border-[var(--es-border)] px-6 py-3 flex items-center justify-between shadow-sm">
           <div className="flex items-center gap-3">

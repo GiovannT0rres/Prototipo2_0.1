@@ -1,0 +1,25 @@
+- main [ref=f1e16]:
+  - generic [ref=f1e17]:
+    - generic [ref=f1e18]:
+      - generic [ref=f1e161]:
+        - generic [ref=f1e162]: Pessoa
+        - generic [ref=f1e169]: Veículo
+        - generic [ref=f1e177]:
+          - generic [ref=f1e178]: "3"
+          - generic [ref=f1e179]: Perfil
+      - generic [ref=f1e180]:
+        - generic [ref=f1e181]:
+          - button "Voltar" [ref=f1e182]
+          - paragraph [ref=f1e185]: Perfil do Usuário
+        - generic [ref=f1e186]:
+          - img "Avatar" [ref=f1e187]
+          - generic [ref=f1e188]:
+            - heading "Pedro Almeida" [level=2] [ref=f1e189]
+            - paragraph [ref=f1e190]: 444.555.666-77
+            - paragraph [ref=f1e191]: Visitante
+        - generic [ref=f1e192]:
+          - heading "Autorizações" [level=3] [ref=f1e193]
+          - generic [ref=f1e194]: Nenhuma autorização ativa encontrada.
+          - button [ref=f1e197]
+        - button "Nova Autorização" [ref=f1e206]
+    - region "Notifications alt+T"

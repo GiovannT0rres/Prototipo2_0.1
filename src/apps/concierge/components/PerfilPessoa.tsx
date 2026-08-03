@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { ArrowLeft, Plus, CheckCircle2, LogOut, History, Ban, AlertTriangle, ChevronDown, ChevronUp } from "lucide-react";
+import { ArrowLeft, Plus, CheckCircle2, LogOut, History, Ban, AlertTriangle, ChevronDown, ChevronUp, Clock } from "lucide-react";
 import { motion } from "motion/react";
 import { toast } from "sonner";
 import { MOCK_ACCESS_HISTORY } from "../mocks/mockConcierge";
+import { labelDataCurta } from "../utils/dateLabel";
 
 interface Props {
   dados: any;
@@ -87,6 +88,22 @@ export function PerfilPessoa({ dados, onNovaAutorizacao, onLiberarAcesso, onVolt
       tamanho === "grande"
         ? "flex-1 py-4 rounded-[14px] text-[21px] min-h-[64px]"
         : "flex-1 py-3 rounded-[14px] text-[19px] min-h-[56px]";
+
+    // Autorização pra data futura (ex. evento agendado) não libera antes de
+    // começar — impedir por design em vez de deixar liberar e avisar depois
+    // (design.md §1.3: impedir > avisar > corrigir).
+    const aindaNaoComecou = !noLocal && auth.inicioISO && new Date(auth.inicioISO) > new Date();
+
+    if (aindaNaoComecou) {
+      return (
+        <div
+          className={`${classeBase} font-semibold text-[var(--es-ink-3)] bg-[var(--es-bg)] border-2 border-[var(--es-border)] opacity-70 cursor-not-allowed flex items-center justify-center gap-2.5`}
+        >
+          <Clock size={tamanho === "grande" ? 26 : 22} strokeWidth={2.25} />
+          Libera {labelDataCurta(new Date(auth.inicioISO))}
+        </div>
+      );
+    }
 
     if (!noLocal) {
       return (

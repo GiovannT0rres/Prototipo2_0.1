@@ -1,0 +1,14 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "createdAt": "2026-08-03T14:16:02.771Z",
+        "reason": "User confirmed Inter is intentional — design.md §5.1 chose it specifically for x-height and 0/O, 1/l disambiguation, critical for reading CPF/plate numbers under sunlight by 60+ users"
+      }
+    ]
+  }
+}

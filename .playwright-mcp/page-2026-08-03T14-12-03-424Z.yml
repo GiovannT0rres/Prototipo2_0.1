@@ -1,0 +1,25 @@
+- main [ref=f2e16]:
+  - generic [ref=f2e17]:
+    - generic [ref=f2e18]:
+      - generic [ref=f2e91]:
+        - generic [ref=f2e93]:
+          - generic [ref=f2e94]: "1"
+          - generic [ref=f2e95]: Pessoa
+        - generic [ref=f2e98]:
+          - generic [ref=f2e99]: "2"
+          - generic [ref=f2e100]: Veículo
+        - generic [ref=f2e103]:
+          - generic [ref=f2e104]: "3"
+          - generic [ref=f2e105]: Perfil
+      - generic [ref=f2e106]:
+        - generic [ref=f2e107]:
+          - button "Voltar" [ref=f2e108]
+          - paragraph [ref=f2e111]: Verificação Visual
+        - generic [ref=f2e112]:
+          - img "Pedro Almeida" [ref=f2e113]
+          - heading "Esta pessoa é Pedro Almeida?" [level=2] [ref=f2e114]: Esta pessoa éPedro Almeida?
+          - paragraph [ref=f2e115]: "CPF: 444.555.666-77"
+        - generic [ref=f2e116]:
+          - button "Não" [ref=f2e117]
+          - button "Sim" [ref=f2e121]
+    - region "Notifications alt+T"

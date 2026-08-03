@@ -1,42 +1,68 @@
 import { useState } from "react";
-import { ArrowLeft, Calendar, ChevronRight } from "lucide-react";
-import { motion } from "motion/react";
+import { ArrowLeft, Calendar, ChevronRight, CalendarDays } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+import { CalendarioSimples } from "./CalendarioSimples";
+import { hojeSemHora, somarDias, labelDataCurta, labelPeriodo } from "../utils/dateLabel";
 
-// Presets de término — "Só hoje" primeiro por ser o caso mais comum de
-// visitante (design.md §14.6: o preset mais frequente deve ser o mais fácil
-// de alcançar). Os demais em contagem de dias, sem input de data nativo.
+// Atalhos de início — cobre tanto "começa agora" (caso dominante, design.md
+// §14.6) quanto "começa num dia específico no futuro" (evento agendado, ex.
+// Baile de Debutantes — autorização criada com antecedência para uma data
+// futura, não só para agora). "Escolher data" abre o calendário.
+const INICIO_PRESETS = [
+  { label: "Hoje", dias: 0 },
+  { label: "Amanhã", dias: 1 },
+];
+
 const TERMINO_PRESETS = [
-  { label: "Só hoje", dias: 0 },
+  { label: "Só esse dia", dias: 0 },
   { label: "+7 dias", dias: 7 },
   { label: "+15 dias", dias: 15 },
   { label: "+30 dias", dias: 30 },
 ];
 
 interface Props {
-  onConfirmar: (periodo: string) => void;
+  // periodo é o label pronto pra exibir (ex. "hoje até 22 de agosto");
+  // inicioISO/fimISO são datas reais — usadas pra decidir se Liberar já
+  // pode ser tocado (autorização futura não deve liberar antes de começar).
+  onConfirmar: (periodo: string, inicioISO: string, fimISO: string) => void;
   onVoltar: () => void;
 }
 
-export function PerguntaPeriodo({ onConfirmar, onVoltar }: Props) {
-  // Início assume "Hoje" por padrão e não é perguntado — a esmagadora
-  // maioria dos acessos de portaria começa agora (design.md §14.6 proposta
-  // 1). "Começa em outro dia" fica disponível como link terciário pra quem
-  // precisar do caso raro de agendar um início futuro.
-  const [inicioOutroDia, setInicioOutroDia] = useState(false);
-  const [diasInicio, setDiasInicio] = useState(1);
-  const [termino, setTermino] = useState(TERMINO_PRESETS[0]);
+type Etapa = "inicio" | "fim";
 
-  const periodoLabel = () => {
-    const de = inicioOutroDia ? `daqui a ${diasInicio} dia${diasInicio > 1 ? "s" : ""}` : "Hoje";
-    const ate = termino.dias === 0 ? "hoje" : `${termino.dias} dias`;
-    return `${de} até ${ate}`;
+export function PerguntaPeriodo({ onConfirmar, onVoltar }: Props) {
+  const [etapa, setEtapa] = useState<Etapa>("inicio");
+  const [inicio, setInicio] = useState<Date>(hojeSemHora());
+  const [fim, setFim] = useState<Date | null>(null);
+  const [calendarioAberto, setCalendarioAberto] = useState<Etapa | null>(null);
+
+  const confirmarInicio = (data: Date) => {
+    setInicio(data);
+    // Trocar o início invalida um término já escolhido que ficou anterior a ele.
+    if (fim && fim < data) setFim(null);
+    setCalendarioAberto(null);
+    setEtapa("fim");
+  };
+
+  const confirmarFim = (data: Date) => {
+    setFim(data);
+    setCalendarioAberto(null);
+    onConfirmar(labelPeriodo(inicio, data), inicio.toISOString(), data.toISOString());
+  };
+
+  const handleVoltar = () => {
+    if (etapa === "fim") {
+      setEtapa("inicio");
+    } else {
+      onVoltar();
+    }
   };
 
   return (
     <motion.div initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="flex-1 flex flex-col h-full bg-[var(--es-surface)]">
       <div className="flex-shrink-0 h-16 px-4 border-b border-[var(--es-border)] flex items-center gap-3 bg-[var(--es-surface)]">
         <button
-          onClick={onVoltar}
+          onClick={handleVoltar}
           aria-label="Voltar"
           className="w-14 h-14 flex items-center justify-center rounded-[14px] text-[var(--es-ink-2)] hover:bg-[var(--es-bg)] transition-colors shrink-0"
         >
@@ -46,69 +72,101 @@ export function PerguntaPeriodo({ onConfirmar, onVoltar }: Props) {
       </div>
 
       <div className="flex-1 p-6 bg-[var(--es-bg)] overflow-y-auto">
-        <p className="text-[28px] font-semibold text-[var(--es-ink)] mb-2 leading-tight tracking-[-0.01em]">
-          <strong className="font-bold">ATÉ QUANDO</strong>?
-        </p>
-        <p className="text-[17px] text-[var(--es-ink-3)] mb-6">
-          {inicioOutroDia ? `Começa daqui a ${diasInicio} dia${diasInicio > 1 ? "s" : ""}.` : "O acesso começa hoje."}
-        </p>
+        <AnimatePresence mode="wait">
+          {etapa === "inicio" ? (
+            <motion.div key="inicio" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+              <p className="text-[17px] font-semibold text-[var(--es-navy)] uppercase tracking-wider mb-2">Pergunta 1 de 2</p>
+              <p className="text-[28px] font-semibold text-[var(--es-ink)] mb-6 leading-tight tracking-[-0.01em]">
+                Quando <strong className="font-bold">COMEÇA</strong>?
+              </p>
 
-        <div className="space-y-3">
-          {TERMINO_PRESETS.map((preset) => (
-            <button
-              key={preset.label}
-              type="button"
-              onClick={() => setTermino(preset)}
-              className={`w-full text-left px-5 min-h-[72px] rounded-[14px] border-2 transition-all active:scale-[0.99] flex items-center gap-4 ${
-                termino.label === preset.label
-                  ? "border-[var(--es-navy)] bg-[var(--es-navy-soft)]"
-                  : "border-[var(--es-border)] bg-[var(--es-surface)] hover:border-[var(--es-border-strong)]"
-              }`}
-            >
-              <Calendar size={24} strokeWidth={2.25} className="text-[var(--es-navy)] shrink-0" />
-              <span className="flex-1 font-semibold text-[21px] text-[var(--es-ink)]">{preset.label}</span>
-            </button>
-          ))}
-        </div>
+              <div className="space-y-3">
+                {INICIO_PRESETS.map((preset) => {
+                  const data = somarDias(hojeSemHora(), preset.dias);
+                  return (
+                    <button
+                      key={preset.label}
+                      type="button"
+                      onClick={() => confirmarInicio(data)}
+                      className="w-full text-left px-5 min-h-[72px] rounded-[14px] border-2 border-[var(--es-border)] bg-[var(--es-surface)] hover:border-[var(--es-border-strong)] active:scale-[0.99] transition-all flex items-center gap-4"
+                    >
+                      <Calendar size={24} strokeWidth={2.25} className="text-[var(--es-navy)] shrink-0" />
+                      <span className="flex-1 font-semibold text-[21px] text-[var(--es-ink)]">{preset.label}</span>
+                    </button>
+                  );
+                })}
+                <button
+                  type="button"
+                  onClick={() => setCalendarioAberto("inicio")}
+                  className="w-full text-left px-5 min-h-[72px] rounded-[14px] border-2 border-dashed border-[var(--es-border-strong)] hover:border-[var(--es-navy)] active:scale-[0.99] transition-all flex items-center gap-4"
+                >
+                  <CalendarDays size={24} strokeWidth={2.25} className="text-[var(--es-ink-2)] shrink-0" />
+                  <span className="flex-1 font-semibold text-[21px] text-[var(--es-ink-2)]">Escolher data (evento futuro)</span>
+                </button>
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div key="fim" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+              <p className="text-[17px] font-semibold text-[var(--es-navy)] uppercase tracking-wider mb-2">Pergunta 2 de 2</p>
+              <p className="text-[28px] font-semibold text-[var(--es-ink)] mb-2 leading-tight tracking-[-0.01em]">
+                Até <strong className="font-bold">QUANDO</strong>?
+              </p>
+              <p className="text-[17px] text-[var(--es-ink-3)] mb-6">Começa {labelDataCurta(inicio)}.</p>
 
-        {/* Início em outro dia é a exceção — link terciário, não compete
-            visualmente com a pergunta principal da tela (design.md §14.6). */}
-        <button
-          type="button"
-          onClick={() => setInicioOutroDia((v) => !v)}
-          className="mt-6 min-h-[56px] px-2 text-[17px] font-semibold text-[var(--es-ink-2)] hover:text-[var(--es-ink)] transition-colors underline underline-offset-4 decoration-[var(--es-border-strong)]"
+              <div className="space-y-3">
+                {TERMINO_PRESETS.map((preset) => {
+                  const data = somarDias(inicio, preset.dias);
+                  return (
+                    <button
+                      key={preset.label}
+                      type="button"
+                      onClick={() => confirmarFim(data)}
+                      className="w-full text-left px-5 min-h-[72px] rounded-[14px] border-2 border-[var(--es-border)] bg-[var(--es-surface)] hover:border-[var(--es-border-strong)] active:scale-[0.99] transition-all flex items-center gap-4"
+                    >
+                      <Calendar size={24} strokeWidth={2.25} className="text-[var(--es-navy)] shrink-0" />
+                      <span className="flex-1 font-semibold text-[21px] text-[var(--es-ink)]">{preset.label}</span>
+                    </button>
+                  );
+                })}
+                <button
+                  type="button"
+                  onClick={() => setCalendarioAberto("fim")}
+                  className="w-full text-left px-5 min-h-[72px] rounded-[14px] border-2 border-dashed border-[var(--es-border-strong)] hover:border-[var(--es-navy)] active:scale-[0.99] transition-all flex items-center gap-4"
+                >
+                  <CalendarDays size={24} strokeWidth={2.25} className="text-[var(--es-ink-2)] shrink-0" />
+                  <span className="flex-1 font-semibold text-[21px] text-[var(--es-ink-2)]">Escolher data específica</span>
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Bottom sheet do calendário — nasce na zona do polegar, não modal
+          centralizado (design.md §7.9). Reaproveitado pra início e término. */}
+      {calendarioAberto && (
+        <div
+          onClick={() => setCalendarioAberto(null)}
+          className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm animate-fade-blur-in"
         >
-          {inicioOutroDia ? "Começar hoje" : "Começa em outro dia"}
-        </button>
-
-        {inicioOutroDia && (
-          <div className="mt-4 flex flex-wrap gap-2.5">
-            {[1, 2, 3, 7].map((d) => (
-              <button
-                key={d}
-                type="button"
-                onClick={() => setDiasInicio(d)}
-                className={`inline-flex items-center gap-2 px-[18px] min-h-[44px] rounded-full text-[17px] font-semibold border-[1.5px] transition-colors active:scale-[0.98] ${
-                  diasInicio === d
-                    ? "bg-[var(--es-navy)] text-white border-[var(--es-navy)]"
-                    : "bg-[var(--es-surface)] text-[var(--es-ink-2)] border-[var(--es-border-strong)]"
-                }`}
-              >
-                +{d} dia{d > 1 ? "s" : ""}
-              </button>
-            ))}
+          <div
+            className="bg-[var(--es-surface)] w-full max-w-sm rounded-t-[28px] overflow-hidden shadow-2xl flex flex-col animate-spring-slide-up"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="w-10 h-1 bg-[var(--es-border-strong)] rounded-full mx-auto mt-3 mb-4" />
+            <div className="px-6 pb-6">
+              <p className="text-[21px] font-semibold text-[var(--es-ink)] mb-4">
+                {calendarioAberto === "inicio" ? "Início do acesso" : "Término do acesso"}
+              </p>
+              <CalendarioSimples
+                value={calendarioAberto === "inicio" ? inicio : fim}
+                minDate={calendarioAberto === "inicio" ? hojeSemHora() : inicio}
+                onChange={(data) => (calendarioAberto === "inicio" ? confirmarInicio(data) : confirmarFim(data))}
+              />
+            </div>
           </div>
-        )}
-      </div>
-
-      <div className="flex-shrink-0 p-6 pt-8 border-t border-[var(--es-border)] bg-[var(--es-surface)]">
-        <button
-          onClick={() => onConfirmar(periodoLabel())}
-          className="w-full py-4 rounded-[14px] font-semibold text-[21px] text-white bg-[var(--es-navy)] hover:bg-[var(--es-navy-press)] active:scale-[0.98] transition-all flex justify-center items-center gap-2.5 min-h-[64px]"
-        >
-          Continuar <ChevronRight size={28} strokeWidth={2.25} />
-        </button>
-      </div>
+        </div>
+      )}
     </motion.div>
   );
 }

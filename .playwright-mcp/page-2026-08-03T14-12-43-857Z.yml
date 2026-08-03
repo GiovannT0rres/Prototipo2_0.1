@@ -1,0 +1,22 @@
+- main [ref=f2e16]:
+  - generic [ref=f2e17]:
+    - generic [ref=f2e220]:
+      - generic [ref=f2e221]:
+        - button "Voltar" [ref=f2e222]
+        - paragraph [ref=f2e225]: Autorização
+      - generic [ref=f2e226]:
+        - paragraph [ref=f2e227]:
+          - text: Qual o
+          - strong [ref=f2e228]: DESTINO
+          - text: "?"
+        - textbox "Digite o destino..." [active] [ref=f2e233]
+        - paragraph [ref=f2e234]: Usados recentemente
+        - generic [ref=f2e235]:
+          - button "Salão Social 1" [ref=f2e236]
+          - button "Salão Social 2" [ref=f2e242]
+          - button "English Bar" [ref=f2e248]
+          - button "Novo Bar" [ref=f2e254]
+          - button "Campo de Golfe" [ref=f2e260]
+          - button "Clube Inteiro (Convidado Patrocinado)" [ref=f2e266]
+      - button "Confirmar destino" [disabled] [ref=f2e273]
+    - region "Notifications alt+T"

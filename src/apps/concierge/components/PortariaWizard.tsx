@@ -150,8 +150,8 @@ export function PortariaWizard() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--es-bg)] flex justify-center items-center p-4">
-      <div className="w-full max-w-[520px] bg-[var(--es-surface)] rounded-3xl shadow-xl overflow-hidden min-h-[650px] max-h-[900px] flex flex-col relative border border-[var(--es-border)]">
+    <div className="h-dvh bg-[var(--es-bg)] flex justify-center items-center p-4 overflow-hidden">
+      <div className="w-full max-w-[520px] h-full max-h-[900px] bg-[var(--es-surface)] rounded-3xl shadow-xl overflow-hidden flex flex-col relative border border-[var(--es-border)]">
 
         {step === "home" && (
           <HomeBusca onBuscar={processarCpf} pessoasNoLocal={pessoasNoLocal} onSaida={handleSaidaDaLista} />
@@ -308,8 +308,8 @@ export function PortariaWizard() {
           <>
             {!dadosPessoa?.id && <ProgressoAtendimento etapas={ETAPAS_NOVO} atual={3} />}
             <PerguntaPeriodo
-              onConfirmar={(periodo) => {
-                setDadosPessoa({ ...dadosPessoa, periodo });
+              onConfirmar={(periodo, inicioISO, fimISO) => {
+                setDadosPessoa({ ...dadosPessoa, periodo, inicioISO, fimISO });
                 setStep("pergunta-observacoes");
               }}
               onVoltar={() => setStep("pergunta-autorizador")}

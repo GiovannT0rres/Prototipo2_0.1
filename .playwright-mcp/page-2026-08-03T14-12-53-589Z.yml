@@ -1,0 +1,15 @@
+- main [ref=f2e16]:
+  - generic [ref=f2e17]:
+    - generic [ref=f2e220]:
+      - generic [ref=f2e221]:
+        - button "Voltar" [ref=f2e222]
+        - paragraph [ref=f2e225]: Autorização
+      - generic [ref=f2e226]:
+        - paragraph [ref=f2e227]:
+          - text: Qual o
+          - strong [ref=f2e228]: DESTINO
+          - text: "?"
+        - textbox "Digite o destino..." [ref=f2e233]: Salão Social 1
+        - button "Salão Social 1" [active] [ref=f2e236]
+      - button "Confirmar destino" [ref=f2e273]
+    - region "Notifications alt+T"

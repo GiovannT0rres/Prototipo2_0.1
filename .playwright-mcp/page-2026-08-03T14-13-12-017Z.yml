@@ -1,0 +1,15 @@
+- main [ref=f2e16]:
+  - generic [ref=f2e17]:
+    - generic [ref=f2e274]:
+      - generic [ref=f2e275]:
+        - button "Voltar" [ref=f2e276]
+        - paragraph [ref=f2e279]: Autorização
+      - generic [ref=f2e280]:
+        - paragraph [ref=f2e281]:
+          - text: Quem é o
+          - strong [ref=f2e282]: AUTORIZADOR
+          - text: "?"
+        - textbox "Buscar sócio autorizador..." [ref=f2e287]: João Silva (Titular)
+        - button "João Silva (Titular)" [ref=f2e364]
+      - button "Confirmar autorizador" [ref=f2e363]
+    - region "Notifications alt+T"

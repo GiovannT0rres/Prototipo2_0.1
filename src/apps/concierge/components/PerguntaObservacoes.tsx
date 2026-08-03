@@ -37,6 +37,8 @@ export function PerguntaObservacoes({ dados, onConcluir, onVoltar }: Props) {
         destino: dados?.destino,
         autorizador: dados?.autorizador,
         periodo: dados?.periodo,
+        inicioISO: dados?.inicioISO,
+        fimISO: dados?.fimISO,
         observacoes: observacoes || undefined,
         status: "Fora do clube",
         entrada: null,

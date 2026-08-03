@@ -1,0 +1,31 @@
+- main [ref=e16]:
+  - generic [ref=e17]:
+    - generic [ref=e18]:
+      - generic [ref=e93]:
+        - generic [ref=e95]:
+          - generic [ref=e96]: "1"
+          - generic [ref=e97]: Pessoa
+        - generic [ref=e100]:
+          - generic [ref=e101]: "2"
+          - generic [ref=e102]: Veículo
+        - generic [ref=e105]:
+          - generic [ref=e106]: "3"
+          - generic [ref=e107]: Autorização
+      - generic [ref=e108]:
+        - generic [ref=e109]:
+          - button "Voltar" [ref=e110]
+          - paragraph [ref=e113]: Cadastro
+        - generic [ref=e140]:
+          - paragraph [ref=e141]: Pergunta 2 de 2
+          - paragraph [ref=e142]:
+            - text: Qual é o
+            - strong [ref=e143]: ANO DE NASCIMENTO
+            - text: da pessoa?
+          - generic [ref=e144]:
+            - button "1982" [ref=e145]
+            - button "1988" [ref=e150]
+            - 'button "1985 dica: correta" [ref=e155]':
+              - generic [ref=e156]: "1985"
+              - generic [ref=e157]: "dica: correta"
+        - button "Nenhuma das alternativas" [ref=e137]
+    - region "Notifications alt+T"

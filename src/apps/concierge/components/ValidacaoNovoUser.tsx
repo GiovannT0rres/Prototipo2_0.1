@@ -103,7 +103,15 @@ export function ValidacaoNovoUser({ dadosBigData, etapaInicial = 1, onSucesso, o
                   className="w-full text-left px-5 py-5 rounded-[14px] border-2 border-[var(--es-border)] bg-[var(--es-surface)] text-[var(--es-ink)] font-semibold hover:border-[var(--es-navy)] hover:bg-[var(--es-navy-soft)] active:scale-[0.99] transition-all flex items-center justify-between min-h-[80px]"
                 >
                   <span className="text-[21px]">{opcao}</span>
-                  <ChevronRight size={24} strokeWidth={2.25} className="text-[var(--es-ink-3)] shrink-0" />
+                  <span className="flex items-center gap-2 shrink-0">
+                    {/* Dica de protótipo — resposta certa não é conhecida por quem testa o fluxo sem acesso ao mock da BigDataCorp. Remover antes de produção. */}
+                    {opcao === respostaCorreta && (
+                      <span className="text-[13px] font-bold uppercase tracking-wide text-[var(--es-success)] bg-[var(--es-success-soft)] px-2 py-1 rounded-full">
+                        dica: correta
+                      </span>
+                    )}
+                    <ChevronRight size={24} strokeWidth={2.25} className="text-[var(--es-ink-3)]" />
+                  </span>
                 </button>
               ))}
             </div>

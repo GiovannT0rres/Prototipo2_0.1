@@ -1,0 +1,29 @@
+- main [ref=f2e16]:
+  - generic [ref=f2e17]:
+    - generic [ref=f2e421]:
+      - generic [ref=f2e422]:
+        - button "Voltar" [ref=f2e423]
+        - paragraph [ref=f2e426]: Autorização
+      - generic [ref=f2e427]:
+        - paragraph [ref=f2e428]:
+          - text: Confirme a
+          - strong [ref=f2e429]: AUTORIZAÇÃO
+        - generic [ref=f2e430]:
+          - generic [ref=f2e435]:
+            - paragraph [ref=f2e436]: Pessoa
+            - paragraph [ref=f2e437]: Pedro Almeida
+          - generic [ref=f2e441]:
+            - paragraph [ref=f2e442]: Motivo
+            - paragraph [ref=f2e443]: Visitante
+          - generic [ref=f2e448]:
+            - paragraph [ref=f2e449]: Destino
+            - paragraph [ref=f2e450]: Salão Social 1
+          - generic [ref=f2e456]:
+            - paragraph [ref=f2e457]: Autorizador
+            - paragraph [ref=f2e458]: João Silva (Titular)
+          - generic [ref=f2e462]:
+            - paragraph [ref=f2e463]: Período
+            - paragraph [ref=f2e464]: Só hoje
+        - button "+ Observação (opcional)" [ref=f2e465]
+      - button "Confirmar autorização" [ref=f2e467]
+    - region "Notifications alt+T"

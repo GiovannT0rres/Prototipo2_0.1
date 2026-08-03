@@ -1,0 +1,25 @@
+- main [ref=f2e16]:
+  - generic [ref=f2e17]:
+    - generic [ref=f2e18]:
+      - generic [ref=f2e125]:
+        - generic [ref=f2e126]: Pessoa
+        - generic [ref=f2e134]:
+          - generic [ref=f2e135]: "2"
+          - generic [ref=f2e136]: Veículo
+        - generic [ref=f2e139]:
+          - generic [ref=f2e140]: "3"
+          - generic [ref=f2e141]: Perfil
+      - generic [ref=f2e142]:
+        - generic [ref=f2e143]:
+          - button "Voltar" [ref=f2e144]
+          - paragraph [ref=f2e147]: Cadastro
+        - generic [ref=f2e148]:
+          - paragraph [ref=f2e149]:
+            - text: Qual a
+            - strong [ref=f2e150]: PLACA
+            - text: do veículo?
+          - paragraph [ref=f2e151]: Opcional — o LPR do clube já libera acesso por placa.
+          - textbox "ABC1D23" [active] [ref=f2e152]
+          - button "Sem veículo" [ref=f2e153]
+          - button "Confirmar" [disabled] [ref=f2e155]
+    - region "Notifications alt+T"

@@ -55,10 +55,18 @@ export function PerguntaAutorizador({ onConfirmar, onVoltar }: Props) {
 
   // Ao digitar, a lista vai ficando mais exata (filtra pelo texto); sem
   // digitar nada, mostra os recentes primeiro.
-  const resultados = (query
-    ? listaOrdenada.filter((o) => normalizeText(o).includes(normalizeText(query)))
-    : listaOrdenada
-  ).slice(0, 12);
+  const resultados = useMemo(() => {
+    const base = query
+      ? listaOrdenada.filter((o) => normalizeText(o).includes(normalizeText(query)))
+      : listaOrdenada;
+    return base.slice(0, 12);
+  }, [query, listaOrdenada]);
+
+  // Nomes de autorizador sempre levam sobrenome + qualificador entre
+  // parênteses ("João Pedro Silva (Dependente)") — mais longos que destinos.
+  // Grade de chips quebra/corta esses nomes em telas de 360-390px; lista
+  // vertical não tem esse limite porque cada item ocupa a largura toda.
+  const algumNomeLongo = useMemo(() => resultados.some((n) => n.length > 22), [resultados]);
 
   // Moeda só preenche a caixa — só a seta ao lado da busca avança de verdade,
   // pra não confirmar sem querer com um toque perto da moeda. A seta só
@@ -106,7 +114,7 @@ export function PerguntaAutorizador({ onConfirmar, onVoltar }: Props) {
           </p>
         )}
 
-        {resultados.length >= 7 ? (
+        {resultados.length >= 7 || algumNomeLongo ? (
           <div className="flex flex-col gap-2.5 mt-3">
             {resultados.map((nome) => (
               <button
@@ -116,7 +124,7 @@ export function PerguntaAutorizador({ onConfirmar, onVoltar }: Props) {
                 className="w-full text-left flex items-center gap-3 px-4 min-h-[56px] rounded-[14px] border-2 border-[var(--es-border)] bg-[var(--es-surface)] hover:border-[var(--es-border-strong)] active:scale-[0.99] transition-all"
               >
                 <UserCheck size={20} strokeWidth={2.25} className="text-[var(--es-navy)] shrink-0" />
-                <span className="text-[19px] font-medium text-[var(--es-ink)]">{nome}</span>
+                <span className="text-[19px] font-medium text-[var(--es-ink)] truncate min-w-0 flex-1">{nome}</span>
               </button>
             ))}
           </div>
