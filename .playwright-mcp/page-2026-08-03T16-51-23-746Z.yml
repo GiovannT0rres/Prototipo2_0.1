@@ -1,0 +1,22 @@
+- main [ref=f2e16]:
+  - generic [ref=f2e17]:
+    - generic [ref=f2e18]:
+      - generic [ref=f2e378]:
+        - generic [ref=f2e379]: Pessoa
+        - generic [ref=f2e386]: Veículo
+        - generic [ref=f2e394]:
+          - generic [ref=f2e395]: "3"
+          - generic [ref=f2e396]: Autorização
+      - generic [ref=f2e397]:
+        - generic [ref=f2e398]:
+          - button "Voltar" [ref=f2e399]
+          - paragraph [ref=f2e402]: Autorização
+        - generic [ref=f2e403]:
+          - paragraph [ref=f2e404]:
+            - text: Qual o
+            - strong [ref=f2e405]: MOTIVO
+            - text: "?"
+          - generic [ref=f2e406]:
+            - button "Visitante" [ref=f2e407]
+            - button "Prestador de Serviço" [ref=f2e414]
+    - region "Notifications alt+T"

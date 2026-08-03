@@ -84,7 +84,7 @@ export function HomeBusca({ onBuscar, pessoasNoLocal, onSaida }: Props) {
               inputMode="numeric"
               value={cpfPrincipal}
               onChange={handleCpfChange}
-              placeholder="Digite o CPF..."
+              placeholder="CPF"
               autoFocus
               className="flex-1 min-w-0 bg-[var(--es-bg)] border-2 border-[var(--es-border-strong)] rounded-[14px] px-5 py-4 text-[21px] font-bold tabular-nums focus:outline-none focus:ring-4 focus:ring-[rgba(15,39,68,0.12)] focus:border-[var(--es-navy)] transition-all placeholder:font-medium tracking-wide text-[var(--es-ink)] min-h-[64px]"
             />

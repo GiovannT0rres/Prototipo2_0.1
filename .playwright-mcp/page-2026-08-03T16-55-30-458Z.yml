@@ -1,0 +1,40 @@
+- main [ref=f3e16]:
+  - generic [ref=f3e17]:
+    - generic [ref=f3e18]:
+      - generic [ref=f3e165]:
+        - generic [ref=f3e166]: Pessoa
+        - generic [ref=f3e173]: Veículo
+        - generic [ref=f3e181]:
+          - generic [ref=f3e182]: "3"
+          - generic [ref=f3e183]: Perfil
+      - generic [ref=f3e184]:
+        - generic [ref=f3e185]:
+          - button "Voltar" [ref=f3e186]
+          - paragraph [ref=f3e189]: Perfil do Usuário
+        - generic [ref=f3e190]:
+          - img "Avatar" [ref=f3e191]
+          - generic [ref=f3e192]:
+            - heading "Maria Souza" [level=2] [ref=f3e193]
+            - paragraph [ref=f3e194]: 555.666.777-88
+            - paragraph [ref=f3e195]: Visitante
+        - generic [ref=f3e196]:
+          - heading "Autorizações" [level=3] [ref=f3e197]
+          - generic [ref=f3e198]:
+            - generic [ref=f3e199]:
+              - generic [ref=f3e200]:
+                - paragraph [ref=f3e201]: English Bar
+                - generic [ref=f3e202]: Visitante
+              - paragraph [ref=f3e203]: Ana Costa (Dependente) • Hoje até 1 Semana
+              - paragraph [ref=f3e204]: No local desde Hoje, 10:30
+              - button "Saída" [ref=f3e206]
+            - generic [ref=f3e210]:
+              - generic [ref=f3e211]:
+                - paragraph [ref=f3e212]: Clube Inteiro
+                - generic [ref=f3e213]: Visitante
+              - paragraph [ref=f3e214]: Roberto Almeida (Titular) • Hoje até 2 Semanas
+              - button "Recusar esta autorização" [ref=f3e215]
+          - button [ref=f3e220]
+        - generic [ref=f3e228]:
+          - button "Nova Autorização" [ref=f3e229]
+          - button "Dar entrada — Clube Inteiro" [ref=f3e231]
+    - region "Notifications alt+T"
