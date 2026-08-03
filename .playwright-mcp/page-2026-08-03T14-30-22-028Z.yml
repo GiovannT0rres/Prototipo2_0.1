@@ -1,0 +1,31 @@
+- main [ref=f4e16]:
+  - generic [ref=f4e17]:
+    - generic [ref=f4e18]:
+      - generic [ref=f4e91]:
+        - generic [ref=f4e93]:
+          - generic [ref=f4e94]: "1"
+          - generic [ref=f4e95]: Pessoa
+        - generic [ref=f4e98]:
+          - generic [ref=f4e99]: "2"
+          - generic [ref=f4e100]: Veículo
+        - generic [ref=f4e103]:
+          - generic [ref=f4e104]: "3"
+          - generic [ref=f4e105]: Autorização
+      - generic [ref=f4e106]:
+        - generic [ref=f4e107]:
+          - button "Voltar" [ref=f4e108]
+          - paragraph [ref=f4e111]: Cadastro
+        - generic [ref=f4e113]:
+          - paragraph [ref=f4e114]: Pergunta 1 de 2
+          - paragraph [ref=f4e115]:
+            - text: Qual é o
+            - strong [ref=f4e116]: NOME COMPLETO
+            - text: da pessoa?
+          - generic [ref=f4e117]:
+            - button "Roberto Nunes Alves" [ref=f4e118]
+            - button "Marcos Silva Pinto" [ref=f4e123]
+            - 'button "Carlos Eduardo Faria dica: correta" [ref=f4e128]':
+              - generic [ref=f4e129]: Carlos Eduardo Faria
+              - generic [ref=f4e130]: "dica: correta"
+        - button "Nenhuma das alternativas" [ref=f4e135]
+    - region "Notifications alt+T"

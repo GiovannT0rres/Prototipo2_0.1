@@ -1,0 +1,35 @@
+- main [ref=f3e16]:
+  - generic [ref=f3e17]:
+    - generic [ref=f3e18]:
+      - generic [ref=f3e352]:
+        - generic [ref=f3e353]: Pessoa
+        - generic [ref=f3e360]: Veículo
+        - generic [ref=f3e368]:
+          - generic [ref=f3e369]: "3"
+          - generic [ref=f3e370]: Autorização
+      - generic [ref=f3e371]:
+        - generic [ref=f3e372]:
+          - button "Voltar" [ref=f3e373]
+          - paragraph [ref=f3e376]: Autorização
+        - generic [ref=f3e377]:
+          - paragraph [ref=f3e378]:
+            - text: Quem é o
+            - strong [ref=f3e379]: AUTORIZADOR
+            - text: "?"
+          - textbox "Buscar sócio autorizador..." [active] [ref=f3e384]
+          - paragraph [ref=f3e385]: Usados recentemente
+          - generic [ref=f3e386]:
+            - button "João Silva (Titular)" [ref=f3e387]
+            - button "Ana Costa (Dependente)" [ref=f3e393]
+            - button "Roberto Almeida (Titular)" [ref=f3e399]
+            - button "Fernando Silva (Titular)" [ref=f3e405]
+            - button "Marcelo Costa (Titular)" [ref=f3e411]
+            - button "Patrícia Nogueira (Titular)" [ref=f3e417]
+            - button "Juliana Ferraz (Titular)" [ref=f3e423]
+            - button "Ricardo Mendes (Titular)" [ref=f3e429]
+            - button "Camila Duarte (Dependente)" [ref=f3e435]
+            - button "Eduardo Klein (Titular)" [ref=f3e441]
+            - button "Beatriz Costa (Dependente)" [ref=f3e447]
+            - button "Lucas Almeida (Dependente)" [ref=f3e453]
+        - button "Confirmar autorizador" [disabled] [ref=f3e460]
+    - region "Notifications alt+T"

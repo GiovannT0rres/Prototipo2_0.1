@@ -19,7 +19,11 @@ interface Props {
 // para este app). Grade de dias em cartões de 44px, mês por vez, sem
 // dependência de teclado ou digitação.
 export function CalendarioSimples({ value, onChange, minDate }: Props) {
-  const inicial = value ?? hojeSemHora();
+  // Abre no mês de "value" se já houver seleção; senão no mês do limite
+  // mínimo (ex.: término de um evento que começa em setembro deve abrir
+  // em setembro, não no mês atual — do contrário o mês inicial pode vir
+  // 100% desabilitado e obrigar a navegar "às cegas" pra sair dele).
+  const inicial = value ?? minDate ?? hojeSemHora();
   const [mesVisivel, setMesVisivel] = useState(() => new Date(inicial.getFullYear(), inicial.getMonth(), 1));
 
   const primeiroDiaSemana = mesVisivel.getDay();

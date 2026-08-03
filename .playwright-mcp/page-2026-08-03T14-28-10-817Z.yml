@@ -1,0 +1,22 @@
+- main [ref=f3e16]:
+  - generic [ref=f3e17]:
+    - generic [ref=f3e18]:
+      - generic [ref=f3e352]:
+        - generic [ref=f3e353]: Pessoa
+        - generic [ref=f3e360]: Veículo
+        - generic [ref=f3e368]:
+          - generic [ref=f3e369]: "3"
+          - generic [ref=f3e370]: Autorização
+      - generic [ref=f3e371]:
+        - generic [ref=f3e372]:
+          - button "Voltar" [ref=f3e373]
+          - paragraph [ref=f3e376]: Autorização
+        - generic [ref=f3e377]:
+          - paragraph [ref=f3e378]:
+            - text: Quem é o
+            - strong [ref=f3e379]: AUTORIZADOR
+            - text: "?"
+          - textbox "Buscar sócio autorizador..." [ref=f3e384]: João Silva (Titular)
+          - button "João Silva (Titular)" [ref=f3e461]
+        - button "Confirmar autorizador" [ref=f3e460]
+    - region "Notifications alt+T"

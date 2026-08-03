@@ -1,0 +1,27 @@
+- main [ref=f3e16]:
+  - generic [ref=f3e17]:
+    - generic [ref=f3e18]:
+      - generic [ref=f3e469]:
+        - generic [ref=f3e470]: Pessoa
+        - generic [ref=f3e477]: Veículo
+        - generic [ref=f3e485]:
+          - generic [ref=f3e486]: "3"
+          - generic [ref=f3e487]: Autorização
+      - generic [ref=f3e488]:
+        - generic [ref=f3e489]:
+          - button "Voltar" [ref=f3e490]
+          - paragraph [ref=f3e493]: Autorização
+        - generic [ref=f3e602]:
+          - paragraph [ref=f3e603]: Pergunta 2 de 2
+          - paragraph [ref=f3e604]:
+            - text: Até
+            - strong [ref=f3e605]: QUANDO
+            - text: "?"
+          - paragraph [ref=f3e606]: Começa sáb, 5 de setembro.
+          - generic [ref=f3e607]:
+            - button "Só esse dia" [ref=f3e608]
+            - button "+7 dias" [ref=f3e612]
+            - button "+15 dias" [ref=f3e616]
+            - button "+30 dias" [ref=f3e620]
+            - button "Escolher data específica" [ref=f3e624]
+    - region "Notifications alt+T"
