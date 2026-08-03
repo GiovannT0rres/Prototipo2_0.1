@@ -26,7 +26,7 @@ import {
 // última muda de nome porque o destino final é diferente (gerar autorização
 // vs. cair no perfil, que pode ou não gerar uma nova autorização a partir daí).
 const ETAPAS_NOVO = ["Pessoa", "Veículo", "Autorização"];
-const ETAPAS_EXISTENTE = ["Pessoa", "Veículo", "Perfil"];
+const ETAPAS_EXISTENTE = ["Pessoa", "Perfil"];
 
 type Step =
   | "home"
@@ -40,7 +40,7 @@ type Step =
   | "pergunta-periodo"
   | "pergunta-observacoes"
   | "confirmacao-selfie"
-  | "pergunta-placa-existente"
+  | "editar-placa"
   | "perfil";
 
 export function PortariaWizard() {
@@ -202,39 +202,41 @@ export function PortariaWizard() {
           </>
         )}
 
-        {/* CAMINHO B: USUÁRIO EXISTENTE — confirma identidade por selfie, pergunta
-            a placa usada hoje (pode ter trocado de carro) e vai pro perfil */}
+        {/* CAMINHO B: USUÁRIO EXISTENTE — confirma identidade por selfie e vai
+            direto pro perfil. Placa não é perguntada aqui: sócio titular e
+            dependente já têm placa cadastrada (LPR), editar é uma ação
+            opcional a partir do Perfil, não uma etapa do atendimento. */}
         {step === "confirmacao-selfie" && (
           <>
             <ProgressoAtendimento etapas={ETAPAS_EXISTENTE} atual={1} />
             <ConfirmacaoSelfie
               dados={dadosPessoa}
-              onConfirmado={() => setStep("pergunta-placa-existente")}
+              onConfirmado={() => setStep("perfil")}
               onRejeitado={resetarFluxo}
             />
           </>
         )}
 
-        {step === "pergunta-placa-existente" && (
-          <>
-            <ProgressoAtendimento etapas={ETAPAS_EXISTENTE} atual={2} />
-            <PerguntaPlaca
-              onConfirmar={(placa) => {
-                setDadosPessoa({ ...dadosPessoa, placa });
-                setStep("perfil");
-              }}
-              onVoltar={() => setStep("confirmacao-selfie")}
-            />
-          </>
+        {step === "editar-placa" && (
+          <PerguntaPlaca
+            modoEdicao
+            placaAtual={dadosPessoa?.placa || ""}
+            onConfirmar={(placa) => {
+              setDadosPessoa({ ...dadosPessoa, placa });
+              setStep("perfil");
+            }}
+            onVoltar={() => setStep("perfil")}
+          />
         )}
 
         {step === "perfil" && (
           <>
-            <ProgressoAtendimento etapas={ETAPAS_EXISTENTE} atual={3} />
+            <ProgressoAtendimento etapas={ETAPAS_EXISTENTE} atual={2} />
             <PerfilPessoa
               dados={dadosPessoa}
               onNovaAutorizacao={() => setStep("pergunta-destino")}
               onLiberarAcesso={handleLiberarAcesso}
+              onEditarPlaca={() => setStep("editar-placa")}
               onVoltar={resetarFluxo}
             />
           </>

@@ -1,0 +1,18 @@
+- main [ref=f2e16]:
+  - generic [ref=f2e17]:
+    - generic [ref=f2e18]:
+      - paragraph [ref=f2e808]: Etapa 2 de 3 — Veículo
+      - generic [ref=f2e813]:
+        - generic [ref=f2e814]:
+          - button "Voltar" [ref=f2e815]
+          - paragraph [ref=f2e818]: Cadastro
+        - generic [ref=f2e819]:
+          - paragraph [ref=f2e820]:
+            - text: Qual a
+            - strong [ref=f2e821]: PLACA
+            - text: do veículo?
+          - paragraph [ref=f2e822]: Opcional — o LPR do clube já libera acesso por placa.
+          - textbox "ABC1D23" [active] [ref=f2e823]
+          - button "Sem veículo" [ref=f2e824]
+          - button "Confirmar" [disabled] [ref=f2e826]
+    - region "Notifications alt+T"

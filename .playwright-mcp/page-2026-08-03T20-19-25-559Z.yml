@@ -1,0 +1,16 @@
+- main [ref=f2e16]:
+  - generic [ref=f2e17]:
+    - generic [ref=f2e18]:
+      - paragraph [ref=f2e276]: Etapa 1 de 3 — Pessoa
+      - generic [ref=f2e281]:
+        - generic [ref=f2e282]:
+          - button "Voltar" [ref=f2e283]
+          - paragraph [ref=f2e286]: Cadastro
+        - generic [ref=f2e287]:
+          - paragraph [ref=f2e288]:
+            - text: Qual o
+            - strong [ref=f2e289]: WHATSAPP
+            - text: "?"
+          - textbox "00000-0000" [active] [ref=f2e290]: (98) 76543-21
+          - button "Confirmar" [disabled] [ref=f2e293]
+    - region "Notifications alt+T"

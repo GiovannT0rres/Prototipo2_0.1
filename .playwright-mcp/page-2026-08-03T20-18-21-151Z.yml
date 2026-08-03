@@ -1,0 +1,22 @@
+- main [ref=f2e16]:
+  - generic [ref=f2e17]:
+    - generic [ref=f2e18]:
+      - paragraph [ref=f2e223]: Etapa 1 de 3 — Pessoa
+      - generic [ref=f2e228]:
+        - generic [ref=f2e229]:
+          - button "Voltar" [ref=f2e230]
+          - paragraph [ref=f2e233]: Cadastro
+        - generic [ref=f2e257]:
+          - paragraph [ref=f2e258]: Pergunta 2 de 2
+          - paragraph [ref=f2e259]:
+            - text: Qual é o
+            - strong [ref=f2e260]: ANO DE NASCIMENTO
+            - text: da pessoa?
+          - generic [ref=f2e261]:
+            - button "1988" [ref=f2e262]
+            - button "1982" [ref=f2e266]
+            - 'button "1985 dica: resposta correta" [ref=f2e270]':
+              - generic [ref=f2e271]: "1985"
+              - 'generic "dica: resposta correta" [ref=f2e272]'
+        - button "Nenhuma das alternativas" [ref=f2e254]
+    - region "Notifications alt+T"

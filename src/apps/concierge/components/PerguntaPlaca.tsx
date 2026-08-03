@@ -5,10 +5,12 @@ import { motion } from "motion/react";
 interface Props {
   onConfirmar: (placa: string) => void;
   onVoltar: () => void;
+  placaAtual?: string;
+  modoEdicao?: boolean;
 }
 
-export function PerguntaPlaca({ onConfirmar, onVoltar }: Props) {
-  const [placa, setPlaca] = useState("");
+export function PerguntaPlaca({ onConfirmar, onVoltar, placaAtual = "", modoEdicao = false }: Props) {
+  const [placa, setPlaca] = useState(placaAtual);
 
   return (
     <motion.div initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="flex-1 flex flex-col h-full min-h-0 bg-[var(--es-surface)]">
@@ -20,7 +22,7 @@ export function PerguntaPlaca({ onConfirmar, onVoltar }: Props) {
         >
           <ArrowLeft size={22} strokeWidth={2.25} />
         </button>
-        <p className="font-semibold text-[var(--es-ink)] text-[16px]">Cadastro</p>
+        <p className="font-semibold text-[var(--es-ink)] text-[16px]">{modoEdicao ? "Editar Placa" : "Cadastro"}</p>
       </div>
 
       <div className="flex-1 flex flex-col p-6 bg-[var(--es-bg)]">

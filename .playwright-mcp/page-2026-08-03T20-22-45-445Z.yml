@@ -1,0 +1,16 @@
+- main [ref=f2e16]:
+  - generic [ref=f2e17]:
+    - generic [ref=f2e18]:
+      - paragraph [ref=f2e784]: Etapa 1 de 3 — Pessoa
+      - generic [ref=f2e789]:
+        - generic [ref=f2e790]:
+          - button "Voltar" [ref=f2e791]
+          - paragraph [ref=f2e794]: Verificação Visual
+        - generic [ref=f2e795]:
+          - img "Maria Souza" [ref=f2e796]
+          - heading "Esta pessoa é Maria Souza?" [level=2] [ref=f2e797]: Esta pessoa éMaria Souza?
+          - paragraph [ref=f2e798]: "CPF: 555.666.777-88"
+        - generic [ref=f2e799]:
+          - button "Não" [ref=f2e800]
+          - button "Sim" [ref=f2e804]
+    - region "Notifications alt+T"

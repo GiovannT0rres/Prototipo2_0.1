@@ -1,18 +1,28 @@
 import { useState } from "react";
-import { ArrowLeft, Plus, CheckCircle2, LogOut, History, Ban, AlertTriangle, ChevronDown, ChevronUp, Clock } from "lucide-react";
+import { ArrowLeft, Plus, CheckCircle2, LogOut, History, Ban, AlertTriangle, ChevronDown, ChevronUp, Clock, Car } from "lucide-react";
 import { motion } from "motion/react";
 import { toast } from "sonner";
 import { MOCK_ACCESS_HISTORY } from "../mocks/mockConcierge";
 import { labelDataCurta } from "../utils/dateLabel";
 
+// Mocks guardam "Hoje, 07:15" (útil no card "Quem está no clube" da Home,
+// que não tem outro contexto de data) — aqui o rótulo já é "Entrada às",
+// então basta a hora, sem repetir "Hoje".
+function apenasHora(entrada: string | null) {
+  if (!entrada) return entrada;
+  const partes = entrada.split(", ");
+  return partes[partes.length - 1];
+}
+
 interface Props {
   dados: any;
   onNovaAutorizacao: () => void;
   onLiberarAcesso: (auth: any) => void;
+  onEditarPlaca: () => void;
   onVoltar: () => void;
 }
 
-export function PerfilPessoa({ dados, onNovaAutorizacao, onLiberarAcesso, onVoltar }: Props) {
+export function PerfilPessoa({ dados, onNovaAutorizacao, onLiberarAcesso, onEditarPlaca, onVoltar }: Props) {
   const [autorizacoes, setAutorizacoes] = useState(dados.autorizacoes || []);
   const historico = MOCK_ACCESS_HISTORY[dados.id] || [];
   const [historicoAberto, setHistoricoAberto] = useState(false);
@@ -51,7 +61,9 @@ export function PerfilPessoa({ dados, onNovaAutorizacao, onLiberarAcesso, onVolt
   const handleToggle = (auth: any) => {
     const estavaNoLocal = auth.status === "No local";
     const novoStatus = estavaNoLocal ? "Fora do clube" : "No local";
-    const novaEntrada = estavaNoLocal ? null : "Agora";
+    const novaEntrada = estavaNoLocal
+      ? null
+      : new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
 
     if (auth.id === "livre") {
       setAcessoLivre((prev) => ({ ...prev, status: novoStatus, entrada: novaEntrada }));
@@ -86,7 +98,7 @@ export function PerfilPessoa({ dados, onNovaAutorizacao, onLiberarAcesso, onVolt
     const mostrarLiberado = noLocal && liberadoRecente[auth.id];
     const classeBase =
       tamanho === "grande"
-        ? "flex-1 py-4 rounded-[14px] text-[19px] min-h-[58px]"
+        ? "flex-1 py-4 px-4 rounded-[14px] text-[17px] min-h-[58px]"
         : "flex-1 py-3 rounded-[14px] text-[17px] min-h-[50px]";
 
     // Autorização pra data futura (ex. evento agendado) não libera antes de
@@ -109,9 +121,9 @@ export function PerfilPessoa({ dados, onNovaAutorizacao, onLiberarAcesso, onVolt
       return (
         <button
           onClick={() => handleToggle(auth)}
-          className={`${classeBase} font-semibold text-white bg-[var(--es-success)] hover:brightness-95 active:scale-[0.98] transition-all flex items-center justify-center gap-2.5`}
+          className={`${classeBase} font-semibold text-white bg-[var(--es-success)] hover:brightness-95 active:scale-[0.98] transition-all flex items-center justify-center gap-2.5 text-center leading-tight`}
         >
-          <CheckCircle2 size={tamanho === "grande" ? 26 : 22} strokeWidth={2.25} />
+          <CheckCircle2 size={tamanho === "grande" ? 24 : 22} strokeWidth={2.25} className="shrink-0" />
           {tamanho === "grande" ? `Dar entrada — ${auth.destino}` : "Dar Entrada"}
         </button>
       );
@@ -151,11 +163,24 @@ export function PerfilPessoa({ dados, onNovaAutorizacao, onLiberarAcesso, onVolt
 
       <div className="flex-shrink-0 bg-[var(--es-surface)] px-6 py-5 border-b border-[var(--es-border)] flex items-center gap-4">
         <img src={dados.avatar} alt="Avatar" className="w-14 h-14 rounded-full object-cover shrink-0" />
-        <div>
+        <div className="flex-1 min-w-0">
           <h2 className="text-[19px] font-semibold text-[var(--es-ink)]">{dados.name}</h2>
           <p className="text-[16px] text-[var(--es-ink-2)] tabular-nums mt-0.5">{dados.cpf}</p>
           <p className="text-[16px] text-[var(--es-ink-3)] mt-1">{dados.type}</p>
         </div>
+
+        {/* Placa é dado de cadastro da pessoa (LPR), não da autorização —
+            edição fica junto da identidade, não dentro do card de Acesso. */}
+        {temLivreAcesso && (
+          <button
+            onClick={onEditarPlaca}
+            aria-label="Editar placa do veículo"
+            className="shrink-0 flex flex-col items-center gap-1 px-3 py-2 rounded-[14px] text-[var(--es-ink-2)] hover:bg-[var(--es-bg)] active:scale-[0.98] transition-all"
+          >
+            <Car size={22} strokeWidth={2.25} />
+            <span className="text-[13px] font-semibold tabular-nums whitespace-nowrap">{dados.placa || "Sem placa"}</span>
+          </button>
+        )}
       </div>
 
       <div className="flex-1 min-h-0 px-6 pt-5 pb-6 overflow-y-auto">
@@ -166,7 +191,7 @@ export function PerfilPessoa({ dados, onNovaAutorizacao, onLiberarAcesso, onVolt
         {temLivreAcesso ? (
           <div className="bg-[var(--es-surface)] p-4 rounded-[14px] border border-[var(--es-border)]">
             {acessoLivre.status === "No local" && (
-              <p className="text-[16px] font-medium text-[var(--es-success)] mb-2">No local desde {acessoLivre.entrada}</p>
+              <p className="text-[16px] font-medium text-[var(--es-success)] mb-2">Entrada às {apenasHora(acessoLivre.entrada)}</p>
             )}
             <p className="text-[17px] text-[var(--es-ink-2)] mb-4 leading-relaxed">
               {dados.type === "Sócio Titular" ? "Sócio" : "Dependente"} tem livre acesso a todo o clube.
@@ -201,7 +226,7 @@ export function PerfilPessoa({ dados, onNovaAutorizacao, onLiberarAcesso, onVolt
                       {auth.autorizador || "Portaria"} {auth.periodo && `• ${auth.periodo}`}
                     </p>
                     {noLocal && (
-                      <p className="text-[16px] font-medium text-[var(--es-success)] mt-1">No local desde {auth.entrada}</p>
+                      <p className="text-[16px] font-medium text-[var(--es-success)] mt-1">Entrada às {apenasHora(auth.entrada)}</p>
                     )}
 
                     {/* Recusar nunca fica adjacente ao botão de entrada — é a

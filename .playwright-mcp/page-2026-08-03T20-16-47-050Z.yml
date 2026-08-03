@@ -1,0 +1,7 @@
+- generic [ref=e4]:
+  - heading "Clube Access" [level=1] [ref=e9]
+  - generic [ref=e10]:
+    - textbox "E-mail ou Matrícula" [active] [ref=e12]
+    - textbox "Senha" [ref=e14]
+    - button "Entrar" [ref=e15]
+  - button "Esqueci minha senha" [ref=e16]

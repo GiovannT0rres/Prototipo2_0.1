@@ -1,0 +1,16 @@
+- main [ref=f4e16]:
+  - generic [ref=f4e17]:
+    - generic [ref=f4e18]:
+      - paragraph [ref=f4e95]: Etapa 1 de 2 — Pessoa
+      - generic [ref=f4e99]:
+        - generic [ref=f4e100]:
+          - button "Voltar" [ref=f4e101]
+          - paragraph [ref=f4e104]: Verificação Visual
+        - generic [ref=f4e105]:
+          - img "João Silva" [ref=f4e106]
+          - heading "Esta pessoa é João Silva?" [level=2] [ref=f4e107]: Esta pessoa éJoão Silva?
+          - paragraph [ref=f4e108]: "CPF: 111.222.333-44"
+        - generic [ref=f4e109]:
+          - button "Não" [ref=f4e110]
+          - button "Sim" [ref=f4e114]
+    - region "Notifications alt+T"
