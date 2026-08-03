@@ -1,0 +1,52 @@
+/* Tema visual do app de Portaria (Concierge) — escopo local, NÃO tocar em
+   src/styles/*. Ver DESIGN.md §4.2 (tokens) e §5.1/§5.2 (tipografia).
+   Importado só em ConciergeLayout.tsx e aplicado via a classe .concierge-app
+   no container de topo, pra não vazar pros outros 3 apps do monorepo. */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap");
+
+.concierge-app {
+  /* ---------- MARCA ---------- */
+  --es-navy: #0f2744;
+  --es-navy-press: #0a1b30;
+  --es-navy-soft: #e8edf4;
+
+  /* ---------- SEMÂNTICAS (ação) ---------- */
+  --es-success: #0b7a3b;
+  --es-success-soft: #e3f5ea;
+  --es-danger: #b3261e;
+  --es-danger-soft: #fceae8;
+  --es-warning: #8a5000;
+  --es-warning-soft: #fff4e0;
+  --es-info: #0f2744;
+
+  /* ---------- NEUTROS ---------- */
+  --es-ink: #101828;
+  --es-ink-2: #344054;
+  --es-ink-3: #475467;
+  --es-border: #d0d5dd;
+  --es-border-strong: #98a2b3;
+  --es-surface: #ffffff;
+  --es-bg: #f2f4f7;
+
+  /* ---------- TIPOGRAFIA ---------- */
+  --es-font: "Inter", -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  font-family: var(--es-font);
+  font-feature-settings:
+    "ss02" 1,
+    "cv05" 1;
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* prefers-reduced-motion: desativa transições de slide/entrada do
+   motion/react — mantém só fades curtos. Ver DESIGN.md §10/§17 item 13. */
+@media (prefers-reduced-motion: reduce) {
+  .concierge-app * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

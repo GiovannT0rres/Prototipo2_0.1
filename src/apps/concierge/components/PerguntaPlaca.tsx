@@ -11,25 +11,23 @@ export function PerguntaPlaca({ onConfirmar, onVoltar }: Props) {
   const [placa, setPlaca] = useState("");
 
   return (
-    <motion.div initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="flex-1 flex flex-col h-full bg-white">
-      <div className="flex-shrink-0 p-4 border-b border-gray-100 flex items-center gap-3 bg-gray-50">
+    <motion.div initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="flex-1 flex flex-col h-full bg-[var(--es-surface)]">
+      <div className="flex-shrink-0 h-16 px-4 border-b border-[var(--es-border)] flex items-center gap-3 bg-[var(--es-surface)]">
         <button
           onClick={onVoltar}
           aria-label="Voltar"
-          className="w-14 h-14 flex items-center justify-center rounded-xl bg-white text-gray-600 shadow-sm shrink-0"
+          className="w-14 h-14 flex items-center justify-center rounded-[14px] text-[var(--es-ink-2)] hover:bg-[var(--es-bg)] transition-colors shrink-0"
         >
           <ArrowLeft size={24} strokeWidth={2.25} />
         </button>
-        <div>
-          <p className="font-bold text-gray-900 text-[17px]">Cadastro</p>
-        </div>
+        <p className="font-semibold text-[var(--es-ink)] text-[17px]">Cadastro</p>
       </div>
 
-      <div className="flex-1 flex flex-col p-6 bg-gray-50">
-        <p className="text-[28px] text-gray-900 mb-2 leading-tight">
+      <div className="flex-1 flex flex-col p-6 bg-[var(--es-bg)]">
+        <p className="text-[28px] font-semibold text-[var(--es-ink)] mb-2 leading-tight tracking-[-0.01em]">
           Qual a <strong className="font-bold">PLACA</strong> do veículo?
         </p>
-        <p className="text-[17px] text-gray-600 mb-6">Opcional — o LPR do clube já libera acesso por placa.</p>
+        <p className="text-[17px] text-[var(--es-ink-3)] mb-6">Opcional — o LPR do clube já libera acesso por placa.</p>
 
         <input
           autoFocus
@@ -37,7 +35,7 @@ export function PerguntaPlaca({ onConfirmar, onVoltar }: Props) {
           onChange={(e) => setPlaca(e.target.value.toUpperCase())}
           placeholder="ABC1D23"
           maxLength={7}
-          className="w-full bg-white border-2 border-gray-300 px-5 py-4 rounded-xl text-[21px] font-semibold uppercase tracking-wide focus:outline-none focus:ring-4 focus:ring-[#0F2744]/12 focus:border-[#0F2744] text-gray-900 min-h-[64px]"
+          className="w-full bg-[var(--es-surface)] border-2 border-[var(--es-border-strong)] px-5 py-4 rounded-[14px] text-[21px] font-semibold uppercase tracking-wide tabular-nums focus:outline-none focus:ring-4 focus:ring-[rgba(15,39,68,0.12)] focus:border-[var(--es-navy)] text-[var(--es-ink)] min-h-[64px]"
         />
 
         {/* Único caminho de escape — o botão primário permanece sempre
@@ -46,7 +44,7 @@ export function PerguntaPlaca({ onConfirmar, onVoltar }: Props) {
           <button
             type="button"
             onClick={() => onConfirmar("")}
-            className="mt-3 inline-flex items-center min-h-[44px] px-4 py-2 rounded-full bg-gray-100 border border-gray-300 text-[15px] font-bold text-gray-700 hover:bg-gray-200 transition-colors self-start"
+            className="mt-3 inline-flex items-center gap-2 min-h-[44px] px-[18px] rounded-full bg-[var(--es-surface)] border-[1.5px] border-[var(--es-border-strong)] text-[17px] font-semibold text-[var(--es-ink-2)] hover:border-[var(--es-ink-3)] transition-colors self-start"
           >
             Sem veículo
           </button>
@@ -57,9 +55,9 @@ export function PerguntaPlaca({ onConfirmar, onVoltar }: Props) {
         <button
           onClick={() => onConfirmar(placa)}
           disabled={!placa}
-          className="w-full mt-6 py-4 rounded-xl font-bold text-[21px] text-white transition-opacity disabled:opacity-45 bg-[#0F2744] flex justify-center items-center gap-2 min-h-[64px]"
+          className="w-full mt-6 py-4 rounded-[14px] font-semibold text-[21px] text-white transition-all active:scale-[0.98] disabled:opacity-45 bg-[var(--es-navy)] hover:bg-[var(--es-navy-press)] flex justify-center items-center gap-2.5 min-h-[64px]"
         >
-          <Car size={22} strokeWidth={2.25} /> Confirmar
+          <Car size={28} strokeWidth={2.25} /> Confirmar
         </button>
       </div>
     </motion.div>

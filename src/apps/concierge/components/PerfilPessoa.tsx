@@ -74,7 +74,7 @@ export function PerfilPessoa({ dados, onNovaAutorizacao, onLiberarAcesso, onVolt
   const confirmarRecusa = () => {
     const auth = recusarModal;
     setAutorizacoes((prev: any[]) => prev.filter((a) => a.id !== auth.id));
-    toast.error(`Autorização recusada: ${auth.name} → ${auth.destino}`);
+    toast.error(`Autorização recusada: ${auth.name} → ${auth.destino}`, { duration: 8000 });
     setRecusarModal(null);
   };
 
@@ -85,16 +85,16 @@ export function PerfilPessoa({ dados, onNovaAutorizacao, onLiberarAcesso, onVolt
     const mostrarLiberado = noLocal && liberadoRecente[auth.id];
     const classeBase =
       tamanho === "grande"
-        ? "flex-1 py-4 rounded-xl text-[19px] min-h-[64px]"
-        : "flex-1 py-3 rounded-lg text-[17px] min-h-[56px]";
+        ? "flex-1 py-4 rounded-[14px] text-[21px] min-h-[64px]"
+        : "flex-1 py-3 rounded-[14px] text-[19px] min-h-[56px]";
 
     if (!noLocal) {
       return (
         <button
           onClick={() => handleToggle(auth)}
-          className={`${classeBase} font-bold text-white bg-[#0B7A3B] hover:bg-[#096530] transition-colors flex items-center justify-center gap-2`}
+          className={`${classeBase} font-semibold text-white bg-[var(--es-success)] hover:brightness-95 active:scale-[0.98] transition-all flex items-center justify-center gap-2.5`}
         >
-          <CheckCircle2 size={tamanho === "grande" ? 22 : 18} strokeWidth={2.25} />
+          <CheckCircle2 size={tamanho === "grande" ? 26 : 22} strokeWidth={2.25} />
           {tamanho === "grande" ? `Dar entrada — ${auth.destino}` : "Dar Entrada"}
         </button>
       );
@@ -102,8 +102,8 @@ export function PerfilPessoa({ dados, onNovaAutorizacao, onLiberarAcesso, onVolt
 
     if (mostrarLiberado) {
       return (
-        <div className={`${classeBase} font-bold text-emerald-800 bg-emerald-50 flex items-center justify-center gap-2`}>
-          <CheckCircle2 size={tamanho === "grande" ? 22 : 18} strokeWidth={2.25} /> Liberado
+        <div className={`${classeBase} font-semibold text-[var(--es-success)] bg-[var(--es-success-soft)] flex items-center justify-center gap-2.5`}>
+          <CheckCircle2 size={tamanho === "grande" ? 26 : 22} strokeWidth={2.25} /> Liberado
         </div>
       );
     }
@@ -111,47 +111,47 @@ export function PerfilPessoa({ dados, onNovaAutorizacao, onLiberarAcesso, onVolt
     return (
       <button
         onClick={() => handleToggle(auth)}
-        className={`${classeBase} font-bold text-red-700 bg-red-50 hover:bg-red-100 transition-colors flex items-center justify-center gap-2`}
+        className={`${classeBase} font-semibold text-[var(--es-danger)] bg-[var(--es-danger-soft)] hover:brightness-95 active:scale-[0.98] transition-all flex items-center justify-center gap-2.5`}
       >
-        <LogOut size={tamanho === "grande" ? 22 : 18} strokeWidth={2.25} /> Saída
+        <LogOut size={tamanho === "grande" ? 26 : 22} strokeWidth={2.25} /> Saída
       </button>
     );
   }
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 flex flex-col h-full bg-gray-50">
-      <div className="flex-shrink-0 px-4 py-3 border-b border-gray-100 bg-white flex items-center justify-between">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 flex flex-col h-full bg-[var(--es-bg)]">
+      <div className="flex-shrink-0 h-16 px-4 border-b border-[var(--es-border)] bg-[var(--es-surface)] flex items-center justify-between">
         <button
           onClick={onVoltar}
           aria-label="Voltar"
-          className="w-14 h-14 flex items-center justify-center -ml-2 rounded-lg text-gray-600 hover:bg-gray-50 shrink-0"
+          className="w-14 h-14 flex items-center justify-center -ml-2 rounded-[14px] text-[var(--es-ink-2)] hover:bg-[var(--es-bg)] transition-colors shrink-0"
         >
           <ArrowLeft size={24} strokeWidth={2.25} />
         </button>
-        <p className="font-semibold text-gray-900 text-[17px]">Perfil do Usuário</p>
+        <p className="font-semibold text-[var(--es-ink)] text-[17px]">Perfil do Usuário</p>
         <div className="w-14" />
       </div>
 
-      <div className="flex-shrink-0 bg-white px-6 py-5 border-b border-gray-100 flex items-center gap-4">
+      <div className="flex-shrink-0 bg-[var(--es-surface)] px-6 py-5 border-b border-[var(--es-border)] flex items-center gap-4">
         <img src={dados.avatar} alt="Avatar" className="w-16 h-16 rounded-full object-cover shrink-0" />
         <div>
-          <h2 className="text-[21px] font-semibold text-gray-900">{dados.name}</h2>
-          <p className="text-[17px] text-gray-600 font-mono mt-0.5">{dados.cpf}</p>
-          <p className="text-[15px] text-gray-500 mt-1">{dados.type}</p>
+          <h2 className="text-[21px] font-semibold text-[var(--es-ink)]">{dados.name}</h2>
+          <p className="text-[17px] text-[var(--es-ink-2)] tabular-nums mt-0.5">{dados.cpf}</p>
+          <p className="text-[17px] text-[var(--es-ink-3)] mt-1">{dados.type}</p>
         </div>
       </div>
 
       <div className="flex-1 px-6 pt-5 pb-6 overflow-y-auto">
-        <h3 className="text-[15px] font-semibold text-gray-500 uppercase tracking-wider mb-3">
+        <h3 className="text-[17px] font-semibold text-[var(--es-ink-3)] uppercase tracking-wider mb-3">
           {temLivreAcesso ? "Acesso" : "Autorizações"}
         </h3>
 
         {temLivreAcesso ? (
-          <div className="bg-white p-4 rounded-xl border border-gray-200">
+          <div className="bg-[var(--es-surface)] p-4 rounded-[14px] border border-[var(--es-border)]">
             {acessoLivre.status === "No local" && (
-              <p className="text-[15px] font-medium text-emerald-700 mb-2">No local desde {acessoLivre.entrada}</p>
+              <p className="text-[17px] font-medium text-[var(--es-success)] mb-2">No local desde {acessoLivre.entrada}</p>
             )}
-            <p className="text-[17px] text-gray-600 mb-4 leading-relaxed">
+            <p className="text-[19px] text-[var(--es-ink-2)] mb-4 leading-relaxed">
               {dados.type === "Sócio Titular" ? "Sócio" : "Dependente"} tem livre acesso a todo o clube.
             </p>
             <div className="flex">
@@ -161,7 +161,7 @@ export function PerfilPessoa({ dados, onNovaAutorizacao, onLiberarAcesso, onVolt
         ) : (
           <div className="space-y-2.5">
             {autorizacoes.length === 0 ? (
-              <div className="bg-white p-6 rounded-xl border border-gray-200 text-center text-gray-500 text-[17px]">
+              <div className="bg-[var(--es-surface)] p-6 rounded-[14px] border border-[var(--es-border)] text-center text-[var(--es-ink-3)] text-[19px]">
                 Nenhuma autorização ativa encontrada.
               </div>
             ) : (
@@ -173,29 +173,32 @@ export function PerfilPessoa({ dados, onNovaAutorizacao, onLiberarAcesso, onVolt
                 const ehAUnicaPendente = !noLocal && autorizacaoUnica?.id === auth.id;
 
                 return (
-                  <div key={auth.id} className="bg-white p-4 rounded-xl border border-gray-200">
+                  <div key={auth.id} className="bg-[var(--es-surface)] p-4 rounded-[14px] border border-[var(--es-border)]">
                     <div className="flex items-start justify-between gap-2 mb-1">
-                      <p className="text-[19px] font-semibold text-gray-900">{auth.destino}</p>
-                      <span className="text-[13px] font-semibold text-gray-500 uppercase tracking-wide pt-0.5 shrink-0">
+                      <p className="text-[19px] font-semibold text-[var(--es-ink)]">{auth.destino}</p>
+                      <span className="text-[17px] font-semibold text-[var(--es-ink-3)] uppercase tracking-wide pt-0.5 shrink-0">
                         {auth.type}
                       </span>
                     </div>
-                    <p className="text-[15px] text-gray-500">
+                    <p className="text-[17px] text-[var(--es-ink-3)]">
                       {auth.autorizador || "Portaria"} {auth.periodo && `• ${auth.periodo}`}
                     </p>
                     {noLocal && (
-                      <p className="text-[15px] font-medium text-emerald-700 mt-1">No local desde {auth.entrada}</p>
+                      <p className="text-[17px] font-medium text-[var(--es-success)] mt-1">No local desde {auth.entrada}</p>
                     )}
 
+                    {/* Recusar nunca fica adjacente ao botão de entrada — é a
+                        receita clássica do erro de toque (design.md §14.8
+                        item 5). Fica separado, com rótulo textual próprio. */}
                     {!ehAUnicaPendente && (
-                      <div className="flex gap-2 mt-3.5">
+                      <div className="mt-3.5">
                         <BotaoAcesso auth={auth} />
                         {!noLocal && (
                           <button
                             onClick={() => setRecusarModal(auth)}
-                            className="min-h-[56px] px-4 rounded-lg text-gray-600 hover:text-red-700 hover:bg-red-50 transition-colors flex items-center gap-1.5 text-[15px] font-semibold"
+                            className="mt-2 min-h-[44px] px-3 -ml-3 rounded-[14px] text-[var(--es-ink-2)] hover:text-[var(--es-danger)] hover:bg-[var(--es-danger-soft)] transition-colors flex items-center gap-1.5 text-[17px] font-semibold"
                           >
-                            <Ban size={18} strokeWidth={2.25} /> Recusar
+                            <Ban size={20} strokeWidth={2.25} /> Recusar esta autorização
                           </button>
                         )}
                       </div>
@@ -203,9 +206,9 @@ export function PerfilPessoa({ dados, onNovaAutorizacao, onLiberarAcesso, onVolt
                     {ehAUnicaPendente && (
                       <button
                         onClick={() => setRecusarModal(auth)}
-                        className="mt-3.5 min-h-[44px] px-3 -ml-3 rounded-lg text-gray-600 hover:text-red-700 hover:bg-red-50 transition-colors flex items-center gap-1.5 text-[15px] font-semibold"
+                        className="mt-3.5 min-h-[44px] px-3 -ml-3 rounded-[14px] text-[var(--es-ink-2)] hover:text-[var(--es-danger)] hover:bg-[var(--es-danger-soft)] transition-colors flex items-center gap-1.5 text-[17px] font-semibold"
                       >
-                        <Ban size={16} strokeWidth={2.25} /> Recusar esta autorização
+                        <Ban size={20} strokeWidth={2.25} /> Recusar esta autorização
                       </button>
                     )}
                   </div>
@@ -219,24 +222,24 @@ export function PerfilPessoa({ dados, onNovaAutorizacao, onLiberarAcesso, onVolt
           <div className="mt-7">
             <button
               onClick={() => setHistoricoAberto((v) => !v)}
-              className="w-full flex items-center justify-between gap-1.5 text-[15px] font-semibold text-gray-500 uppercase tracking-wider mb-3 min-h-[44px]"
+              className="w-full flex items-center justify-between gap-1.5 text-[17px] font-semibold text-[var(--es-ink-3)] uppercase tracking-wider mb-3 min-h-[44px]"
             >
               <span className="flex items-center gap-1.5">
-                <History size={16} strokeWidth={2.25} /> Histórico de Acessos
+                <History size={20} strokeWidth={2.25} /> Ver histórico de acessos
               </span>
               {historicoAberto ? (
-                <ChevronUp size={18} strokeWidth={2.25} />
+                <ChevronUp size={22} strokeWidth={2.25} />
               ) : (
-                <ChevronDown size={18} strokeWidth={2.25} />
+                <ChevronDown size={22} strokeWidth={2.25} />
               )}
             </button>
 
             {historicoAberto && (
               <div className="space-y-2">
                 {historico.map((h) => (
-                  <div key={h.id} className="bg-white px-4 py-3.5 rounded-xl border border-gray-200 flex items-center justify-between gap-3">
-                    <p className="text-[17px] font-medium text-gray-800">{h.status} · {h.gate}</p>
-                    <p className="text-[15px] text-gray-500 shrink-0">{h.data}</p>
+                  <div key={h.id} className="bg-[var(--es-surface)] px-4 py-3.5 rounded-[14px] border border-[var(--es-border)] flex items-center justify-between gap-3">
+                    <p className="text-[17px] font-medium text-[var(--es-ink-2)]">{h.status} · {h.gate}</p>
+                    <p className="text-[17px] text-[var(--es-ink-3)] shrink-0">{h.data}</p>
                   </div>
                 ))}
               </div>
@@ -246,18 +249,20 @@ export function PerfilPessoa({ dados, onNovaAutorizacao, onLiberarAcesso, onVolt
       </div>
 
       {!temLivreAcesso && (
-        <div className="flex-shrink-0 p-4 bg-white border-t border-gray-100 space-y-2.5">
-          {autorizacaoUnica && <BotaoAcesso auth={autorizacaoUnica} tamanho="grande" />}
+        <div className="flex-shrink-0 p-4 pt-6 bg-[var(--es-surface)] border-t border-[var(--es-border)] space-y-2.5">
+          {/* Nova Autorização rebaixada a secundário, acima do primário — dar
+              entrada é o caso dominante (design.md §14.8 item 1 e 4). */}
           <button
             onClick={onNovaAutorizacao}
-            className={`w-full rounded-xl font-semibold flex justify-center items-center gap-2 transition-colors ${
+            className={`w-full rounded-[14px] font-semibold flex justify-center items-center gap-2 transition-all active:scale-[0.98] ${
               autorizacaoUnica
-                ? "py-3 text-[17px] min-h-[56px] text-gray-600 bg-gray-50 hover:bg-gray-100"
-                : "py-4 text-[21px] min-h-[64px] text-white bg-[#0F2744] hover:bg-[#0B1D33]"
+                ? "py-3 text-[19px] min-h-[56px] text-[var(--es-ink-2)] bg-[var(--es-bg)] hover:bg-[var(--es-border-strong)]/20"
+                : "py-4 text-[21px] min-h-[64px] text-white bg-[var(--es-navy)] hover:bg-[var(--es-navy-press)]"
             }`}
           >
-            <Plus size={autorizacaoUnica ? 18 : 22} strokeWidth={2.25} /> Nova Autorização
+            <Plus size={autorizacaoUnica ? 22 : 26} strokeWidth={2.25} /> Nova Autorização
           </button>
+          {autorizacaoUnica && <BotaoAcesso auth={autorizacaoUnica} tamanho="grande" />}
         </div>
       )}
 
@@ -267,29 +272,29 @@ export function PerfilPessoa({ dados, onNovaAutorizacao, onLiberarAcesso, onVolt
           className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm animate-fade-blur-in"
         >
           <div
-            className="bg-white w-full max-w-sm rounded-t-[28px] overflow-hidden shadow-2xl flex flex-col animate-spring-slide-up"
+            className="bg-[var(--es-surface)] w-full max-w-sm rounded-t-[28px] overflow-hidden shadow-2xl flex flex-col animate-spring-slide-up"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="w-10 h-1 bg-gray-300 rounded-full mx-auto mt-3 mb-5" />
+            <div className="w-10 h-1 bg-[var(--es-border-strong)] rounded-full mx-auto mt-3 mb-5" />
             <div className="px-6 pb-4 flex flex-col items-center text-center">
-              <div className="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center text-red-600 mb-4">
-                <AlertTriangle size={26} strokeWidth={1.75} />
+              <div className="w-16 h-16 bg-[var(--es-danger-soft)] rounded-full flex items-center justify-center text-[var(--es-danger)] mb-4">
+                <AlertTriangle size={32} strokeWidth={2.25} />
               </div>
-              <h3 className="text-[23px] font-bold text-gray-900 mb-2">Recusar Autorização?</h3>
-              <p className="text-[17px] text-gray-600 leading-relaxed mb-6">
-                Tem certeza que deseja recusar a autorização de <strong className="text-gray-900">{recusarModal.name}</strong> para{" "}
-                <strong className="text-gray-900">{recusarModal.destino}</strong>?
+              <h3 className="text-[28px] font-bold text-[var(--es-ink)] mb-2">Recusar autorização?</h3>
+              <p className="text-[19px] text-[var(--es-ink-2)] leading-relaxed mb-6">
+                Tem certeza que deseja recusar a autorização de <strong className="text-[var(--es-ink)]">{recusarModal.name}</strong> para{" "}
+                <strong className="text-[var(--es-ink)]">{recusarModal.destino}</strong>?
               </p>
               <div className="w-full space-y-2.5">
                 <button
                   onClick={confirmarRecusa}
-                  className="w-full bg-red-600 text-white font-semibold text-[19px] py-4 rounded-2xl ios-press shadow-sm min-h-[64px]"
+                  className="w-full bg-[var(--es-danger)] text-white font-semibold text-[21px] py-4 rounded-[14px] active:scale-[0.98] transition-all shadow-sm min-h-[64px]"
                 >
                   Sim, recusar
                 </button>
                 <button
                   onClick={() => setRecusarModal(null)}
-                  className="w-full bg-[#f2f2f7] text-gray-700 font-semibold text-[19px] py-4 rounded-2xl ios-press min-h-[64px]"
+                  className="w-full bg-[var(--es-bg)] text-[var(--es-ink-2)] font-semibold text-[21px] py-4 rounded-[14px] active:scale-[0.98] transition-all min-h-[64px]"
                 >
                   Cancelar
                 </button>

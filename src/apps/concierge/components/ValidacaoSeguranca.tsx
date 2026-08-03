@@ -19,25 +19,33 @@ export function ValidacaoSeguranca({ dados, onSucesso, onVoltar }: Props) {
     if (resposta) onSucesso();
   };
 
+  // Nota: componente órfão — sem rota/import apontando para ele (substituído
+  // por ValidacaoNovoUser.tsx no fluxo real). Ver CLAUDE.md §6, candidato a
+  // remoção numa próxima rodada. Mantido só com o token pass de tipografia/
+  // cor deste redesign, sem reestruturar a lógica.
   return (
-    <motion.div initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="flex-1 flex flex-col h-full bg-white">
-      <div className="flex-shrink-0 p-4 border-b border-gray-100 flex items-center gap-3">
-        <button onClick={onVoltar} className="p-2 rounded-xl bg-gray-50 text-gray-600 hover:bg-gray-100">
-          <ArrowLeft size={20} />
+    <motion.div initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="flex-1 flex flex-col h-full bg-[var(--es-surface)]">
+      <div className="flex-shrink-0 h-16 px-4 border-b border-[var(--es-border)] flex items-center gap-3">
+        <button
+          onClick={onVoltar}
+          aria-label="Voltar"
+          className="w-14 h-14 flex items-center justify-center rounded-[14px] text-[var(--es-ink-2)] hover:bg-[var(--es-bg)] transition-colors"
+        >
+          <ArrowLeft size={24} strokeWidth={2.25} />
         </button>
-        <p className="font-bold text-gray-900 text-[15px]">Validação de Segurança</p>
+        <p className="font-semibold text-[var(--es-ink)] text-[17px]">Validação de Segurança</p>
       </div>
 
-      <div className="p-6 bg-gray-50 flex items-center gap-4">
-        <img src={dados.avatar} alt="Avatar" className="w-14 h-14 rounded-full border-2 border-white shadow-sm" />
+      <div className="p-6 bg-[var(--es-bg)] flex items-center gap-4">
+        <img src={dados.avatar} alt="Avatar" className="w-16 h-16 rounded-full border-2 border-[var(--es-surface)] shadow-sm" />
         <div>
-          <p className="text-[12px] font-bold text-blue-600 uppercase tracking-wider mb-0.5">Pessoa Encontrada</p>
-          <p className="text-[16px] font-bold text-gray-900">{dados.name}</p>
+          <p className="text-[17px] font-semibold text-[var(--es-navy)] uppercase tracking-wider mb-0.5">Pessoa Encontrada</p>
+          <p className="text-[19px] font-bold text-[var(--es-ink)]">{dados.name}</p>
         </div>
       </div>
 
       <div className="flex-1 p-6 overflow-y-auto">
-        <p className="text-[18px] font-bold text-gray-900 mb-6">
+        <p className="text-[28px] font-semibold text-[var(--es-ink)] mb-6 leading-tight">
           Qual o mês de nascimento?
         </p>
 
@@ -46,10 +54,10 @@ export function ValidacaoSeguranca({ dados, onSucesso, onVoltar }: Props) {
             <button
               key={opcao}
               onClick={() => setResposta(opcao)}
-              className={`w-full text-left px-5 py-4 rounded-xl border-2 transition-colors ${
+              className={`w-full text-left px-5 min-h-[72px] rounded-[14px] border-2 transition-all active:scale-[0.99] text-[21px] ${
                 resposta === opcao
-                  ? "border-gray-900 bg-gray-900 text-white font-semibold"
-                  : "border-gray-200 bg-white text-gray-600 hover:border-gray-300"
+                  ? "border-[var(--es-navy)] bg-[var(--es-navy-soft)] text-[var(--es-navy)] font-semibold"
+                  : "border-[var(--es-border)] bg-[var(--es-surface)] text-[var(--es-ink)] hover:border-[var(--es-border-strong)]"
               }`}
             >
               {opcao}
@@ -58,13 +66,13 @@ export function ValidacaoSeguranca({ dados, onSucesso, onVoltar }: Props) {
         </div>
       </div>
 
-      <div className="p-6 border-t border-gray-100">
+      <div className="p-6 pt-8 border-t border-[var(--es-border)]">
         <button
           onClick={handleValidar}
           disabled={!resposta}
-          className="w-full py-4 rounded-xl font-bold text-[16px] text-white transition-opacity disabled:opacity-40 bg-gray-900 flex justify-center items-center gap-2"
+          className="w-full py-4 rounded-[14px] font-semibold text-[21px] text-white transition-all active:scale-[0.98] disabled:opacity-45 bg-[var(--es-navy)] hover:bg-[var(--es-navy-press)] flex justify-center items-center gap-2.5 min-h-[64px]"
         >
-          <UserCheck size={20} /> Confirmar Identidade
+          <UserCheck size={28} strokeWidth={2.25} /> Confirmar Identidade
         </button>
       </div>
     </motion.div>

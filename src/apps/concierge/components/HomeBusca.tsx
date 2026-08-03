@@ -62,12 +62,12 @@ export function HomeBusca({ onBuscar, pessoasNoLocal, onSaida }: Props) {
   }, [filtroLista, pessoasNoLocal]);
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 flex flex-col h-full bg-gray-50">
-      
-      {/* ================= SEÇÃO SUPERIOR: BUSCA DE CPF ================= */}
-      <div className="flex-shrink-0 bg-white p-6 shadow-sm z-10">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 flex flex-col h-full bg-[var(--es-bg)]">
+
+      {/* ================= SEÇÃO SUPERIOR: BUSCA DE CPF (ação principal da Home) ================= */}
+      <div className="flex-shrink-0 bg-[var(--es-surface)] p-6 shadow-sm z-10">
         <form onSubmit={handleBuscarNovo} className="relative">
-          <label className="text-[17px] font-bold text-gray-600 uppercase tracking-wider mb-2 block">
+          <label className="text-[17px] font-semibold text-[var(--es-ink-2)] uppercase tracking-wider mb-2 block">
             Iniciar Atendimento
           </label>
           <div className="flex items-center gap-3">
@@ -78,48 +78,40 @@ export function HomeBusca({ onBuscar, pessoasNoLocal, onSaida }: Props) {
               onChange={handleCpfChange}
               placeholder="Digite o CPF..."
               autoFocus
-              className="flex-1 min-w-0 bg-gray-50 border-2 border-gray-300 rounded-xl px-5 py-4 text-[21px] font-bold focus:outline-none focus:ring-4 focus:ring-[#0F2744]/12 focus:border-[#0F2744] transition-all placeholder:font-medium tracking-wide text-gray-900 min-h-[64px]"
+              className="flex-1 min-w-0 bg-[var(--es-bg)] border-2 border-[var(--es-border-strong)] rounded-[14px] px-5 py-4 text-[21px] font-bold tabular-nums focus:outline-none focus:ring-4 focus:ring-[rgba(15,39,68,0.12)] focus:border-[var(--es-navy)] transition-all placeholder:font-medium tracking-wide text-[var(--es-ink)] min-h-[64px]"
             />
             <button
               type="submit"
               disabled={cpfPrincipal.length < 14}
-              className="h-16 px-6 rounded-xl font-bold text-[17px] text-white transition-opacity active:opacity-80 disabled:opacity-45 bg-[#0F2744] hover:bg-[#0B1D33] flex justify-center items-center gap-2 shrink-0"
+              className="h-16 px-6 rounded-[14px] font-semibold text-[19px] text-white transition-all active:scale-[0.98] disabled:opacity-45 bg-[var(--es-navy)] hover:bg-[var(--es-navy-press)] flex justify-center items-center gap-2 shrink-0"
             >
-              <Search size={22} strokeWidth={2.25} /> <span className="hidden sm:inline">Buscar</span>
+              <Search size={24} strokeWidth={2.25} /> <span className="hidden sm:inline">Buscar</span>
             </button>
           </div>
         </form>
-
-        {/* Dica de teste: quais CPFs simulam cada cenário de usuário existente vs novo */}
-        <p className="text-[13px] text-gray-500 mt-3 leading-relaxed">
-          💡 <span className="font-mono font-semibold text-gray-600">111.222.333-44</span> - Sócio Titular
-          {" · "}
-          <span className="font-mono font-semibold text-gray-600">555.666.777-88</span> - Visitante
-          {" · "}Qualquer outro CPF - Usuário Novo
-        </p>
       </div>
 
-      {/* ================= SEÇÃO INFERIOR: PESSOAS NO LOCAL ================= */}
+      {/* ================= SEÇÃO INFERIOR: PESSOAS NO LOCAL (secundária) ================= */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        
+
         {/* Controles da Lista */}
         <div className="flex-shrink-0 p-6 pb-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <h2 className="text-[19px] font-bold text-gray-900">Quem está no clube</h2>
-            <span className="bg-gray-200 text-gray-800 text-[15px] font-bold px-2.5 py-0.5 rounded-full">
+            <h2 className="text-[19px] font-bold text-[var(--es-ink)]">Quem está no clube</h2>
+            <span className="bg-[var(--es-navy-soft)] text-[var(--es-navy)] text-[17px] font-bold px-2.5 py-0.5 rounded-full">
               {pessoasNoLocal.length}
             </span>
           </div>
 
           <div className="flex items-center gap-2">
             <div className="relative flex-1 sm:w-52">
-              <Search size={18} strokeWidth={2.25} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500" />
+              <Search size={20} strokeWidth={2.25} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--es-ink-3)]" />
               <input
                 type="text"
                 value={filtroLista}
                 onChange={(e) => setFiltroLista(e.target.value)}
                 placeholder="Filtrar nome/CPF..."
-                className="w-full bg-white border-2 border-gray-200 rounded-lg pl-10 pr-3 py-3 text-[17px] focus:outline-none focus:ring-4 focus:ring-gray-900/10 focus:border-gray-400 text-gray-900 min-h-[56px]"
+                className="w-full bg-[var(--es-surface)] border-2 border-[var(--es-border)] rounded-[14px] pl-11 pr-3 py-3 text-[17px] focus:outline-none focus:ring-4 focus:ring-[rgba(15,39,68,0.12)] focus:border-[var(--es-navy)] text-[var(--es-ink)] min-h-[56px]"
               />
             </div>
             <button
@@ -127,9 +119,9 @@ export function HomeBusca({ onBuscar, pessoasNoLocal, onSaida }: Props) {
               disabled={isRefreshing}
               aria-label="Atualizar lista"
               title="Atualizar lista"
-              className="w-14 h-14 flex items-center justify-center shrink-0 bg-white border-2 border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors disabled:opacity-50"
+              className="w-14 h-14 flex items-center justify-center shrink-0 bg-[var(--es-surface)] border-2 border-[var(--es-border)] rounded-[14px] text-[var(--es-ink-2)] hover:bg-[var(--es-bg)] transition-colors disabled:opacity-50"
             >
-              <RefreshCw size={20} strokeWidth={2.25} className={isRefreshing ? "animate-spin" : ""} />
+              <RefreshCw size={24} strokeWidth={2.25} className={isRefreshing ? "animate-spin" : ""} />
             </button>
           </div>
         </div>
@@ -145,30 +137,30 @@ export function HomeBusca({ onBuscar, pessoasNoLocal, onSaida }: Props) {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95 }}
-                  className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col sm:flex-row sm:items-center gap-4 group"
+                  className="bg-[var(--es-surface)] p-4 rounded-[14px] border border-[var(--es-border)] shadow-sm flex flex-col sm:flex-row sm:items-center gap-4 group"
                 >
                   <div className="flex items-center gap-4 flex-1">
                     <img
                       src={pessoa.avatar}
                       alt={pessoa.name}
-                      className="w-16 h-16 rounded-full object-cover border border-gray-100 shrink-0"
+                      className="w-16 h-16 rounded-full object-cover border border-[var(--es-border)] shrink-0"
                     />
                     <div>
-                      <p className="text-[19px] font-bold text-gray-900">{pessoa.name}</p>
-                      <p className="text-[17px] text-gray-600 font-medium font-mono mt-0.5">
+                      <p className="text-[19px] font-bold text-[var(--es-ink)]">{pessoa.name}</p>
+                      <p className="text-[17px] text-[var(--es-ink-3)] font-medium tabular-nums mt-0.5">
                         {censurarCpf(pessoa.cpf)}
                       </p>
-                      <p className="text-[17px] text-gray-500 mt-1 flex items-center gap-1.5 font-medium">
-                        <Clock size={16} strokeWidth={2.25} /> Entrada: {pessoa.entrada}
+                      <p className="text-[17px] text-[var(--es-ink-3)] mt-1 flex items-center gap-1.5 font-medium">
+                        <Clock size={20} strokeWidth={2.25} /> Entrada: {pessoa.entrada}
                       </p>
                     </div>
                   </div>
 
                   <button
                     onClick={() => onSaida(pessoa.id, pessoa.name)}
-                    className="w-full sm:w-auto min-h-[56px] px-5 py-3 bg-red-50 text-red-700 hover:bg-red-100 rounded-lg text-[17px] font-bold flex items-center justify-center gap-2 transition-colors"
+                    className="w-full sm:w-auto min-h-[56px] px-5 py-3 bg-[var(--es-danger-soft)] text-[var(--es-danger)] hover:brightness-95 rounded-[14px] text-[17px] font-bold flex items-center justify-center gap-2 transition-colors"
                   >
-                    <LogOut size={20} strokeWidth={2.25} /> Registrar Saída
+                    <LogOut size={24} strokeWidth={2.25} /> Registrar Saída
                   </button>
                 </motion.div>
               ))}
@@ -176,20 +168,20 @@ export function HomeBusca({ onBuscar, pessoasNoLocal, onSaida }: Props) {
 
             {listaFiltrada.length === 0 && (
               <div className="flex flex-col items-center justify-center py-12 text-center">
-                <div className="w-14 h-14 bg-gray-100 text-gray-500 rounded-full flex items-center justify-center mb-3">
+                <div className="w-14 h-14 bg-[var(--es-bg)] text-[var(--es-ink-3)] rounded-full flex items-center justify-center mb-3">
                   <Users size={26} strokeWidth={2.25} />
                 </div>
                 {pessoasNoLocal.length === 0 ? (
                   <>
-                    <p className="text-[19px] font-bold text-gray-900">Ninguém no clube no momento</p>
-                    <p className="text-[17px] text-gray-600 mt-1">
+                    <p className="text-[19px] font-bold text-[var(--es-ink)]">Ninguém no clube no momento</p>
+                    <p className="text-[17px] text-[var(--es-ink-3)] mt-1">
                       Assim que alguém der entrada, a pessoa aparece aqui.
                     </p>
                   </>
                 ) : (
                   <>
-                    <p className="text-[19px] font-bold text-gray-900">Nenhuma pessoa encontrada</p>
-                    <p className="text-[17px] text-gray-600 mt-1">
+                    <p className="text-[19px] font-bold text-[var(--es-ink)]">Nenhuma pessoa encontrada</p>
+                    <p className="text-[17px] text-[var(--es-ink-3)] mt-1">
                       Não há registros que correspondam à sua busca atual.
                     </p>
                   </>

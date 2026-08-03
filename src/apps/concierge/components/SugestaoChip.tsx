@@ -15,16 +15,16 @@ export function SugestaoChip({ label, icon, onClick, tone = "marca" }: Props) {
     <button
       type="button"
       onClick={onClick}
-      className="flex items-center gap-2.5 px-4 py-3 min-h-[48px] rounded-xl border-2 border-gray-200 bg-white hover:border-gray-300 transition-colors text-left"
+      className="flex items-center gap-2.5 px-4 min-h-[56px] rounded-[14px] border-2 border-[var(--es-border)] bg-[var(--es-surface)] hover:border-[var(--es-border-strong)] active:scale-[0.98] transition-all text-left"
     >
       <span
         className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
-          tone === "marca" ? "bg-[#0F2744]/10 text-[#0F2744]" : "bg-gray-100 text-gray-600"
+          tone === "marca" ? "bg-[var(--es-navy-soft)] text-[var(--es-navy)]" : "bg-[var(--es-bg)] text-[var(--es-ink-2)]"
         }`}
       >
         {icon}
       </span>
-      <span className="text-[17px] font-semibold text-gray-800">{label}</span>
+      <span className="text-[17px] font-semibold text-[var(--es-ink)]">{label}</span>
     </button>
   );
 }

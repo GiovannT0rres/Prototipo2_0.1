@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useOutletContext } from "react-router";
 import { toast, Toaster } from "sonner";
 import { HomeBusca } from "./HomeBusca";
 import { ValidacaoNovoUser } from "./ValidacaoNovoUser";
@@ -46,6 +47,15 @@ export function PortariaWizard() {
   const [step, setStep] = useState<Step>("home");
   const [cpfAtual, setCpfAtual] = useState("");
   const [dadosPessoa, setDadosPessoa] = useState<any>(null);
+
+  // Avisa o ConciergeLayout se estamos na Home (idle) ou em atendimento —
+  // controla a exibição do header de marca (DESIGN.md §14.10). O contexto é
+  // opcional (undefined fora do router de verdade), então isso nunca quebra
+  // a árvore de estados do wizard nem os callbacks existentes.
+  const outletCtx = useOutletContext<{ setIsHome: (v: boolean) => void } | null>();
+  useEffect(() => {
+    outletCtx?.setIsHome(step === "home");
+  }, [step, outletCtx]);
 
   // Só existe pra fazer o botão "voltar" do WhatsApp cair na etapa 2 (Ano) da
   // validação, e não reiniciar do zero na etapa 1 (Nome) — "voltar" tem que
@@ -140,8 +150,8 @@ export function PortariaWizard() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f0f2f5] flex justify-center items-center p-4">
-      <div className="w-full max-w-[520px] bg-white rounded-3xl shadow-xl overflow-hidden min-h-[650px] max-h-[900px] flex flex-col relative border border-gray-100">
+    <div className="min-h-screen bg-[var(--es-bg)] flex justify-center items-center p-4">
+      <div className="w-full max-w-[520px] bg-[var(--es-surface)] rounded-3xl shadow-xl overflow-hidden min-h-[650px] max-h-[900px] flex flex-col relative border border-[var(--es-border)]">
 
         {step === "home" && (
           <HomeBusca onBuscar={processarCpf} pessoasNoLocal={pessoasNoLocal} onSaida={handleSaidaDaLista} />
@@ -319,7 +329,17 @@ export function PortariaWizard() {
         )}
 
       </div>
-      <Toaster position="top-center" richColors />
+      <Toaster
+        position="top-center"
+        richColors
+        duration={3000}
+        toastOptions={{
+          classNames: {
+            toast: "!min-h-[72px] !rounded-[14px] !items-center",
+            title: "!text-[19px] !font-semibold !leading-snug",
+          },
+        }}
+      />
     </div>
   );
 }

@@ -2,125 +2,111 @@ import { useState } from "react";
 import { ArrowLeft, Calendar, ChevronRight } from "lucide-react";
 import { motion } from "motion/react";
 
-const TERMINO_PRESETS = ["1 Semana", "2 Semanas", "1 Mês", "2 Meses", "6 Meses"];
+// Presets de término — "Só hoje" primeiro por ser o caso mais comum de
+// visitante (design.md §14.6: o preset mais frequente deve ser o mais fácil
+// de alcançar). Os demais em contagem de dias, sem input de data nativo.
+const TERMINO_PRESETS = [
+  { label: "Só hoje", dias: 0 },
+  { label: "+7 dias", dias: 7 },
+  { label: "+15 dias", dias: 15 },
+  { label: "+30 dias", dias: 30 },
+];
 
 interface Props {
   onConfirmar: (periodo: string) => void;
   onVoltar: () => void;
 }
 
-// Chip minimalista estilo iOS — cheio e azul quando selecionado, plano
-// (sem borda pesada) quando não.
-function Chip({
-  label,
-  selected,
-  onClick,
-  icon,
-}: {
-  label: string;
-  selected: boolean;
-  onClick: () => void;
-  icon?: React.ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`inline-flex items-center gap-2 px-4 py-3 min-h-[48px] rounded-full text-[17px] font-semibold transition-colors ${
-        selected ? "bg-[#0F2744] text-white" : "bg-white text-gray-700 border-2 border-gray-300"
-      }`}
-    >
-      {icon}
-      {label}
-    </button>
-  );
-}
-
 export function PerguntaPeriodo({ onConfirmar, onVoltar }: Props) {
-  const [inicio, setInicio] = useState<"hoje" | "data">("hoje");
-  const [inicioData, setInicioData] = useState("");
-  const [termino, setTermino] = useState<string>(TERMINO_PRESETS[0]);
-  const [terminoData, setTerminoData] = useState("");
+  // Início assume "Hoje" por padrão e não é perguntado — a esmagadora
+  // maioria dos acessos de portaria começa agora (design.md §14.6 proposta
+  // 1). "Começa em outro dia" fica disponível como link terciário pra quem
+  // precisar do caso raro de agendar um início futuro.
+  const [inicioOutroDia, setInicioOutroDia] = useState(false);
+  const [diasInicio, setDiasInicio] = useState(1);
+  const [termino, setTermino] = useState(TERMINO_PRESETS[0]);
 
   const periodoLabel = () => {
-    const de = inicio === "hoje" ? "Hoje" : inicioData || "data a definir";
-    const ate = termino === "Escolher data" ? (terminoData || "data a definir") : termino;
+    const de = inicioOutroDia ? `daqui a ${diasInicio} dia${diasInicio > 1 ? "s" : ""}` : "Hoje";
+    const ate = termino.dias === 0 ? "hoje" : `${termino.dias} dias`;
     return `${de} até ${ate}`;
   };
 
   return (
-    <motion.div initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="flex-1 flex flex-col h-full bg-white">
-      <div className="flex-shrink-0 p-4 border-b border-gray-100 flex items-center gap-3 bg-gray-50">
+    <motion.div initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="flex-1 flex flex-col h-full bg-[var(--es-surface)]">
+      <div className="flex-shrink-0 h-16 px-4 border-b border-[var(--es-border)] flex items-center gap-3 bg-[var(--es-surface)]">
         <button
           onClick={onVoltar}
           aria-label="Voltar"
-          className="w-14 h-14 flex items-center justify-center rounded-xl bg-white text-gray-600 shadow-sm shrink-0"
+          className="w-14 h-14 flex items-center justify-center rounded-[14px] text-[var(--es-ink-2)] hover:bg-[var(--es-bg)] transition-colors shrink-0"
         >
           <ArrowLeft size={24} strokeWidth={2.25} />
         </button>
-        <div>
-          <p className="font-bold text-gray-900 text-[17px]">Autorização</p>
-        </div>
+        <p className="font-semibold text-[var(--es-ink)] text-[17px]">Autorização</p>
       </div>
 
-      <div className="flex-1 p-6 bg-gray-50 overflow-y-auto">
-        <p className="text-[28px] text-gray-900 mb-6 leading-tight">
-          Qual o <strong className="font-bold">PERÍODO</strong>?
+      <div className="flex-1 p-6 bg-[var(--es-bg)] overflow-y-auto">
+        <p className="text-[28px] font-semibold text-[var(--es-ink)] mb-2 leading-tight tracking-[-0.01em]">
+          <strong className="font-bold">ATÉ QUANDO</strong>?
+        </p>
+        <p className="text-[17px] text-[var(--es-ink-3)] mb-6">
+          {inicioOutroDia ? `Começa daqui a ${diasInicio} dia${diasInicio > 1 ? "s" : ""}.` : "O acesso começa hoje."}
         </p>
 
-        <div className="bg-white rounded-2xl border-2 border-gray-200 p-4 space-y-5">
-          <div>
-            <p className="text-[19px] font-bold text-gray-900 mb-3">Inicia</p>
-            <div className="flex flex-wrap gap-2.5">
-              <Chip label="Hoje" selected={inicio === "hoje"} onClick={() => setInicio("hoje")} />
-              <Chip
-                label="Escolher data"
-                icon={<Calendar size={16} strokeWidth={2.25} />}
-                selected={inicio === "data"}
-                onClick={() => setInicio("data")}
-              />
-            </div>
-            {inicio === "data" && (
-              <input
-                type="date"
-                value={inicioData}
-                onChange={(e) => setInicioData(e.target.value)}
-                className="mt-3 w-full bg-gray-50 border-2 border-gray-300 px-4 py-3 rounded-xl text-[17px] font-medium text-gray-900 min-h-[56px]"
-              />
-            )}
-          </div>
-
-          <div>
-            <p className="text-[19px] font-bold text-gray-900 mb-3">Termina em</p>
-            <div className="flex flex-wrap gap-2.5">
-              {TERMINO_PRESETS.map((preset) => (
-                <Chip key={preset} label={preset} selected={termino === preset} onClick={() => setTermino(preset)} />
-              ))}
-              <Chip
-                label="Escolher data"
-                icon={<Calendar size={16} strokeWidth={2.25} />}
-                selected={termino === "Escolher data"}
-                onClick={() => setTermino("Escolher data")}
-              />
-            </div>
-            {termino === "Escolher data" && (
-              <input
-                type="date"
-                value={terminoData}
-                onChange={(e) => setTerminoData(e.target.value)}
-                className="mt-3 w-full bg-gray-50 border-2 border-gray-300 px-4 py-3 rounded-xl text-[17px] font-medium text-gray-900 min-h-[56px]"
-              />
-            )}
-          </div>
+        <div className="space-y-3">
+          {TERMINO_PRESETS.map((preset) => (
+            <button
+              key={preset.label}
+              type="button"
+              onClick={() => setTermino(preset)}
+              className={`w-full text-left px-5 min-h-[72px] rounded-[14px] border-2 transition-all active:scale-[0.99] flex items-center gap-4 ${
+                termino.label === preset.label
+                  ? "border-[var(--es-navy)] bg-[var(--es-navy-soft)]"
+                  : "border-[var(--es-border)] bg-[var(--es-surface)] hover:border-[var(--es-border-strong)]"
+              }`}
+            >
+              <Calendar size={24} strokeWidth={2.25} className="text-[var(--es-navy)] shrink-0" />
+              <span className="flex-1 font-semibold text-[21px] text-[var(--es-ink)]">{preset.label}</span>
+            </button>
+          ))}
         </div>
+
+        {/* Início em outro dia é a exceção — link terciário, não compete
+            visualmente com a pergunta principal da tela (design.md §14.6). */}
+        <button
+          type="button"
+          onClick={() => setInicioOutroDia((v) => !v)}
+          className="mt-6 min-h-[56px] px-2 text-[17px] font-semibold text-[var(--es-ink-2)] hover:text-[var(--es-ink)] transition-colors underline underline-offset-4 decoration-[var(--es-border-strong)]"
+        >
+          {inicioOutroDia ? "Começar hoje" : "Começa em outro dia"}
+        </button>
+
+        {inicioOutroDia && (
+          <div className="mt-4 flex flex-wrap gap-2.5">
+            {[1, 2, 3, 7].map((d) => (
+              <button
+                key={d}
+                type="button"
+                onClick={() => setDiasInicio(d)}
+                className={`inline-flex items-center gap-2 px-[18px] min-h-[44px] rounded-full text-[17px] font-semibold border-[1.5px] transition-colors active:scale-[0.98] ${
+                  diasInicio === d
+                    ? "bg-[var(--es-navy)] text-white border-[var(--es-navy)]"
+                    : "bg-[var(--es-surface)] text-[var(--es-ink-2)] border-[var(--es-border-strong)]"
+                }`}
+              >
+                +{d} dia{d > 1 ? "s" : ""}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
-      <div className="flex-shrink-0 p-6 pt-4 border-t border-gray-100 bg-white">
+      <div className="flex-shrink-0 p-6 pt-8 border-t border-[var(--es-border)] bg-[var(--es-surface)]">
         <button
           onClick={() => onConfirmar(periodoLabel())}
-          className="w-full py-4 rounded-xl font-bold text-[21px] text-white bg-[#0F2744] flex justify-center items-center gap-2 min-h-[64px]"
+          className="w-full py-4 rounded-[14px] font-semibold text-[21px] text-white bg-[var(--es-navy)] hover:bg-[var(--es-navy-press)] active:scale-[0.98] transition-all flex justify-center items-center gap-2.5 min-h-[64px]"
         >
-          Continuar <ChevronRight size={22} strokeWidth={2.25} />
+          Continuar <ChevronRight size={28} strokeWidth={2.25} />
         </button>
       </div>
     </motion.div>

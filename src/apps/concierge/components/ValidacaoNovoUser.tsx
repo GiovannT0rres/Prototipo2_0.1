@@ -39,7 +39,7 @@ export function ValidacaoNovoUser({ dadosBigData, etapaInicial = 1, onSucesso, o
   // valida e avança sozinha — um único clique por pergunta, sem passo de confirmação.
   const handleResposta = (resposta: string) => {
     if (resposta !== respostaCorreta) {
-      toast.error("Resposta incorreta. Processo de segurança cancelado.");
+      toast.error("Resposta incorreta. Processo de segurança cancelado.", { duration: 8000 });
       onFalha();
       return;
     }
@@ -54,7 +54,7 @@ export function ValidacaoNovoUser({ dadosBigData, etapaInicial = 1, onSucesso, o
 
   const confirmarCancelamentoFn = () => {
     setConfirmarCancelamento(false);
-    toast.error("Processo de segurança cancelado.");
+    toast.error("Processo de segurança cancelado.", { duration: 8000 });
     onFalha();
   };
 
@@ -69,27 +69,25 @@ export function ValidacaoNovoUser({ dadosBigData, etapaInicial = 1, onSucesso, o
   };
 
   return (
-    <motion.div initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="flex-1 flex flex-col h-full bg-white">
-      <div className="flex-shrink-0 p-4 border-b border-gray-100 flex items-center gap-3 bg-gray-50">
+    <motion.div initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="flex-1 flex flex-col h-full bg-[var(--es-surface)]">
+      <div className="flex-shrink-0 h-16 px-4 border-b border-[var(--es-border)] flex items-center gap-3 bg-[var(--es-surface)]">
         <button
           onClick={handleVoltar}
           aria-label="Voltar"
-          className="w-14 h-14 flex items-center justify-center rounded-xl bg-white text-gray-600 shadow-sm shrink-0"
+          className="w-14 h-14 flex items-center justify-center rounded-[14px] text-[var(--es-ink-2)] hover:bg-[var(--es-bg)] transition-colors shrink-0"
         >
           <ArrowLeft size={24} strokeWidth={2.25} />
         </button>
-        <div>
-          <p className="font-bold text-gray-900 text-[17px]">Validação de Segurança</p>
-        </div>
+        <p className="font-semibold text-[var(--es-ink)] text-[17px]">Cadastro</p>
       </div>
 
-      <div className="flex-1 p-6 overflow-y-auto bg-gray-50 flex flex-col">
+      <div className="flex-1 p-6 overflow-y-auto bg-[var(--es-bg)] flex flex-col">
         <AnimatePresence mode="wait">
           <motion.div key={etapa} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-            <p className="text-[17px] font-bold text-[#0F2744] uppercase tracking-wider mb-2">
+            <p className="text-[17px] font-semibold text-[var(--es-navy)] uppercase tracking-wider mb-2">
               Pergunta {etapa} de 2
             </p>
-            <p className="text-[28px] text-gray-900 mb-6 leading-tight">
+            <p className="text-[28px] font-semibold text-[var(--es-ink)] mb-6 leading-tight tracking-[-0.01em]">
               {etapa === 1 ? (
                 <>Qual é o <strong className="font-bold">NOME COMPLETO</strong> da pessoa?</>
               ) : (
@@ -102,10 +100,10 @@ export function ValidacaoNovoUser({ dadosBigData, etapaInicial = 1, onSucesso, o
                 <button
                   key={opcao}
                   onClick={() => handleResposta(opcao)}
-                  className="w-full text-left px-5 py-5 rounded-xl border-2 border-gray-200 bg-white text-gray-700 font-semibold hover:border-gray-300 transition-colors flex items-center justify-between min-h-[72px]"
+                  className="w-full text-left px-5 py-5 rounded-[14px] border-2 border-[var(--es-border)] bg-[var(--es-surface)] text-[var(--es-ink)] font-semibold hover:border-[var(--es-navy)] hover:bg-[var(--es-navy-soft)] active:scale-[0.99] transition-all flex items-center justify-between min-h-[80px]"
                 >
-                  <span className="text-[19px]">{opcao}</span>
-                  <ChevronRight size={24} strokeWidth={2.25} className="text-gray-400 shrink-0" />
+                  <span className="text-[21px]">{opcao}</span>
+                  <ChevronRight size={24} strokeWidth={2.25} className="text-[var(--es-ink-3)] shrink-0" />
                 </button>
               ))}
             </div>
@@ -113,13 +111,16 @@ export function ValidacaoNovoUser({ dadosBigData, etapaInicial = 1, onSucesso, o
         </AnimatePresence>
       </div>
 
-      <div className="p-6 border-t border-gray-100 bg-white space-y-3">
+      {/* "Nenhuma das alternativas" é terciário — texto simples, sem fundo,
+          separado por divisória (design.md §14.2: é a saída de exceção que
+          cancela o atendimento, não pode ter peso visual de ação primária). */}
+      <div className="p-6 pt-4 border-t border-[var(--es-border)] bg-[var(--es-surface)]">
         <button
           type="button"
           onClick={() => setConfirmarCancelamento(true)}
-          className="w-full py-3 text-center text-[17px] font-semibold text-gray-500 hover:text-gray-700 transition-colors flex justify-center items-center gap-2"
+          className="w-full min-h-[56px] py-3 text-center text-[17px] font-semibold text-[var(--es-ink-2)] hover:text-[var(--es-ink)] transition-colors flex justify-center items-center gap-2"
         >
-          <ShieldAlert size={18} strokeWidth={2.25} /> Nenhuma das alternativas
+          <ShieldAlert size={22} strokeWidth={2.25} /> Nenhuma das alternativas
         </button>
       </div>
 
@@ -129,28 +130,28 @@ export function ValidacaoNovoUser({ dadosBigData, etapaInicial = 1, onSucesso, o
           className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm animate-fade-blur-in"
         >
           <div
-            className="bg-white w-full max-w-sm rounded-t-[28px] overflow-hidden shadow-2xl flex flex-col animate-spring-slide-up"
+            className="bg-[var(--es-surface)] w-full max-w-sm rounded-t-[28px] overflow-hidden shadow-2xl flex flex-col animate-spring-slide-up"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="w-10 h-1 bg-gray-300 rounded-full mx-auto mt-3 mb-5" />
+            <div className="w-10 h-1 bg-[var(--es-border-strong)] rounded-full mx-auto mt-3 mb-5" />
             <div className="px-6 pb-4 flex flex-col items-center text-center">
-              <div className="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center text-red-500 mb-4">
-                <AlertTriangle size={26} strokeWidth={1.75} />
+              <div className="w-16 h-16 bg-[var(--es-danger-soft)] rounded-full flex items-center justify-center text-[var(--es-danger)] mb-4">
+                <AlertTriangle size={32} strokeWidth={2.25} />
               </div>
-              <h3 className="text-[23px] font-bold text-gray-900 mb-2">Cancelar atendimento?</h3>
-              <p className="text-[17px] text-gray-500 leading-relaxed mb-6">
+              <h3 className="text-[28px] font-bold text-[var(--es-ink)] mb-2">Cancelar atendimento?</h3>
+              <p className="text-[19px] text-[var(--es-ink-2)] leading-relaxed mb-6">
                 Nenhum dos nomes confere com a pessoa? Isso encerra o cadastro e volta ao início.
               </p>
               <div className="w-full space-y-2.5">
                 <button
                   onClick={confirmarCancelamentoFn}
-                  className="w-full bg-red-500 text-white font-semibold text-[19px] py-4 rounded-2xl ios-press shadow-sm min-h-[56px]"
+                  className="w-full bg-[var(--es-danger)] text-white font-semibold text-[21px] py-4 rounded-[14px] active:scale-[0.98] transition-all shadow-sm min-h-[64px]"
                 >
                   Sim, cancelar
                 </button>
                 <button
                   onClick={() => setConfirmarCancelamento(false)}
-                  className="w-full bg-[#f2f2f7] text-gray-600 font-semibold text-[19px] py-4 rounded-2xl ios-press min-h-[56px]"
+                  className="w-full bg-[var(--es-bg)] text-[var(--es-ink-2)] font-semibold text-[21px] py-4 rounded-[14px] active:scale-[0.98] transition-all min-h-[64px]"
                 >
                   Voltar às opções
                 </button>

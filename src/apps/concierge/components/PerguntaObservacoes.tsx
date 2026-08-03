@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, CheckCircle2, User, MapPin, UserCheck, Calendar, ChevronRight } from "lucide-react";
 import { motion } from "motion/react";
 
 interface Props {
@@ -8,14 +8,16 @@ interface Props {
   onVoltar: () => void;
 }
 
-// Última pergunta da Autorização (CADASTRO → AUTORIZAÇÃO → LIBERAÇÃO — ver
-// CLAUDE.md §4.1): Motivo, Destino, Autorizador e Período já foram
-// preenchidos nas telas anteriores; aqui só falta um campo livre e opcional
-// antes de finalizar e virar autorização de verdade.
+// Última etapa da Autorização (CADASTRO → AUTORIZAÇÃO → LIBERAÇÃO — ver
+// CLAUDE.md §4.1). Virou tela de revisão (design.md §14.7): mostra o resumo
+// de Pessoa/Motivo/Destino/Autorizador/Período coletado nas telas anteriores
+// antes de gravar, com "Observação" como campo opcional colapsado ao final.
+// Sem autoFocus — o teclado só abre se o porteiro tocar no campo.
 export function PerguntaObservacoes({ dados, onConcluir, onVoltar }: Props) {
   const jaCadastrado = !!dados?.id;
 
   const [observacoes, setObservacoes] = useState("");
+  const [mostrarObservacao, setMostrarObservacao] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -49,65 +51,116 @@ export function PerguntaObservacoes({ dados, onConcluir, onVoltar }: Props) {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="flex-1 flex flex-col items-center justify-center h-full bg-white p-8 text-center"
+        className="flex-1 flex flex-col items-center justify-center h-full bg-[var(--es-surface)] p-8 text-center"
       >
         <motion.div
           initial={{ scale: 0.6, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ type: "spring", duration: 0.5 }}
-          className="w-20 h-20 rounded-full bg-[#E9FBF0] text-[#0B7A3B] flex items-center justify-center mb-5"
+          className="w-20 h-20 rounded-full bg-[var(--es-success-soft)] text-[var(--es-success)] flex items-center justify-center mb-5"
         >
           <CheckCircle2 size={44} strokeWidth={1.75} />
         </motion.div>
-        <h2 className="text-[23px] font-semibold text-gray-900">Autorização criada</h2>
-        <p className="text-[19px] text-gray-600 mt-1.5 max-w-xs leading-relaxed">
+        <h2 className="text-[23px] font-semibold text-[var(--es-ink)]">Autorização criada</h2>
+        <p className="text-[19px] text-[var(--es-ink-2)] mt-1.5 max-w-xs leading-relaxed">
           {dados?.name || "Usuário"} está autorizado.
         </p>
-        <p className="text-[17px] text-gray-500 mt-6">
+        <p className="text-[17px] text-[var(--es-ink-3)] mt-6">
           {jaCadastrado ? "Voltando ao perfil…" : "Voltando ao início…"}
         </p>
+
+        {/* Continuar imediatamente, sem esperar o timer — porteiro com fila
+            não pode ser obrigado a esperar 2s (design.md §15.4). */}
+        <button
+          onClick={() => onConcluir({
+            id: `auth-${Date.now()}`,
+            name: dados?.name,
+            avatar: dados?.avatar,
+            cpf: dados?.cpf,
+            type: dados?.type,
+            destino: dados?.destino,
+            autorizador: dados?.autorizador,
+            periodo: dados?.periodo,
+            observacoes: observacoes || undefined,
+            status: "Fora do clube",
+            entrada: null,
+          })}
+          className="mt-6 min-h-[56px] px-6 rounded-[14px] font-semibold text-[19px] text-[var(--es-navy)] bg-[var(--es-navy-soft)] hover:brightness-95 active:scale-[0.98] transition-all flex items-center gap-2"
+        >
+          Continuar <ChevronRight size={22} strokeWidth={2.25} />
+        </button>
       </motion.div>
     );
   }
 
+  const resumo = [
+    { icone: User, label: "Pessoa", valor: dados?.name },
+    { icone: Calendar, label: "Motivo", valor: dados?.type },
+    { icone: MapPin, label: "Destino", valor: dados?.destino },
+    { icone: UserCheck, label: "Autorizador", valor: dados?.autorizador },
+    { icone: Calendar, label: "Período", valor: dados?.periodo },
+  ].filter((item) => item.valor);
+
   return (
-    <motion.div initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="flex-1 flex flex-col h-full bg-white">
-      <div className="flex-shrink-0 p-4 border-b border-gray-100 flex items-center gap-3 bg-gray-50">
+    <motion.div initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="flex-1 flex flex-col h-full bg-[var(--es-surface)]">
+      <div className="flex-shrink-0 h-16 px-4 border-b border-[var(--es-border)] flex items-center gap-3 bg-[var(--es-surface)]">
         <button
           onClick={onVoltar}
           aria-label="Voltar"
-          className="w-14 h-14 flex items-center justify-center rounded-xl bg-white text-gray-600 shadow-sm shrink-0"
+          className="w-14 h-14 flex items-center justify-center rounded-[14px] text-[var(--es-ink-2)] hover:bg-[var(--es-bg)] transition-colors shrink-0"
         >
           <ArrowLeft size={24} strokeWidth={2.25} />
         </button>
-        <div>
-          <p className="font-bold text-gray-900 text-[17px]">Autorização</p>
-        </div>
+        <p className="font-semibold text-[var(--es-ink)] text-[17px]">Autorização</p>
       </div>
 
-      <div className="flex-1 p-6 bg-gray-50 overflow-y-auto">
-        <p className="text-[28px] text-gray-900 mb-2 leading-tight">
-          Alguma <strong className="font-bold">OBSERVAÇÃO</strong>?
+      <div className="flex-1 p-6 bg-[var(--es-bg)] overflow-y-auto">
+        <p className="text-[28px] font-semibold text-[var(--es-ink)] mb-6 leading-tight tracking-[-0.01em]">
+          Confirme a <strong className="font-bold">AUTORIZAÇÃO</strong>
         </p>
-        <p className="text-[17px] text-gray-600 mb-6">Opcional — fica registrado junto com a autorização.</p>
 
-        <textarea
-          value={observacoes}
-          onChange={(e) => setObservacoes(e.target.value)}
-          placeholder="Ex: chega de carro, vai direto pro salão principal..."
-          rows={4}
-          enterKeyHint="done"
-          className="w-full bg-white border-2 border-gray-300 px-4 py-4 rounded-xl text-[19px] font-medium focus:outline-none focus:ring-4 focus:ring-[#0F2744]/12 focus:border-[#0F2744] text-gray-900 resize-none"
-        />
+        <div className="bg-[var(--es-surface)] rounded-[14px] border-2 border-[var(--es-border)] divide-y divide-[var(--es-border)]">
+          {resumo.map((item) => (
+            <div key={item.label} className="flex items-center gap-3 px-5 py-4">
+              <item.icone size={24} strokeWidth={2.25} className="text-[var(--es-ink-3)] shrink-0" />
+              <div className="min-w-0">
+                <p className="text-[17px] font-semibold text-[var(--es-ink-3)]">{item.label}</p>
+                <p className="text-[19px] font-medium text-[var(--es-ink)] truncate">{item.valor}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {!mostrarObservacao ? (
+          <button
+            type="button"
+            onClick={() => setMostrarObservacao(true)}
+            className="mt-5 min-h-[56px] w-full text-left px-5 rounded-[14px] border-2 border-dashed border-[var(--es-border-strong)] text-[19px] font-semibold text-[var(--es-ink-2)] hover:border-[var(--es-navy)] transition-colors"
+          >
+            + Observação (opcional)
+          </button>
+        ) : (
+          <div className="mt-5">
+            <p className="text-[17px] font-semibold text-[var(--es-ink-2)] mb-2">Observação (opcional)</p>
+            <textarea
+              value={observacoes}
+              onChange={(e) => setObservacoes(e.target.value)}
+              placeholder="Ex: chega de carro, vai direto pro salão principal..."
+              rows={3}
+              enterKeyHint="done"
+              className="w-full bg-[var(--es-surface)] border-2 border-[var(--es-border-strong)] px-4 py-4 rounded-[14px] text-[19px] font-medium focus:outline-none focus:ring-4 focus:ring-[rgba(15,39,68,0.12)] focus:border-[var(--es-navy)] text-[var(--es-ink)] resize-none"
+            />
+          </div>
+        )}
       </div>
 
-      <div className="flex-shrink-0 p-6 pt-4 border-t border-gray-100 bg-white">
+      <div className="flex-shrink-0 p-6 pt-8 border-t border-[var(--es-border)] bg-[var(--es-surface)]">
         <button
           onClick={handleConfirmar}
           disabled={isSubmitting}
-          className="w-full py-4 rounded-xl font-bold text-[21px] text-white transition-opacity disabled:opacity-60 bg-[#0F2744] flex justify-center items-center gap-2 min-h-[64px]"
+          className="w-full py-4 rounded-[14px] font-semibold text-[21px] text-white transition-all active:scale-[0.98] disabled:opacity-60 bg-[var(--es-navy)] hover:bg-[var(--es-navy-press)] flex justify-center items-center gap-2.5 min-h-[64px]"
         >
-          {isSubmitting ? "Processando..." : <><CheckCircle2 size={22} strokeWidth={2.25} /> Salvar e Liberar</>}
+          {isSubmitting ? "Processando…" : <><CheckCircle2 size={28} strokeWidth={2.25} /> Confirmar autorização</>}
         </button>
       </div>
     </motion.div>
