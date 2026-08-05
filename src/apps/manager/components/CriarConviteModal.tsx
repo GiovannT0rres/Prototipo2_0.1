@@ -1,15 +1,12 @@
 import { useEffect, useState } from "react";
-import { X, Check, ChevronDown, Copy, MessageCircleMore, Link2 } from "lucide-react";
+import { X, Check, Copy, MessageCircleMore, Link2 } from "lucide-react";
 import { toast } from "sonner";
-import { MOCK_SOCIOS } from "../mocks/mockManager";
 import { criarConvite, type Convite } from "../mocks/mockManagerStore";
-import { ESPACOS } from "@/shared/data/spaces";
-import { SeletorPeriodo } from "./SeletorPeriodo";
+import { MOTIVOS, MOTIVO_COR, type Motivo } from "../types";
+import { SeletorPeriodo, type Periodo } from "./SeletorPeriodo";
 
-// 3 categorias fixas do PACC (CLAUDE.md §6) — "Familiar" foi renomeado pra
-// "Dependente" em 31/07/2026, decisão do usuário.
-const MOTIVOS = ["Visitante", "Prestador de Serviço", "Dependente"] as const;
-const AUTORIZADORES = ["Administração do Clube", ...MOCK_SOCIOS.map((s) => s.name)];
+const AUTORIZADORES = ["Administração do Clube"];
+const SEM_PRAZO: Motivo[] = ["Sócio Titular", "Dependente", "Equipe Administrativa", "Porteiro"];
 
 interface Props {
   predefinido: boolean;
@@ -17,26 +14,21 @@ interface Props {
   onCriado: () => void;
 }
 
-// Um só modal cobre as duas opções pedidas: "Criar Convite" (link aberto, o
-// Manager configura pessoa por pessoa depois que ela completa o cadastro no
-// Bot) e "Criar Convite Pré-definido" (motivo/destino/autorizador/período já
-// vêm prontos — pensado pra uso em lote, ex.: 50 convidados de um evento).
+// Um só modal cobre as duas opções pedidas: "Convite aberto" (link sem
+// nenhum campo, o Manager configura pessoa por pessoa depois que ela
+// completa o cadastro no Bot, na fila de Pendências) e "Convite
+// pré-definido" (motivo/espaço/autorizador/período já vêm prontos —
+// pensado pra uso em lote, ex.: 50 convidados de um evento).
 export function CriarConviteModal({ predefinido, onFechar, onCriado }: Props) {
-  const [motivo, setMotivo] = useState<(typeof MOTIVOS)[number]>("Visitante");
-  const [destino, setDestino] = useState("");
+  const [motivo, setMotivo] = useState<Motivo>("Visitante");
   const [autorizador, setAutorizador] = useState(AUTORIZADORES[0]);
-  const [periodo, setPeriodo] = useState("");
+  const [periodo, setPeriodo] = useState<Periodo | null>(null);
   const [observacoes, setObservacoes] = useState("");
 
   const [convite, setConvite] = useState<Convite | null>(null);
 
-  // Dependente tem livre acesso por natureza (mesma regra do Concierge) —
-  // não precisa de destino/autorizador/período.
-  const temLivreAcesso = motivo === "Dependente";
-
-  const opcoesDestino = motivo === "Visitante" ? [...ESPACOS.map((e) => e.name), "Clube Inteiro"] : ESPACOS.map((e) => e.name);
-
-  const camposCompletos = !predefinido || temLivreAcesso || (!!destino && !!autorizador && !!periodo);
+  const temLivreAcesso = SEM_PRAZO.includes(motivo);
+  const camposCompletos = !predefinido || temLivreAcesso || (!!autorizador && !!periodo);
 
   const handleGerar = () => {
     const novo = criarConvite({
@@ -45,9 +37,9 @@ export function CriarConviteModal({ predefinido, onFechar, onCriado }: Props) {
       ...(predefinido
         ? {
             motivo,
-            destino: temLivreAcesso ? undefined : destino,
             autorizador: temLivreAcesso ? undefined : autorizador,
-            periodo: temLivreAcesso ? undefined : periodo,
+            periodoInicio: temLivreAcesso ? undefined : periodo?.inicio,
+            periodoFim: temLivreAcesso ? undefined : periodo?.fim,
             observacoes: observacoes || undefined,
           }
         : {}),
@@ -56,8 +48,8 @@ export function CriarConviteModal({ predefinido, onFechar, onCriado }: Props) {
     onCriado();
   };
 
-  // "Criar Convite" (não predefinido) não tem mais nenhum campo pra
-  // preencher — gera o link na hora e já mostra a tela de copiar/WhatsApp.
+  // "Convite aberto" não tem mais nenhum campo pra preencher — gera o link
+  // na hora e já mostra a tela de copiar/WhatsApp.
   useEffect(() => {
     if (!predefinido) handleGerar();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -85,7 +77,7 @@ export function CriarConviteModal({ predefinido, onFechar, onCriado }: Props) {
       >
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
           <p className="text-[16px] font-bold text-gray-900">
-            {predefinido ? "Criar Convite Pré-definido" : "Criar Convite"}
+            {predefinido ? "Convite Pré-definido" : "Convite Aberto"}
           </p>
           <button onClick={onFechar} className="p-2 rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-600">
             <X size={18} />
@@ -100,7 +92,7 @@ export function CriarConviteModal({ predefinido, onFechar, onCriado }: Props) {
             <p className="text-[15px] font-bold text-gray-900">Link gerado com sucesso</p>
             <p className="text-[13px] text-gray-500 mt-1 mb-5">
               Envie pra quantas pessoas precisar — cada uma que completar o cadastro pelo Bot
-              vira um card em Ativar.
+              vira um card em Pendências.
             </p>
             <div className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-[13px] font-mono text-gray-700 break-all">
               {convite.url}
@@ -131,60 +123,40 @@ export function CriarConviteModal({ predefinido, onFechar, onCriado }: Props) {
             <div className="p-6 overflow-y-auto space-y-4">
               <div className="space-y-1.5">
                 <label className="text-[12px] font-bold text-gray-500 uppercase tracking-wider">Motivo</label>
-                <div className="flex gap-2">
-                  {MOTIVOS.map((m) => (
-                    <button
-                      key={m}
-                      type="button"
-                      onClick={() => { setMotivo(m); setDestino(""); }}
-                      className={`flex-1 py-2.5 rounded-xl text-[13px] font-bold border-2 transition-colors ${
-                        motivo === m ? "border-emerald-600 bg-emerald-50 text-emerald-700" : "border-gray-200 text-gray-600"
-                      }`}
-                    >
-                      {m}
-                    </button>
-                  ))}
+                <div className="grid grid-cols-2 gap-2">
+                  {MOTIVOS.map((m) => {
+                    const cor = MOTIVO_COR[m];
+                    const selecionado = motivo === m;
+                    return (
+                      <button
+                        key={m}
+                        type="button"
+                        onClick={() => setMotivo(m)}
+                        className={`py-2.5 px-2 rounded-xl text-[12.5px] font-bold border-2 transition-colors ${
+                          selecionado ? `${cor.border} ${cor.bg} ${cor.text}` : "border-gray-200 text-gray-600"
+                        }`}
+                      >
+                        {m}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
               {temLivreAcesso ? (
                 <div className="bg-gray-50 border border-gray-100 rounded-xl p-3.5 text-[13px] text-gray-500 leading-relaxed">
-                  Dependente tem livre acesso a todo o clube — sem destino, autorizador ou
-                  período a definir.
+                  {motivo} tem acesso ligado ao status de associação/função — sem
+                  autorizador ou período a definir.
                 </div>
               ) : (
                 <>
                   <div className="space-y-1.5">
-                    <label className="text-[12px] font-bold text-gray-500 uppercase tracking-wider">Destino</label>
-                    <div className="relative">
-                      <select
-                        value={destino}
-                        onChange={(e) => setDestino(e.target.value)}
-                        className="w-full appearance-none bg-gray-50 border border-gray-200 px-4 py-3 rounded-xl text-[14px] font-medium focus:outline-none focus:ring-2 focus:ring-emerald-600/10"
-                      >
-                        <option value="">Selecione o destino...</option>
-                        {opcoesDestino.map((d) => (
-                          <option key={d} value={d}>{d}</option>
-                        ))}
-                      </select>
-                      <ChevronDown size={16} className="absolute right-4 top-3.5 text-gray-400 pointer-events-none" />
-                    </div>
-                  </div>
-
-                  <div className="space-y-1.5">
                     <label className="text-[12px] font-bold text-gray-500 uppercase tracking-wider">Autorizador</label>
-                    <div className="relative">
-                      <select
-                        value={autorizador}
-                        onChange={(e) => setAutorizador(e.target.value)}
-                        className="w-full appearance-none bg-gray-50 border border-gray-200 px-4 py-3 rounded-xl text-[14px] font-medium focus:outline-none focus:ring-2 focus:ring-emerald-600/10"
-                      >
-                        {AUTORIZADORES.map((a) => (
-                          <option key={a} value={a}>{a}</option>
-                        ))}
-                      </select>
-                      <ChevronDown size={16} className="absolute right-4 top-3.5 text-gray-400 pointer-events-none" />
-                    </div>
+                    <input
+                      value={autorizador}
+                      onChange={(e) => setAutorizador(e.target.value)}
+                      className="w-full bg-gray-50 border border-gray-200 px-4 py-3 rounded-xl text-[14px] font-medium focus:outline-none focus:ring-2 focus:ring-emerald-600/10 focus:border-emerald-600"
+                    />
                   </div>
 
                   <div className="space-y-1.5">

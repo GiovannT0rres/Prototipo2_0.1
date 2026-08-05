@@ -1,20 +1,10 @@
 import { useState } from "react";
-import { MOCK_SOCIOS } from "../mocks/mockManager";
 import { configurarPessoaConvidada, revogarPessoaConvidada, type PessoaConvidada } from "../mocks/mockManagerStore";
-import { ESPACOS } from "@/shared/data/spaces";
-import { SeletorPeriodo } from "./SeletorPeriodo";
+import { MOTIVOS, MOTIVO_COR, type Motivo } from "../types";
+import { SeletorPeriodo, type Periodo } from "./SeletorPeriodo";
 
-type Motivo = "Visitante" | "Prestador de Serviço" | "Dependente";
-
-// 3 categorias fixas do PACC (CLAUDE.md §6) — cada uma com uma cor própria,
-// sempre visível no texto; a seleção só acrescenta a borda.
-const MOTIVOS: { valor: Motivo; texto: string; borda: string }[] = [
-  { valor: "Visitante", texto: "text-amber-600", borda: "border-amber-600" },
-  { valor: "Prestador de Serviço", texto: "text-blue-600", borda: "border-blue-600" },
-  { valor: "Dependente", texto: "text-emerald-600", borda: "border-emerald-600" },
-];
-
-const AUTORIZADORES = ["Administração do Clube", ...MOCK_SOCIOS.map((s) => s.name)];
+const AUTORIZADORES = ["Administração do Clube"];
+const SEM_PRAZO: Motivo[] = ["Sócio Titular", "Dependente", "Equipe Administrativa", "Porteiro"];
 
 interface Props {
   pessoa: PessoaConvidada;
@@ -23,17 +13,16 @@ interface Props {
 
 // Card único de grade — face + dados básicos + "Rejeitar" sempre visíveis;
 // ao escolher o Motivo, o próprio card expande (não abre uma segunda box
-// embaixo) revelando as configurações que faltam (Destino/Autorizador/
-// Período), ou a mensagem de livre acesso se for Dependente.
+// embaixo) revelando as configurações que faltam (Autorizador/Período), ou
+// a mensagem de acesso sem prazo se for Sócio Titular/Dependente/Equipe
+// Administrativa/Porteiro.
 export function ConvitePendenteCard({ pessoa, onAtualizado }: Props) {
   const [motivo, setMotivo] = useState<Motivo | null>(null);
-  const [destino, setDestino] = useState("");
   const [autorizador, setAutorizador] = useState(AUTORIZADORES[0]);
-  const [periodo, setPeriodo] = useState("");
+  const [periodo, setPeriodo] = useState<Periodo | null>(null);
   const [observacoes, setObservacoes] = useState("");
 
-  const temLivreAcesso = motivo === "Dependente";
-  const opcoesDestino = motivo === "Visitante" ? [...ESPACOS.map((e) => e.name), "Clube Inteiro"] : ESPACOS.map((e) => e.name);
+  const temLivreAcesso = motivo ? SEM_PRAZO.includes(motivo) : false;
 
   const handleRevogar = () => {
     revogarPessoaConvidada(pessoa.id);
@@ -44,9 +33,10 @@ export function ConvitePendenteCard({ pessoa, onAtualizado }: Props) {
     if (!motivo) return;
     configurarPessoaConvidada(pessoa.id, {
       motivo,
-      destino: temLivreAcesso ? "Clube Inteiro" : destino,
-      autorizador: temLivreAcesso ? "" : autorizador,
-      periodo: temLivreAcesso ? "" : periodo,
+      autorizadorId: null,
+      autorizadorLabel: temLivreAcesso ? "Administração do Clube" : autorizador,
+      periodoInicio: temLivreAcesso ? "" : (periodo?.inicio ?? ""),
+      periodoFim: temLivreAcesso ? "" : (periodo?.fim ?? ""),
       observacoes: observacoes || undefined,
     });
     onAtualizado();
@@ -72,19 +62,20 @@ export function ConvitePendenteCard({ pessoa, onAtualizado }: Props) {
 
       <div className="mt-4 pt-4 border-t border-gray-100">
         <p className="text-[13px] font-bold text-gray-700 text-center mb-3">Qual o MOTIVO do acesso?</p>
-        <div className="flex flex-wrap justify-center gap-2">
+        <div className="flex flex-wrap justify-center gap-1.5">
           {MOTIVOS.map((m) => {
-            const selecionado = motivo === m.valor;
+            const cor = MOTIVO_COR[m];
+            const selecionado = motivo === m;
             return (
               <button
-                key={m.valor}
+                key={m}
                 type="button"
-                onClick={() => { setMotivo(m.valor); setDestino(""); }}
-                className={`px-3 py-1.5 rounded-full text-[12px] font-bold border-2 transition-colors ${m.texto} ${
-                  selecionado ? m.borda : "border-transparent"
+                onClick={() => setMotivo(m)}
+                className={`px-2.5 py-1.5 rounded-full text-[11.5px] font-bold border-2 transition-colors ${cor.text} ${
+                  selecionado ? cor.border : "border-transparent"
                 }`}
               >
-                {m.valor}
+                {m}
               </button>
             );
           })}
@@ -95,35 +86,17 @@ export function ConvitePendenteCard({ pessoa, onAtualizado }: Props) {
         <div className="mt-4 pt-4 border-t border-gray-100 space-y-3">
           {temLivreAcesso ? (
             <p className="text-[12px] text-gray-500 text-center leading-relaxed">
-              Dependente tem livre acesso a todo o clube — sem destino, autorizador ou período a definir.
+              {motivo} tem acesso ligado ao status de associação/função — sem autorizador ou período a definir.
             </p>
           ) : (
             <>
               <div className="space-y-1">
-                <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Destino</label>
-                <select
-                  value={destino}
-                  onChange={(e) => setDestino(e.target.value)}
-                  className="w-full bg-gray-50 border border-gray-200 px-3 py-2 rounded-lg text-[13px] font-medium"
-                >
-                  <option value="">Selecione...</option>
-                  {opcoesDestino.map((d) => (
-                    <option key={d} value={d}>{d}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="space-y-1">
                 <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Autorizador</label>
-                <select
+                <input
                   value={autorizador}
                   onChange={(e) => setAutorizador(e.target.value)}
                   className="w-full bg-gray-50 border border-gray-200 px-3 py-2 rounded-lg text-[13px] font-medium"
-                >
-                  {AUTORIZADORES.map((a) => (
-                    <option key={a} value={a}>{a}</option>
-                  ))}
-                </select>
+                />
               </div>
 
               <div className="space-y-1">
@@ -146,7 +119,7 @@ export function ConvitePendenteCard({ pessoa, onAtualizado }: Props) {
 
           <button
             onClick={handleAtivar}
-            disabled={!temLivreAcesso && !destino}
+            disabled={!temLivreAcesso && !periodo}
             className="w-full py-2.5 rounded-xl font-bold text-[13px] text-white bg-emerald-600 hover:bg-emerald-700 transition-colors disabled:opacity-40"
           >
             Ativar Acesso

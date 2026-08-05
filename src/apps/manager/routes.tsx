@@ -1,13 +1,9 @@
-import { Dashboard } from "./components/Dashboard";
-import { DashboardAprovacoes } from "./components/DashboardAprovacoes";
-import { GestaoSociosHub } from "./components/GestaoSociosHub";
-import { VisaoSocio } from "./components/VisaoSocio";
-import { AlertasSeguranca } from "./components/AlertasSeguranca";
+import { Busca } from "./components/Busca";
+import { Perfil } from "./components/Perfil";
+import { Notificacoes } from "./components/Notificacoes";
 
 export const managerRoutes = [
-  { index: true, Component: Dashboard },
-  { path: "aprovacoes", Component: DashboardAprovacoes },
-  { path: "socios", Component: GestaoSociosHub },
-  { path: "socio/:id", Component: VisaoSocio },
-  { path: "alertas", Component: AlertasSeguranca },
+  { index: true, Component: Busca },
+  { path: "pessoa/:id", Component: Perfil },
+  { path: "notificacoes", Component: Notificacoes },
 ];
