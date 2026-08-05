@@ -20,6 +20,8 @@ out/
 .output/
 docs/
 evidencia/
+mock/
+
 
 # Secrets, Credentials, and Environment Variables (CRÍTICO: Segurança contra vazamentos)
 # Catch-all para qualquer variante de .env, com exceção explícita para templates
@@ -44,6 +46,14 @@ evidencia/
 *.pub
 *.gpg
 *.asc
+*.p8
+*.mobileprovision
+*.der
+appsettings.*.json
+!appsettings.example.json
+firebase-adminsdk*.json
+google-services.json
+GoogleService-Info.plist
 secring.gpg
 jwt.keys
 *credentials*.json
@@ -62,6 +72,18 @@ id_dsa*
 *.ppk
 *.keystore
 *.jks
+.playwright-mcp/
+.claude/
+
+# Screenshots e artefatos soltos de verificação manual (gerados na raiz
+# durante sessões de teste com o browser, ex.: run/playwright) — nunca
+# devem virar parte do histórico do repo.
+/*.png
+/*.jpg
+/*.jpeg
+manager-*.png
+*.dev.log
+/tmp/
 
 # Dados pessoais/sensíveis do domínio (CPF, telefone, selfies, documentos, listas
 # de sócios) — este produto lida com KYP/biometria (ver CLAUDE.md §5); nenhum

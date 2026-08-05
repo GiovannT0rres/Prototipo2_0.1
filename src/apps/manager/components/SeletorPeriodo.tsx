@@ -3,7 +3,14 @@ import { Calendar } from "lucide-react";
 
 // "1 Dia" entra pensando em evento (ex.: convidado só tem acesso no dia da
 // festa) — período fixo em semanas/meses não cobre esse caso mais comum.
-const TERMINO_PRESETS = ["1 Dia", "1 Semana", "2 Semanas", "1 Mês", "2 Meses", "6 Meses"];
+const TERMINO_PRESETS: { label: string; dias: number }[] = [
+  { label: "1 Dia", dias: 1 },
+  { label: "1 Semana", dias: 7 },
+  { label: "2 Semanas", dias: 14 },
+  { label: "1 Mês", dias: 30 },
+  { label: "2 Meses", dias: 60 },
+  { label: "6 Meses", dias: 180 },
+];
 
 function Chip({
   label,
@@ -30,25 +37,46 @@ function Chip({
   );
 }
 
+function hojeISO() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+export interface Periodo {
+  inicio: string; // ISO datetime
+  fim: string; // ISO datetime
+}
+
 interface Props {
-  onChange: (periodo: string) => void;
+  onChange: (periodo: Periodo) => void;
 }
 
 // Início (Hoje / data específica) + Término (presets, incluindo 1 dia, ou
 // data específica) — mesma lógica já usada no Concierge, reaproveitada aqui
-// pro Manager pra cobrir o caso de evento (acesso só naquele dia).
+// pro Manager pra cobrir o caso de evento (acesso só naquele dia). Emite
+// datas ISO reais (não mais um texto formatado) — é o que permite calcular
+// status vigente/futura/expirada na lista de Autorizações.
 export function SeletorPeriodo({ onChange }: Props) {
   const [inicio, setInicio] = useState<"hoje" | "data">("hoje");
-  const [inicioData, setInicioData] = useState("");
-  const [termino, setTermino] = useState<string>(TERMINO_PRESETS[0]);
+  const [inicioData, setInicioData] = useState(hojeISO());
+  const [terminoLabel, setTerminoLabel] = useState<string>(TERMINO_PRESETS[0].label);
   const [terminoData, setTerminoData] = useState("");
 
   useEffect(() => {
-    const de = inicio === "hoje" ? "Hoje" : inicioData || "data a definir";
-    const ate = termino === "Escolher data" ? (terminoData || "data a definir") : termino;
-    onChange(`${de} até ${ate}`);
+    const dataInicio = inicio === "hoje" ? hojeISO() : inicioData;
+    const preset = TERMINO_PRESETS.find((p) => p.label === terminoLabel);
+
+    let dataFim: string;
+    if (preset) {
+      const base = new Date(`${dataInicio}T00:00`);
+      base.setDate(base.getDate() + preset.dias);
+      dataFim = base.toISOString().slice(0, 10);
+    } else {
+      dataFim = terminoData || dataInicio;
+    }
+
+    onChange({ inicio: `${dataInicio}T00:00`, fim: `${dataFim}T23:59` });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inicio, inicioData, termino, terminoData]);
+  }, [inicio, inicioData, terminoLabel, terminoData]);
 
   return (
     <div className="bg-gray-50 rounded-xl border border-gray-200 p-4 space-y-4">
@@ -77,16 +105,16 @@ export function SeletorPeriodo({ onChange }: Props) {
         <p className="text-[12px] font-bold text-gray-500 uppercase tracking-wider mb-2">Termina em</p>
         <div className="flex flex-wrap gap-2">
           {TERMINO_PRESETS.map((preset) => (
-            <Chip key={preset} label={preset} selected={termino === preset} onClick={() => setTermino(preset)} />
+            <Chip key={preset.label} label={preset.label} selected={terminoLabel === preset.label} onClick={() => setTerminoLabel(preset.label)} />
           ))}
           <Chip
             label="Escolher data"
             icon={<Calendar size={13} />}
-            selected={termino === "Escolher data"}
-            onClick={() => setTermino("Escolher data")}
+            selected={terminoLabel === "Escolher data"}
+            onClick={() => setTerminoLabel("Escolher data")}
           />
         </div>
-        {termino === "Escolher data" && (
+        {terminoLabel === "Escolher data" && (
           <input
             type="date"
             value={terminoData}
@@ -97,4 +125,12 @@ export function SeletorPeriodo({ onChange }: Props) {
       </div>
     </div>
   );
+}
+
+export function formatarPeriodo(inicio: string | null, fim: string | null): string {
+  if (!inicio || !fim) return "Sem prazo definido";
+  const opts: Intl.DateTimeFormatOptions = { day: "2-digit", month: "2-digit", year: "numeric" };
+  const de = new Date(inicio).toLocaleDateString("pt-BR", opts);
+  const ate = new Date(fim).toLocaleDateString("pt-BR", opts);
+  return `${de} – ${ate}`;
 }
