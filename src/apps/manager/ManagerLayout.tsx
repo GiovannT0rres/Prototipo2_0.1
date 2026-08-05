@@ -3,6 +3,8 @@ import { Outlet, useNavigate, useLocation } from "react-router";
 import { Bell } from "lucide-react";
 import { Toaster } from "sonner";
 import { MOCK_NOTIFICACOES } from "./mocks/mockManager";
+import { TransicaoPilha } from "./components/TransicaoPilha";
+import "./manager.css";
 
 // Shell mínimo do redesign filter-first — sem sidebar, sem nav por tela.
 // Toda navegação passa pela busca (Busca.tsx); este layout só dá a moldura:
@@ -54,7 +56,9 @@ export function ManagerLayout() {
         </button>
       </header>
       <main className="flex-1 flex flex-col min-h-0">
-        <Outlet />
+        <TransicaoPilha>
+          <Outlet />
+        </TransicaoPilha>
       </main>
       <Toaster />
     </div>

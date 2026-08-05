@@ -1,0 +1,15 @@
+/* Transição de pilha do Manager — sempre da direita (spec §2/§7). Anima só
+   transform/opacity, nunca width/height/padding/margin. */
+@keyframes pushIn  { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes pushOut { from { transform: translateX(0); opacity: 1; }   to { transform: translateX(-8%); opacity: 0; } }
+@keyframes popIn   { from { transform: translateX(-8%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes popOut  { from { transform: translateX(0); opacity: 1; }   to { transform: translateX(100%); opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  [class*="animate-[pushIn"],
+  [class*="animate-[pushOut"],
+  [class*="animate-[popIn"],
+  [class*="animate-[popOut"] {
+    animation-duration: 1ms !important;
+  }
+}
